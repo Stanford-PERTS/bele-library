@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"></meta>
+    {% include '_styles.html' %}
+    <style type="text/css">
+      p a {
+        color: #EF472F;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table class="email-outer">
+      <tr>
+        <td>
+          <table class="email-inner">
+            <tr>
+              <td>
+                <table class="email-header">
+                  <tr>
+                    <td>
+                      <a href="{{ domain }}">
+                        <img src="{{ domain }}/static/images/bele-logo-header.png" height="48px">
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="email-body">
+                  <tr>
+                    <td>
+                      <p>
+                        Hi {{ short_name }},
+                      </p>
+                      <p>
+                        Thank you for signing up and creating an account on the
+                        <a href="{{ domain }}">BELE Library Platform</a>.
+                        We&rsquo;re excited to work with you!
+                      </p>
+                      <p>
+                        If you haven&rsquo;t already, be sure to update your <a
+                        href="{{ domain }}/profile">profile</a>. This will help
+                        others learn who you are when you upload a book or
+                        page, or leave a comment. You can find already uploaded
+                        content and more on our <a href="{{ domain
+                        }}/discover">resource page.</a>
+                      </p>
+                      <p>
+                        Feel free to message <a
+                        href="</a>
+                        or reply to this email with any feedback or thoughts
+                        about the BELE Library.
+                      </p>
+                      <br>
+                      <p>
+                        - The BELE Library Team
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table class="email-footer">
+            This message was intended for {{ full_name }}<br>
+            PERTS &copy; {{ year }}  |   All Rights Reserved<br>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

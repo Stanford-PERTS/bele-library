@@ -1,0 +1,106 @@
+<div
+  class="modal fade"
+  id="authorsModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content" authors-modal="">
+      <h4>
+        {% if entity_type == 'book' %}
+          Editors
+        {% elif entity_type == 'page' %}
+          Authors
+        {% endif %}
+      </h4>
+      {% include 'components/authors-list.html' %}
+      {% if user %}
+      <div class="button-container">
+        <button
+          data-dismiss="modal"
+          ng-hide="sendingInvites"
+          class="btn btn-lg cancel"
+          ng-click="handleClickCloseAuthors()"
+        >
+          Close
+        </button>
+        {% if is_author %}
+        <button
+          type="button"
+          ng-hide="sendingInvites"
+          class="btn btn-lg btn-primary"
+          ng-click="handleClickInviteAuthors()"
+        >
+          <i class="fa fa-user"></i>
+          Invite
+          {% if entity_type == 'book' %}
+            Editor
+          {% elif entity_type == 'page' %}
+            Author
+          {% endif %}
+        </button>
+        {% endif %}
+        <i class="fa fa-spin fa-spinner" ng-show="sendingInvites"></i>
+      </div>
+      {% else %}
+      <div class="button-container flex-end">
+        <button data-dismiss="modal" ng-hide="sendingInvites" class="btn btn-primary btn-lg" ng-click="handleClickCloseAuthors()">Close</button>
+      </div>
+      {% endif %}
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div
+  class="modal fade"
+  id="removeAuthorModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content" authors-modal="">
+      <h4>
+        Remove
+        {% if entity_type == 'book' %}
+          Editor
+        {% elif entity_type == 'page' %}
+          Author
+        {% endif %}
+      </h4>
+      {% set page_title = page.title if page else '' %}
+      {% set book_title = book.title if book else '' %}
+      {% set entity_title = page_title if page else book_title %}
+      <p style="padding: 16px 40px">
+        Are you sure you would like to remove {[ authorPendingRemoval.name ]}
+        from <em>{{ entity_title }}</em>?
+      </p>
+      <div class="button-container">
+        <button
+          data-dismiss="modal"
+          ng-hide="removingAuthor"
+          class="btn btn-lg cancel"
+          ng-click="handleCloseRemove()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-lg btn-primary"
+          ng-hide="removingAuthor"
+          ng-click="handleConfirmRemoveAuthor(authorPendingRemoval)"
+        >
+          Remove
+          {% if entity_type == 'book' %}
+            Editor
+          {% elif entity_type == 'page' %}
+            Author
+          {% endif %}
+        </button>
+        <i class="fa fa-spin fa-spinner" ng-show="removingAuthor"></i>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

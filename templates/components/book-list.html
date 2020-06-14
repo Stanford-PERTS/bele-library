@@ -1,0 +1,71 @@
+<!-- Must set bookListKey in context -->
+
+<div class="book-list">
+  {% for book in books %}
+  <div class="book-list-item">
+    <div class="row">
+      <div class="col-xs-3">
+        <a href="/books/{{ book.uid | replace('Book_', '') }}">
+          {% if book.icon %}
+          <div
+            class="landscape-img portrait-img__book"
+            style="background-image: url('{{ book.icon }}');"
+          ></div>
+          {% else %}
+          <div
+            class="landscape-img portrait-img__book"
+            style="background-image: url('/static/images/book-icon-default-landscape.png');"
+          ></div>
+          {% endif %}
+        </a>
+      </div>
+      <div class="col-xs-9">
+        <div class="book-header">
+          <a href="/books/{{ book.uid | replace('Book_', '') }}">
+            <h3 class="book-title">{{ book.title }}</h3>
+          </a>
+          <div class="flex-grow-1"></div>
+          <div class="book-meta">
+            <i class="fa fa-heart"></i>
+            {{ book.votes_for }}
+          </div>
+        </div>
+        <p class="book-description">{{ book.short_description }}</p>
+        <div class="search-result-authors">
+          {% for author in book.author_users %}
+          <a
+            href="/users/{{author.canonical_username}}"
+            target="_self"
+            class="author-row user-info"
+          >
+            {% if author.image_url %}
+            <div
+              class="user-image"
+              user="author"
+              style="background-image: url('{{author.image_url}}');"
+            ></div>
+            {% else %}
+            <div
+              class="user-image"
+              user="author"
+              style="background-image: url('/static/images/default-user.png');"
+            ></div>
+            {% endif %}
+            <div class="posting-data">
+              <div class="byline">
+                {{ author.first_name or '' }} {{ author.last_name or '' }}
+              </div>
+              {#
+              <div class="date">
+                {{ result.createdPrettyDate }}
+              </div>
+              #}
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

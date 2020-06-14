@@ -1,0 +1,1485 @@
+/* Styles for Practice Library home and search page */
+
+@import '_colors';
+@import '_fonts';
+@import '_animations';
+@import '_responsive';
+@import 'compass';
+
+@include keyframes(fade-left) {
+  0%,25% { @include opacity(0.0);; margin-left: 30px; }
+  100% { @include opacity(1.0);; margin-left: 0px; }
+}
+
+@include keyframes(fade-in) {
+  0%,25% { @include opacity(0.0);}
+  100% { @include opacity(1.0);}
+}
+
+@include keyframes(fade-drop-in) {
+  0%,25% { @include opacity(0.0); left: 0px; }
+  100% { @include opacity(1.0); left: 15px; }
+}
+
+@include keyframes(pop-in) {
+  0% { @include opacity(1.0); @include transform(scale(0));}
+  80% { @include opacity(1.0); @include transform(scale(1.1));}
+  100% { @include opacity(1.0); @include transform(scale(1.0));}
+}
+
+@include keyframes(pop-back) {
+  0% { @include opacity(1.0); @include transform(scale(1.0));}
+  80% { @include opacity(1.0); @include transform(scale(1.2));}
+  100% { @include opacity(1.0); @include transform(scale(1.0));}
+}
+
+@include keyframes(shrink-in) {
+  0% { @include opacity(0.0); @include transform(scale(2.0));}
+  80% { @include opacity(1.0); @include transform(scale(0.9));}
+  100% { @include opacity(1.0); @include transform(scale(1.0));}
+}
+
+$panel-width: 280px;
+$vertical-nav-width: 60px;
+$vertical-nav-color: #f8b699;
+$panel-color: #eef1f3;
+$accent-color: $purple-color;
+
+$upload-accent-color: $purple-color;
+
+// Universal practice components
+
+.practice-tags {
+  display: inline-block;
+}
+
+a.practice-tag {
+  text-decoration: none;
+  display: inline-block;
+  padding: 5px 15px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  background-color: #f0f1f2;
+  color: #666;
+  @include border-radius(20px);
+  @include transition(0.14s ease-in-out);
+
+  &:hover {
+    color: white;
+    background-color: #aaa;
+  }
+}
+
+a.mindset-tag {
+  @extend .practice-tag;
+}
+
+// Panel-layout styling
+
+#vertical-nav {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  padding-top: 50px;
+  height: 100%;
+  width: $vertical-nav-width;
+  background-color: $deep-violet-color;
+
+  a {
+    display: block;
+    color: white;
+    text-align: center;
+    margin: 20px auto;
+    @include opacity(0.65);
+
+    &:hover {
+      @include opacity(1.0);
+    }
+  }
+}
+
+#panels {
+  position: relative;
+  height: 100%;
+
+  &.padded-left {
+    margin-left: $vertical-nav-width;
+  }
+}
+
+.main-container {
+  padding-left: $panel-width;
+  min-height: 100%;
+  background-color: none;
+  padding-bottom: 90px;
+  // overflow: scroll;
+  pointer-events: none;
+}
+
+.main-container-inner {
+  max-width: 700px;
+  margin: 0px auto;
+  padding: 45px 15px 60px 15px;
+  pointer-events: all;
+}
+
+// Sidepanel for practice application pages
+
+#sidepanel {
+  position: absolute;
+  // left: 0px;
+  top: 0px;
+  height: 100%;
+  overflow: scroll;
+  width: $panel-width;
+  background-color: $panel-color;
+  padding: 45px 15px 80px 20px;
+
+  &.affix {
+    position: fixed;
+    top: 50px;
+  }
+
+  h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: $font-weight-bold;
+    color: #666;
+  }
+
+  .input-wrapper {
+    position: relative;
+
+    i.fa {
+      position: absolute;
+      left: 13px;
+      top: 16px;
+    }
+  }
+
+  a#upload-button {
+    display: block;
+    position: relative;
+    width: 100%;
+    background-color: $color-practices;
+    color: white;
+    padding: 10px 15px;
+    font-size: 14px;
+    outline: none;
+    border: none;
+    letter-spacing: 1px;
+    font-weight: $font-weight-bold;
+    text-align: left;
+    text-decoration: none;
+    @include transition(0.12s ease-in-out);
+
+    &:hover {
+      background-color: darken($color-practices, 5);
+
+      .plus-icon {
+        .plus-icon_h { width: 100%; }
+        .plus-icon_v { height: 100%; }
+      }
+    }
+
+  }
+
+  a.filters-toggle {
+    display: none;
+    color: $light-font-color;
+    text-decoration: none;
+
+    &:hover {
+      color: $font-color;
+    }
+  }
+}
+
+/* -------------------------------------------
+ * Styles for practice pages
+ * -------------------------------------------
+ */
+
+.practice-page {
+  background-color: #f2f2f2;
+
+
+  .practice-page_info {
+    // padding-top: 90px;
+    background-color: #666;
+    color: white;
+    // padding-bottom: 150px;
+    height: 400px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .container {
+      position: absolute;
+    }
+
+    .head1 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 10px;
+      background: inherit;
+      background-attachment: fixed;
+    }
+    .head1::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      background-attachment: fixed;
+      -webkit-filter: blur(12px);
+      filter: blur(12px);
+    }
+
+    h1 {
+      margin-top: 0px;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    p {
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    h4 {
+      border-bottom: 1px solid white;
+      text-transform: uppercase;
+      padding-bottom: 5px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin-top: 0px;
+      display: inline-block;
+      padding-right: 60px;
+      margin-bottom: 15px;
+    }
+
+    .practice_user-info {
+      padding-left: 0px;
+    }
+
+    a.user-info {
+      display: block;
+      color: white;
+      text-decoration: none;
+      position: relative;
+      padding-left: 60px;
+      margin-bottom: 0px;
+      letter-spacing: 1px;
+
+      .user-info_image {
+        position: absolute;
+        top: 0px; left: 0px;
+        height: 50px;
+        width: 50px;
+        border: 2px solid white;
+        background-color: #aaa;
+        @include background-size(cover);
+        background-position: center center;
+        @include border-radius(28px);
+      }
+
+      .user-info_name {
+        margin: 0px 0px 5px 0px;
+        padding-top: 3px;
+        @include text-truncate;
+        font-size: 16px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      p {
+        font-size: 13px;
+      }
+    }
+
+  }
+
+  .practice-container {
+    margin-top: -130px;
+    margin-bottom: 150px;
+    color: $font-color;
+    min-height: 600px;
+
+    .embed-responsive {
+      background-color: #666;
+    }
+
+    .practice-container_inner {
+      padding: 45px 30px;
+      background-color: white;
+      
+      .practice-additional-info {
+        h4 {
+          text-transform: uppercase;
+          border-bottom: 2px solid #e3e3e3;
+          padding-bottom: 5px;
+          font-size: 13px;
+          letter-spacing: 1px;
+        }
+        .additional-info {
+          p:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .practice-body {
+        padding: 0px 0px 30px 0px;
+        font-size: 18px;
+
+        p, li {
+          font-size: 18px;
+        }
+
+        > p {
+          font-weight: 300;
+          line-height: 1.54;
+          margin-bottom: 30px;
+
+          > a {
+            font-weight: 400;
+          }
+        }
+
+        > h2 { font-size: 22px; font-weight: 600;}
+        > h3 { font-size: 20px; font-weight: 700;}
+        > h4 { font-size: 20px; font-weight: 600;}
+
+        li {
+          margin-top: 10px;
+        }
+
+        ul, ol {
+          margin-bottom: 20px;
+        }
+
+        pre {
+          margin: 30px auto;
+        }
+
+        table {
+          margin: 30px 0px 45px 0px;
+          width: 100%;
+        }
+
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+
+        th, td {
+          padding: 15px;
+          font-size: 16px;
+        }
+
+        table td {
+          vertical-align: top;
+        }
+
+        table li {
+          font-size: 16px;
+        }
+
+        table ol, table ul {
+          margin-top: 10px;
+        }
+
+      }
+    }
+  }
+
+  .vote-wrapper {
+    display: block;
+    margin: 0px auto 30px auto;
+    position: relative;
+  }
+
+  a.like-button {
+    display: inline-block;
+    color: $light-font-color;
+    padding: 8px 12px;
+    font-size: 15px;
+    text-decoration: none;
+    @include border-radius(5px);
+    border: 2px solid #ccc;
+
+    i { color: #999; }
+
+    &:hover {
+      color: $font-color;
+      border-color: $font-color;
+      i {
+        @include animation(pop-back 0.12s ease-in-out);
+      }
+    }
+
+    &.liked {
+      i {
+        @include animation(shrink-in 0.24s ease-out);
+        color: $error-color;
+      }
+    }
+  }
+
+  .print-button a {
+    display: block;
+    margin-top: 30px;
+    padding: 8px 15px;
+    font-weight: 600;
+    font-size: 16px;
+    border-left: 3px solid rgba(0,0,0,0.8);
+    // background-color: #f0f1f2;
+    text-decoration: none;
+    @include opacity(0.75);
+
+    &:hover {
+      @include opacity(1.0);
+    }
+  }
+
+  .practice-files {
+
+    > h4 {
+      text-transform: uppercase;
+      border-bottom: 2px solid #e3e3e3;
+      padding-bottom: 5px;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+  }
+
+  a.attachment {
+    display: inline-block;
+    padding-left: 78px;
+    position: relative;
+    text-decoration: none;
+    min-height: 64px;
+    margin: 5px 0px;
+    padding-top: 4px;
+    color: $orange-color;
+
+    &:hover .attachment_image {
+      color: white;
+      background-color: $orange-color;
+    }
+
+    .attachment_image {
+      position: absolute;
+      height: 64px;
+      width: 64px;
+      border-radius: 32px;
+      top: 0px; left: 0px;
+      border: 5px solid $orange-color;
+      text-align: center;
+      padding-top: 13px;
+      padding-left: 3px;
+      @include transition(0.14s, ease-in-out);
+    }
+
+    .attachment_text {
+
+      > h4 {
+        font-weight: $font-weight-bold;
+        margin-bottom: 2px;
+        margin-top: 7px;
+        letter-spacing: 1px;
+        font-size: 15px;
+        text-transform: uppercase;
+      }
+
+      > span {
+        font-size: 17px;
+      }
+    }
+  }
+
+  // Practice info in side panel
+
+  .practice-info {
+    margin-top: -130px;
+    padding: 0px;
+
+
+    .practice-info_inner {
+      padding: 5px 15px 30px 15px;
+      background-color: white;
+
+      h4 {
+        text-transform: uppercase;
+        color: #666;
+        font-size: 13px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        letter-spacing: 0.5px;
+      }
+
+      h4.inline {
+        display: inline;
+      }
+
+      .link {
+        cursor: pointer;
+        text-decoration: underline;
+        color: #0000EE;
+      }
+
+      .practice-details {
+        margin-top: 10px;
+        margin-bottom: 30px;
+      }
+
+      .practice_related-practices {
+        border-top: 1px solid #e3e3e3;
+
+        // Override standard height set for practices
+        // since this is only single-column
+        a.content_practice-wrapper {
+          height: auto;
+        }
+      }
+    }
+
+    .options-bar {
+      border: 0px;
+    }
+  }
+}
+
+// Universal practice tags
+
+a.practice-tag {
+  text-decoration: none;
+  display: inline-block;
+  padding: 5px 15px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  background-color: white;
+  color: #999;
+  border: 2px solid #666;
+  font-size: 13px;
+  @include border-radius(5px);
+  @include transition(0.08s ease-in-out);
+
+  &:hover {
+    color: #333;
+    border-color: #333;
+    background-color: white;
+  }
+}
+
+a.mindset-tag {
+  @extend .practice-tag;
+}
+
+.spacer {
+  border-bottom: 1px solid #ccc;
+}
+
+/* -------------------------------------------
+ * Styles for UPLOADING PAGE
+ * -------------------------------------------
+ */
+
+#sidepanel.upload-practice {
+  padding-top: 20px;
+
+  .top-section {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #999;
+
+    .upload-image {
+      display: inline-block;
+      height: 60px;
+      width: 60px;
+      @include border-radius(30px);
+      background-color: white;
+    }
+
+    h2 {
+      font-size: 19px;
+      letter-spacing: 1px;
+    }
+  }
+
+  .step-item {
+    position: relative;
+    margin-bottom: 30px;
+
+    .step-indicator {
+      position: absolute;
+      top: 5px; right: 0px;
+      height: 40px;
+      width: 40px;
+      padding-top: 10px;
+      padding-left: 3px;
+      text-align: center;
+      @include border-radius(20px);
+      background-color: #ccccc9;
+    }
+    i {
+      @include opacity(0.0);
+      color: white;
+    }
+
+    &.active {
+      .step-indicator {
+        background-color: $upload-accent-color;
+      }
+      i {
+        @include opacity(1.0);
+      }
+    }
+  }
+}
+
+.upload-container {
+
+  color: $font-color;
+
+  .main-container-inner {
+    max-width: 800px;
+    padding-top: 45px;
+    display: none;
+    @include animation(fade-in 0.4s ease-out);
+
+    &.active {
+      display: block;
+    }
+
+    > h1 {
+      font-size: 25px;
+      letter-spacing: 1px;
+      margin-top: 0px;
+      margin-bottom: 25px;
+
+      span.light-text {
+        color: $light-font-color;
+      }
+    }
+  }
+
+  h4 {
+    margin: 25px auto 5px auto;
+    font-family: $sans-serif-font;
+    // font-weight: $font-weight-normal;
+  }
+
+  label {
+    color: $light-font-color;
+    margin-bottom: 10px;
+    font-weight: $font-weight-normal;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  input {
+    outline: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+    @include border-radius(0px);
+
+    &:focus {
+      border-color: #999;
+    }
+  }
+
+  button.next-button {
+    margin-top: 15px;
+    float: right;
+    padding: 8px 15px;
+    font-weight: $font-weight-bold;
+    letter-spacing: 1px;
+    background-color: white;
+    @include transition(0.14s ease-in-out);
+    border: 4px solid #bbb;
+    color: #bbb;
+    outline: none;
+    &.active {
+      border-color: $font-color;
+      color: $font-color;
+    }
+    &.active:hover {
+      background-color: $font-color;
+      color: white;
+    }
+  }
+
+  button.back-button {
+    @extend button.next-button;
+    border-color: white;
+    color: #999;
+    &:hover {
+      color: $font-color;
+    }
+  }
+
+  .creating-indicator {
+    text-align: right;
+    margin-top: 15px;
+    padding-right: 10px;
+  }
+
+  .error-message {
+    float: left;
+    color: white;
+    margin-top: 20px;
+    padding: 5px 15px;
+    background-color: $error-color;
+    @include border-radius(8px);
+    @include animation(fade-in 0.25s ease-out);
+  }
+
+  textarea {
+    @extend input;
+
+    &.practice-body {
+      height: 220px;
+      font-size: 18px;
+      padding: 10px 12px;
+    }
+  }
+
+  .tags-wrapper {
+    margin-top: 15px;
+
+    .click-tag {
+      @extend a.practice-tag;
+
+      text-align: center;
+      display: inline-block;
+      width: 24%;
+      padding: 8px 15px;
+      margin-right: 1.33333%;
+      margin-bottom: 15px;
+
+      &:nth-child(4n) {
+        margin-right: 0%;
+      }
+
+      &.active {
+        background-color: $font-color;
+        color: #ddd;
+
+        &:hover {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .tags-wrapper--5 {
+    @extend .tags-wrapper;
+    .click-tag {
+      width: 19%;
+      margin-right: 1.25%;
+
+      &:nth-child(4n) {
+        margin-right: 1.25%;
+      }
+      &:nth-child(5n) {
+        margin-right: 0%;
+      }
+    }
+
+  }
+
+  .tags-wrapper--select {
+    @extend .tags-wrapper;
+    position: relative;
+
+    .dropdown-tag {
+      @extend .click-tag;
+      position: relative;
+      border: 4px solid #ccc;
+      padding: 4px 11px;
+      text-align: left;
+      padding-left: 20px;
+
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f078";
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        display: block;
+      }
+
+      &:hover {
+        background-color: #f0f0f0;
+        border-color: #999;
+        color: $font-color;
+      }
+    }
+
+    ul.dropdown-tag_options {
+      display: none;
+      position: absolute;
+      top: 36px;
+      left: 15px;
+      width: 200px;
+      padding: 0px;
+      background-color: #e3e3e3;
+      margin: 0px;
+      z-index: 10;
+
+      li {
+        list-style: none;
+        font-size: 14px;
+        padding: 8px 15px;
+
+        &:hover {
+          background-color: #999;
+          color: #fff;
+        }
+      }
+
+      &.active {
+        display: block;
+        @include animation(fade-drop-in 0.4s ease-out);
+      }
+    }
+  }
+
+  /* UI Slider styling */
+
+  .ui-slider {
+    background-color: #f0f1f2;
+    margin-top: 20px;
+    margin-bottom: 15px;
+  }
+
+  .ui-slider-range {
+    background-color: $accent-color;
+  }
+
+  a.ui-slider-handle {
+
+    &:after {}
+
+    &.ui-state-hover:after {
+      border-color: darken($accent-color, 10);
+    }
+
+    &.ui-state-active:after {
+      background-color: lighten($accent-color, 10);
+      border-color: darken($accent-color, 10);
+    }
+  }
+
+  // Practice Type Page
+
+  .content-options {
+    margin-top: 10px;
+
+    .content-option-wrapper {
+      display: flex;
+      align-items: center;
+      text-align: left;
+      position: relative;
+      padding-left: 70px;
+      // padding-top: 15px;
+      // margin-bottom: 15px;
+      // height: 76px;
+      cursor: pointer;
+
+      > h4 {
+        margin-top: 0px;
+        margin-bottom: 5px;
+      }
+
+      .content-option {
+        display: block;
+        position: absolute;
+        top: 8px; left: 0px;
+        height: 60px;
+        width: 60px;
+        @include border-radius(50px);
+        border: 3px solid #999;
+        text-align: center;
+        padding-top: 15px;
+        color: #999;
+        @include transition(0.14s ease-in-out);
+      }
+
+      &:hover .content-option {
+        cursor: pointer;
+        border-color: $font-color;
+        color: $font-color;
+      }
+
+      .content-option-text {
+        h4 {
+          margin-top: 0;
+        }
+        label {
+           margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .input-wrapper {
+    position: relative;
+    @include animation(fade-left 0.4s ease-out);
+
+    .valid-indicator {
+      position: absolute;
+      right: 13px;
+      top: 12px;
+      color: green;
+      &.invalid {
+        color: red;
+      }
+    }
+  }
+
+  // Listed files on upload page
+
+  .file-wrapper {
+    display: block;
+    position: relative;
+    margin-top: 10px;
+    padding: 5px 10px;
+    @include border-radius(5px);
+    border: 2px solid $upload-accent-color;
+    background-color: lighten($upload-accent-color, 35);
+    font-size: 14px;
+    color: $upload-accent-color;
+    @include animation(fade-left 0.4s ease-out);
+
+    a.file-removal {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 12px;
+      text-decoration: none;
+
+      color: $upload-accent-color;
+      @include opacity(0.85);
+
+      &:hover {
+        @include opacity(1.0);
+      }
+    }
+
+    &.video-wrapper {
+      border-color: $accent-color;
+      background-color: lighten($accent-color, 35);
+      color: $accent-color;
+
+      a.file-removal {
+        color: $accent-color;
+      }
+    }
+  }
+
+  // Finish and share page
+
+  .sharing-options {
+    margin: 20px 0px 40px 0px;
+
+    .sharing-option {
+      display: inline-block;
+      height: 50px;
+      width: 50px;
+      @include border-radius(25px);
+      border: 2px solid #666;
+      color: #666;
+      text-align: center;
+      margin-right: 10px;
+      padding-top: 13px;
+      padding-left: 2px;
+      @include transition(0.2s ease-in-out);
+
+      &:hover {
+        background-color: #666;
+        color: #fff;
+      }
+    }
+
+    label {
+      margin-top: 30px;
+    }
+
+    input[readonly] {
+      display: inline-block;
+      padding: 8px 10px;
+      @include border-radius(5px);
+      width: 280px;
+      border: 1px solid #ccc;
+      color: #aaa;
+    }
+  }
+
+}
+
+// Modal for video uploading
+
+.video-upload-modal {
+  padding: 10px 20px;
+  height: 400px;
+  position: relative;
+
+  input, textarea {
+    outline: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+    @include border-radius(5px);
+
+    &:focus {
+      border-color: #999;
+    }
+
+    &[readonly] {
+      background-color: #f0f0f0;
+    }
+  }
+
+  textarea {
+    height: 100px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    @include animation(fade-left 0.4s ease-out);
+
+    .valid-indicator {
+      position: absolute;
+      right: 13px;
+      top: 12px;
+      color: green;
+      &.invalid {
+        color: red;
+      }
+    }
+  }
+
+  .youtube-image-holder {
+    margin-top: 15px;
+    @include animation(fade-left 0.4s ease-out);
+  }
+
+  .modal-footer {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+
+    button {
+      float: right;
+      margin-left: 10px;
+      padding: 8px 15px;
+      font-weight: $font-weight-bold;
+      letter-spacing: 1px;
+      background-color: white;
+      @include transition(0.14s ease-in-out);
+      border: 4px solid $font-color;
+      outline: none;
+      color: $font-color;
+      &:hover {
+        background-color: $font-color;
+        color: white;
+      }
+    }
+  }
+}
+
+// Footer for practice upload page
+
+#panels footer {
+  padding-left: $panel-width;
+
+  .inner-container {
+    max-width: 800px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+// Styles for practice bodies and rich text editing.------------
+// -------------------------------------------------------------
+
+.practice-body, div[text-angular], text-angular {
+
+  color: $font-color;
+
+}
+
+div[text-angular], text-angular {
+
+  .ta-scroll-window > .ta-bind {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  // Disable unused buttons to reduce clutter
+  button[name="h5"], button[name="h6"] {
+    display: none !important;
+  }
+  button[name="redo"], button[name="undo"], button[name="clear"] {
+    display: none !important;
+  }
+  button[name="insertImage"], button[name="insertVideo"] {
+    display: none !important;
+  }
+  button[name="indent"], button[name="outdent"] {
+    display: none !important;
+  }
+  div[name="charcount"], div[name="wordcount"] {
+    display: none !important;
+  }
+  // Bootstrap overrides
+  .form-control {
+    @include border-radius(5px);
+  }
+  .btn-group {
+    @include border-radius(5px);
+  }
+  .btn-group > .btn {
+    @include border-radius(5px);
+    margin-bottom: 3px;
+  }
+  .placeholder-text {
+    color: $light-font-color;
+  }
+}
+
+// Redactor overrides
+
+.redactor-box {
+
+  .redactor-toolbar {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    border-bottom: 0px
+  }
+
+  .redactor-toolbar li a {
+
+    border-right: 1px solid #e3e3e3;
+
+    &.redactor-toolbar-link-dropdown {
+      padding-right: 25px;
+      position: relative;
+
+      &:after {
+        position: absolute;
+        top: 14px;
+        right: 12px;
+        font-size: 11px;
+        font-family: "FontAwesome";
+        content: '\f0d7';
+      }
+    }
+
+    &.re-italic {
+      font-family: serif;
+    }
+  }
+
+  .redactor-editor {
+    height: 250px;
+    border: 1px solid #ccc;
+    padding: 15px;
+  }
+}
+
+// Styles specific to ie 9 and earlier
+
+.lt-ie10 {
+
+}
+
+// Mobile styling for responsive application
+
+@include tablet {
+
+  .practice-page {
+
+    .practice-container {
+
+      .practice-container_inner {
+        padding: 30px 15px;
+      }
+    }
+
+    .print-button {
+      display: none;
+    }
+  }
+
+}
+
+@include mobile {
+
+  // Removes sticky vertical navigation bar
+
+  #vertical-nav {
+    display: none;
+  }
+
+  // Format panels to be stacked vertically
+
+  #panels {
+    height: auto;
+
+    &.padded-left {
+      margin-left: 0px;
+    }
+  }
+
+  #sidepanel {
+    position: relative;
+    width: 100%;
+    overflow: auto;
+    padding-top: 30px;
+    padding-bottom: 20px;
+
+    // Turn off 'affix' on mobile
+
+    &.affix {
+      position: relative;
+      top: 0px;
+    }
+
+    a.filters-toggle {
+      display: inline;
+    }
+
+    a.filters-toggle.details {
+      color: $accent-color;
+      text-decoration: underline;
+    }
+
+    .filters, .practice-details {
+      display: none;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+
+  .practice-page {
+
+    .practice-page_info {
+      .practice_user-info {
+        padding-top: 15px;
+        padding-left: 20px;
+      }
+    }
+
+    .practice-container {
+      margin-bottom: 0px;
+      padding-left: 0px;
+      padding-right: 0px;
+      min-height: auto;
+      margin-bottom: 60px;
+
+      .practice-container_inner {
+        padding: 45px 20px 30px 20px;
+      }
+    }
+
+    .practice-info {
+      margin-top: 0px;
+
+      .practice-info_inner {
+        padding: 30px 20px 60px 20px;
+      }
+    }
+  }
+
+  // Used on upload page
+
+  .main-container {
+    padding-left: 0px;
+    height: auto;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  // Remove steps on mobile...
+
+  #sidepanel.upload-practice {
+
+    .step-list {
+      display: none;
+    }
+
+  }
+
+  // Fix tag sizes to fit half screen
+
+  .upload-container {
+
+    .tags-wrapper {
+
+      .click-tag {
+        width: 49%;
+        margin-right: 2%;
+
+        &:nth-child(even) {
+          margin-right: 0%;
+        }
+      }
+    }
+
+    .tags-wrapper--5 {
+      .click-tag {
+        width: 49%;
+        margin-right: 1.666%;
+
+        &:nth-child(even) {
+          margin-right: 0%;
+        }
+        &:nth-child(4n) {
+          margin-right: 0%;
+        }
+        &:nth-child(5n) {
+          margin-right: 1.666%;
+        }
+      }
+
+    }
+  }
+
+  #panels footer {
+    padding-left: 0px;
+  }
+
+}
+
+// Print styles!
+
+@media print {
+
+  .practice-page {
+
+    .practice-page_info {
+      padding-top: 0px;
+      padding-bottom: 0px;
+
+      h1 {
+        font-size: 28px;
+      }
+
+      p {
+        font-size: 15px;
+      }
+
+      h4 {
+      }
+
+      .practice_user-info {
+        padding-left: 15px;
+      }
+
+      a.user-info {
+        padding-left: 0px;
+
+        .user-info_image {
+          display: none;
+        }
+
+        .user-info_name {
+          margin: 0px 0px 5px 0px;
+        }
+
+        p {
+          font-size: 13px;
+        }
+      }
+
+    }
+
+    .practice-container {
+      margin-top: 30px;
+      margin-bottom: 30px;
+
+      .embed-responsive {
+        display: none;
+      }
+
+      .practice-container_inner {
+        padding: 30px 0px;
+
+        .practice-body {
+          padding: 0px 0px 30px 0px;
+        }
+      }
+    }
+
+    .vote-wrapper {
+      display: block;
+      margin: 0px auto 30px auto;
+    }
+
+    .practice-files {
+
+    }
+
+    // Practice info in side panel
+
+    .practice-info {
+      margin-top: 0px;
+      padding: 0px;
+      padding-left: 15px;
+
+      .practice-info_inner {
+        padding: 5px 0px 30px 0px;
+        background-color: white;
+
+        .practice-details {
+          margin-top: 10px;
+          margin-bottom: 30px;
+        }
+
+        .practice_related-practices {
+          display: none;
+        }
+      }
+
+      .options-bar {
+        border: 0px;
+      }
+    }
+
+    .print-button {
+      display: none;
+    }
+  }
+
+}
+
+.book-image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  opacity: 0.75;
+}

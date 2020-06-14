@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"></meta>
+    {% include '_styles.html' %}
+    <style type="text/css">
+      a.cta, button.cta {
+        background-color: #6f58b0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table class="email-outer">
+      <tr>
+        <td>
+          <table class="email-inner">
+            <tr>
+              <td>
+                <table class="email-header">
+                  <tr>
+                    <td>
+                      <a href="https://www.mindsetkit.org">
+                        <img src="{{ domain }}/static/images/email/mindsetkit-logo.png" height="16px">
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="email-body">
+                  <tr>
+                    <td>
+                      <p>
+                        On {{ response_date }} you answered the following question in the <a href="{{ domain }}/belonging">Belonging for Educators Course</a>:
+                      </p>
+                      <p>
+                        <b>Question:</b>
+                        <ol>
+                        {% for question in questions %}
+                          <li>
+                            {{ question }}
+                          </li>
+                        {% endfor %}
+                        </ol>
+                      </p>
+                      <p>
+                        <b>Your response:</b>
+                        <br>
+                        "{{ reflection }}"
+                        <br>
+                        <br>
+                      </p>
+                      <p>
+                        Tip: We suggest creating a <a href="https://www.google.com/drive/">Google Document</a> so that you can store your reflections in a safe and convenient place.
+                      </p>
+                      <p>
+                        Thank you for using the Belonging for Educators Course!
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table class="email-footer">
+            This message was intended for {{ full_name }}<br>
+            PERTS &copy; 2015  |   All Rights Reserved<br>
+            <a href="*|UNSUB:https://mindsetkit.org/unsubscribe|*">
+              Unsubscribe
+            </a>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

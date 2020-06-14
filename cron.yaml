@@ -1,0 +1,14 @@
+###############################################################################
+##                                                                           ##
+##                    !!  EDIT ONLY IN TEMPLATE  !!                          ##
+##                                                                           ##
+##  Only edit the following if this is the cron.yaml.template file. Specific ##
+##  cron jobs can be enabled or disabled via the branch_environment.json     ##
+##  file. Then generate cron.yaml by running `python branch_environment.py`  ##
+##  at the command line.                                                     ##
+##                                                                           ##
+###############################################################################
+cron:
+- description: send any emails that are due according to the queue
+  url: /cron/send_pending_email
+  schedule: every 1 minutes

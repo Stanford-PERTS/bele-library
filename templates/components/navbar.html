@@ -1,0 +1,79 @@
+<!-- IMPORTANT! Include target="_self" on all links to prevent navigation errors from the (Angular $location using) search page -->
+
+<div class="navbar navbar-default navbar-static-top" navbar="">
+  <div class="navbar-header">
+
+    <!-- Brand info -->
+    <div class="navbar-brand__icon-wrapper">
+      <a href="/" target="_self" class="navbar-brand__icon">
+        <img src="/" alt="Bele Brand Logo" />
+      </a>
+    </div>
+
+    <div class="flex-grow-1"></div>
+
+    <!-- Static links -->
+    <div class="navbar-static-links">
+
+      <!-- About selection -->
+      <span class="subapps">
+        <a href="/discover" class="navbar-subapp" target="_self">
+          <i class="fa fa-search fa-lg"></i> Discover
+        </a>
+        <a href="/about" class="navbar-subapp" target="_self">
+          About
+        </a>
+      </span>
+
+    </div>
+
+    <!-- Regristration or user information -->
+    {% if user %}
+      <a ng-click="toggleDropdown('showOptions')"
+         target="_self" class="user-info image-wrapper no-propagation">
+        <span user-image="" user="user" class="user-image no-propagation"></span>
+      </a>
+    {% else %}
+      <a ng-click="showLogin()" class="mobile-hidden login-button">LOG IN</a>
+      <a ng-click="showSignup()" class="btn btn-primary btn-lg align-self-center mobile-hidden">SIGN UP</a>
+      <a ng-click="toggleDropdown('showOptions')" class="toggle-button mobile-only no-propagation">
+        <i class="fa fa-bars fa-lg no-propagation"></i>
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- User option dropdown -->
+
+  <div ng-class="{active: showOptions}" class="navbar-dropdown">
+    <ul>
+    {% if user %}
+      <li ng-click="viewProfile()">Your profile</li>
+      {% if user.is_admin %}
+      <li ng-click="goToAdmin()">Admin Panel</li>
+      {% endif %}
+      <li ng-click="logout()">Logout</li>
+    {% else %}
+      <li ng-click="showLogin()">Login</li>
+      <li ng-click="showSignup()">Signup</li>
+    {% endif %}
+    </ul>
+  </div>
+
+  <!-- User options (mobile-only) -->
+
+    <div ng-class="{active: showOptions}" class="navbar-options mobile-only">
+      <ul>
+        <li><a href="/discover" target="_self">Discover</a></li>
+        {% if user %}
+        <li ng-click="viewProfile()">Your profile</li>
+        <li ng-click="logout()">Logout</li>
+        {% else %}
+        <li ng-click="showLogin()">Login</li>
+        <li ng-click="showSignup()">Signup</li>
+        {% endif %}
+        <li><a href="/about" target="_self">About</a></li>
+        <li data-toggle="modal" data-target="#feedbackModal">Give feedback</li>
+      </ul>
+    </div>
+
+</div>

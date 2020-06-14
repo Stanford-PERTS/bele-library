@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+<!-- Uses different title formats if this in in a special theme -->
+{% if teacher_theme %}
+{% set title = lesson['name'] + ", " + topic['name'] %}
+{% else %}
+{% set title = lesson['name'] + ", " + theme['name'] %}
+{% endif %}
+{% set desc = lesson['summary'] %}
+{% set controller = "LessonCtrl" %}
+
+{% block head %}
+  {{ super() }}
+  <script src="/static/javascripts/lesson.js"></script>
+
+  <style type="text/css">
+    .content-container a { color: {{ color }}; }
+    .content-container a:hover { color: {{ color }}; }
+    .lesson-header a.mindset-stamp:hover { color: {{ color }}; }
+    a.attachment .attachment_image { border-color: {{ color }}; }
+    a.attachment .attachment_image { color: {{ color }}; }
+    a.attachment:hover .attachment_image { background-color: {{ color }}; }
+    a.content_practice-wrapper .practice_icon {
+      border-color: {{ color }};
+    }
+    a.content_practice-wrapper .practice_icon:after {
+      color: {{ color }};
+    }
+    a.content_practice-wrapper:hover .practice_icon {
+      background-color: {{ color }};
+    }
+    #discussion-box a.comment-button { background-color: {{ color }}; }
+    .print-button a { color: {{ color }}; }
+    input[type=submit].rounded-button { background-color: {{ color }}; }
+  </style>
+
+{% endblock %}
+{% block content %}
+
+<div class="full-container lesson-page">
+
+  <div class="lesson-header" style="background-color: {{ color }};">
+
+    <!-- Lesson info -->
+    {% if not teacher_theme %}
+      <a href="/{{ theme.short_uid }}" class="mindset-stamp">{{ theme.name }}</a>
+      <a class="topic-link" href="/{{ theme.short_uid }}/{{ topic.short_uid }}">{{ topic['name'] }}</a>
+    {% else %}
+      <a class="topic-link" href="/topics/{{ topic.short_uid }}">{{ topic['name'] }}</a>
+    {% endif %}
+
+    <div class="lesson-links">
+      {% for topic_lesson in lessons %}
+        <a class="lesson-link {{'active' if topic_lesson.short_uid == lesson.short_uid}}" href="/{{'topics' if teacher_theme else theme.short_uid}}/{{topic.short_uid}}/{{topic_lesson.short_uid}}" data-toggle="tooltip" title="{{topic_lesson.name}}" data-placement="bottom"></a>
+      {% endfor %}
+    </div>
+
+    <!-- Navigation buttons -->
+    {% if teacher_theme and not next_lesson %}
+      <a data-toggle="modal" data-target="#finishModal" class="next-lesson">
+        <div class="inner-button">{{ translation.FINISH_TOPIC }} <i class="fa fa-caret-right"></i></div>
+      </a>
+    {% elif next_url %}
+      <a href="{{next_url}}" class="next-lesson hidden-mobile">
+        <div class="inner-button">{{ translation.NEXT_LESSON if next_lesson else translation.NEXT_TOPIC }}  <i class="fa fa-caret-right"></i></div>
+      </a>
+      <a href="{{next_url}}" class="next-lesson mobile-only">
+        <div class="inner-button">{{ translation.NEXT }} <i class="fa fa-caret-right"></i></div>
+      </a>
+      <a href="{{next_url}}" class="next-lesson mobile-only mobile-only--small">
+        <div class="inner-button">{{ translation.NEXT }}</div>
+      </a>
+    {% endif %}
+
+  </div>
+
+  {% if lesson['type'] == 'video' %}
+
+  <!-- Main content for video lessons -->
+
+  {% block video %}
+
+  <div class="content-container content-container--video">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+          <h1>{{ lesson['name'] }}</h1>
+          <div class="embed-responsive embed-responsive-16by9">
+            {% block video_embed %}
+              {% if lesson['wistia_id'] %}
+                <!-- Displays Wistia video embed by priority -->
+                <iframe src="//fast.wistia.net/embed/iframe/{{ lesson['wistia_id'] }}?videoFoam=true" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen width="100%" height="100%"></iframe>
+
+              {% else %}
+                <!-- Displays Youtube video embed -->
+                <iframe class="embed-responsive-item" src="//www.youtube.com/embed/{{ lesson['youtube_id'] }}?wmode=transparent&amp;rel=0&amp;showinfo=0" allowfullscreen="true"></iframe>
+              {% endif %}
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {% if locale == 'es' %}
+    <!-- Info bubble to warn video only in english -->
+    <div class="translation-warning">
+      <div class="warning_inner"
+           style="border-color: {{ color }};color: {{ color }}">
+        Este video aún no está disponible en español, por favor ver más abajo la transcripción
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <div class="content-container content-container--summary">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+
+          <div class="main-actions">
+            <!-- Like button -->
+            <a class="like-button rounded-button" ng-hide="user" ng-cloak data-toggle="modal" data-target="#signupModal">
+              <i class="fa fa-heart"></i>&nbsp;&nbsp;{{ translation.LIKE }}
+            </a>
+            <a class="like-button rounded-button" ng-show="user && voteFound" ng-cloak ng-click="toggleLike()" ng-class="{liked: liked}">
+              <i class="fa fa-heart"></i>&nbsp;
+              <span ng-show="liked">{{ translation.LIKED }}</span>
+              <span ng-hide="liked">{{ translation.LIKE }}</span>
+            </a>
+
+            {% if next_lesson %}
+            <a id="nextLesson" style="background-color: {{ topic['color'] }};" href="{{next_lesson_url}}" class="rounded-button colored-button">{{ translation.NEXT_LESSON }}</a>
+            {% else %}
+              <!-- If teacher topic, show next options -->
+              {% if teacher_theme %}
+                <a id="nextLesson" style="background-color: {{ topic['color'] }};" data-toggle="modal" data-target="#finishModal" class="rounded-button colored-button">{{ translation.FINISH_TOPIC }}</a>
+              <!-- If special topic, take to the next topic -->
+              {% elif next_url %}
+                <a id="nextLesson" style="background-color: {{ topic['color'] }};" href="{{ next_url }}" class="rounded-button colored-button">{{ translation.FINISH_TOPIC }}</a>
+              <!-- If no next topic, take to theme page -->
+              {% else %}
+                <a id="nextLesson" style="background-color: {{ topic['color'] }};" href="/{{ theme.short_uid }}" class="rounded-button colored-button">{{ translation.FINISH_TOPIC }}</a>
+              {% endif %}
+            {% endif %}
+          </div>
+
+          {% block video_lesson %}
+          <h2>Subheader for info</h2>
+          <ul>
+            <li>
+              Veggies es bonus vobis...
+            </li>
+          </ul>
+          {% endblock %}
+
+          <div class="video-transcription">
+            <div class="transcription_header">
+              <a ng-click="toggleTranscription()" ng-hide="showTranscription">
+                {{ translation.VIDEO_TRANSCRIPTION }} <i class="fa fa-caret-right"></i>
+              </a>
+              <a ng-click="toggleTranscription()" ng-show="showTranscription">
+                {{ translation.VIDEO_TRANSCRIPTION }} <i class="fa fa-caret-down"></i>
+              </a>
+            </div>
+
+            <!-- Transcripts initially hidden due to length -->
+            <div class="transcription_body" ng-show="showTranscription">
+
+              <!-- Transcript populated for specific lesson -->
+              {% block transcription %}
+              {% endblock %}
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+
+
+  <!-- Main content for text lessons -->
+  {% else %}
+
+  <div class="content-container content-container--text">
+
+    <!-- Primary lesson content -->
+
+    <div class="container text_content">
+      <div class="row">
+
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+
+          <!-- Main section -->
+
+          <h1>{{ lesson.name }}</h1>
+
+          {% block text_lesson %}
+
+          <h2>Growth Mindsets are awesome.</h2>
+          <p>
+            Lorem ipsum dolor sit amet...
+          </p>
+
+          {% endblock %}
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+
+          <div class="main-actions">
+            <!-- Like button -->
+            <a class="like-button rounded-button" ng-hide="user" ng-cloak data-toggle="modal" data-target="#signupModal">
+              <i class="fa fa-heart"></i>&nbsp;&nbsp;{{ translation.LIKE }}
+            </a>
+            <a class="like-button rounded-button" ng-show="user && voteFound" ng-cloak ng-click="toggleLike()" ng-class="{liked: liked}">
+              <i class="fa fa-heart"></i>&nbsp;
+              <span ng-show="liked">{{ translation.LIKED }}</span>
+              <span ng-hide="liked">{{ translation.LIKE }}</span>
+            </a>
+
+            {% if next_lesson %}
+            <a id="nextLesson"
+               style="background-color: {{ topic['color'] }};"
+               href="{{next_lesson_url}}"
+               class="rounded-button colored-button">
+              {{ translation.NEXT_LESSON }}
+            </a>
+            {% else %}
+              <!-- If teacher topic, show next options -->
+              {% if teacher_theme %}
+                <a id="nextLesson" style="background-color: {{ topic['color'] }};" data-toggle="modal" data-target="#finishModal" class="rounded-button colored-button">{{ translation.FINISH_TOPIC }}</a>
+              <!-- If special topic, take to the next topic -->
+              {% elif next_url %}
+                <a id="nextLesson" style="background-color: {{ topic['color'] }};" href="{{ next_url }}" class="rounded-button colored-button">{{ translation.FINISH_TOPIC }}</a>
+              <!-- If no next topic, take to theme page -->
+              {% else %}
+                <a id="nextLesson" style="background-color: {{ topic['color'] }};" href="/{{ theme.short_uid }}" class="rounded-button colored-button">{{ translation.FINISH_TOPIC }}</a>
+              {% endif %}
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% endif %}
+
+  <div class="print-button">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+          <a onclick="window.print()">
+            <i class="fa fa-print"></i>&nbsp;{{ translation.PRINT_THIS_PAGE }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section for additional functions or features... -->
+
+  {% if related_practices %}
+  <div class="lesson-page_practices">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+
+          <h4>Related Resources</h4>
+          <div class="row">
+            {% for practice in related_practices %}
+            <div class="col-sm-6">
+              <a class="content_practice-wrapper" href="/practices/{{ practice.short_uid }}">
+                <div class="practice_title">
+                  {{ practice.name }}
+                </div>
+                <div class="practice_info">
+                  {{ practice.summary }}
+                </div>
+                <div class="practice_icon {{'icon--video' if practice.youtube_id else ''}} {{'icon--files' if practice.has_files else ''}}"></div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Section for additional functions or features... -->
+
+  <div class="lesson-page_practices">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+
+          <!-- Discussion Angular Directive -->
+          <discussion parent="'{{ lesson.uid }}'" type="lesson"></discussion>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="extras-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 extras-inner">
+          {% block extra_section %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'components/footer.html' %}
+
+</div>
+
+<!-- Sticky share buttons -->
+
+<div class="sticky-share" ng-class="{active: shareOpened}">
+  <!-- Social links -->
+  <div class="sticky-share_links">
+    <a share-button="{{lesson.uid}}" share-type="facebook">
+      <i class="fa fa-facebook fa-lg"></i>
+    </a>
+    <a share-button="{{lesson.uid}}" share-type="twitter" share-text="{{share_text}}">
+      <i class="fa fa-twitter fa-lg"></i>
+    </a>
+    <a share-button="{{lesson.uid}}" share-type="google">
+      <i class="fa fa-google-plus fa-lg"></i>
+    </a>
+    <div class="share-toggler" ng-click="shareOpened = !shareOpened">
+      <i ng-hide="shareOpened" class="fa fa-share fa-lg"></i>
+      <i ng-show="shareOpened" class="fa fa-close fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block modals %}
+
+{{ super() }}
+
+<!-- Modal for gms teacher lessons only -->
+
+<div class="modal fade fresh-modal" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      <h2>So, what's next?</h2>
+      {% if next_topic %}
+      <h4>
+        Next topic
+      </h4>
+      <a href="{{ next_url }}" style="color: {{ next_topic.color }};">
+        <h3>
+          {{ next_topic.name }}
+        </h3>
+      </a>
+      {% endif %}
+      {% if related_topics %}
+        <h4>
+          Related topics
+        </h4>
+        {% for topic in related_topics %}
+          <a href="/topics/{{ topic.short_uid }}" style="color: #666;">
+            <h3>
+              {{ topic.name }}
+            </h3>
+          </a>
+        {% endfor %}
+      {% endif %}
+      <h4>
+        Put it into practice
+      </h4>
+      <a class="modal_secondary-button" href="/search">View Related Resources</a>
+      <a href="/" class="plain-link">
+        <i class="fa fa-long-arrow-left"></i> Return to home
+      </a>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}

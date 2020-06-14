@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+{% autoescape true %}
+<!--[if lt IE 7]>  <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en" ng-app="mskApp" id="ng-app" ng-init="setUser('{{user.uid if user else ''}}')"> <![endif]-->
+<!--[if IE 7]>     <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en" ng-app="mskApp" id="ng-app" ng-init="setUser('{{user.uid if user else ''}}')"> <![endif]-->
+<!--[if IE 8]>     <html class="no-js lt-ie10 lt-ie9" lang="en" ng-app="mskApp" id="ng-app" ng-init="setUser('{{user.uid if user else ''}}')"> <![endif]-->
+<!--[if IE 9]>     <html class="no-js lt-ie10" lang="en" ng-app="mskApp" id="ng-app" ng-init="setUser('{{user.uid if user else ''}}')"> <![endif]-->
+<!--[if !IE]><!--> <html class="no-js" lang="en" ng-app="mskApp" id="ng-app" ng-init="setUser('{{user.uid if user else ''}}')"> <!--<![endif]-->
+<html lang="en" class="no-js" ng-app="mskApp" id="ng-app" ng-init="setUser('{{user.uid if user else ''}}')">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary meta tags for SEO -->
+
+    <title>BELE | {{ title }}</title>
+    <base href="/">
+    <meta name="description" content="{{ desc }}" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <!-- Open Graph data -->
+
+    <meta property="og:title" content="BELE Library - {{ title }}" />
+    <meta property="og:description" content="{{ desc }}" />
+    <meta property="og:site_name" content="BELE Library" />
+    <meta property="og:image" content="https://{{ hosting_domain }}/static/images/{{share_image if share_image else ''}}" />
+
+    <meta property="fb:app_id" content="{{ facebook_app_id }}" />
+
+    <!-- Twitter Card data -->
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:description" content="{{ desc }}" />
+    <meta name="twitter:site" content="@pertslab" />
+    <meta name="twitter:title" content="BELE Library - {{ title }}" />
+    <meta name="twitter:image" content="https://{{ hosting_domain }}/static/images/{{share_image if share_image else ''}}" />
+
+    <!-- Schema.org markup for Google+ -->
+
+    <meta itemprop="name" content="BELE Library - {{ title }}" />
+    <meta itemprop="description" content="{{ desc }}" />
+    <meta itemprop="image" content="https://{{ hosting_domain }}/static/images/{{share_image if share_image else ''}}" />
+
+    {% block head %}
+
+    <!-- FYI, Mixpanel is included as a bower component. -->
+
+    <!-- Determine head files to use based on env -->
+    {% if localhost %}
+    {% include 'head.html' %}
+    {% else %}
+    {% include 'dist/head.html' %}
+    {% endif %}
+
+    {% endblock %}
+
+    <!-- Server-to-angular data trasfer. -->
+    <script type="text/javascript">
+
+      angular.module('mskApp').value('hostingDomain', '{{ hosting_domain }}');
+
+    </script>
+
+  </head>
+
+  {% if controller %}
+  <body ng-controller="{{ controller }}" ng-init="{{ init }}">
+  {% else %}
+  <body>
+  {% endif %}
+
+    <!-- Primary content -->
+
+    <main>
+
+        {% block content %}
+        <!-- Main content -->
+        {% endblock %}
+
+        {% block footer %}
+        {% include 'components/footer.html' %}
+        {% endblock %}
+
+    </main>
+
+    {% block navbar %}
+    {% include 'components/navbar.html' %}
+    {% endblock %}
+
+    <!-- Modal for feedback -->
+
+    {% block modals %}
+
+    {% include 'components/modal-feedback.html' %}
+    {% include 'components/modal-signup.html' %}
+    {% include 'components/modal-login.html' %}
+    {% include 'components/modal-authors.html' %}
+    <edit-book-modal></edit-book-modal>
+    <authorship-modal></authorship-modal>
+    <confirm-delete-modal></confirm-delete-modal>
+
+    {% endblock %}
+
+    {% block videomodal %}
+    {% endblock %}
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-35079862-5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-35079862-5');
+    </script>
+
+    <!-- Pingdom RUM ("Real User Monitoring") -->
+    <!-- @todo -->
+
+  </body>
+
+</html>
+{% endautoescape %}

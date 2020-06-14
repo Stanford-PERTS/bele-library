@@ -1,0 +1,35 @@
+@import '_colors';
+@import '_fonts';
+@import '_animations';
+@import '_responsive';
+@import 'compass/css3';
+
+// Used for extending overall 'content' styling
+@import 'content';
+
+// =====================================================
+// Topic page
+
+.topic-page_masthead {
+  @extend .content-page_masthead;
+  background-position: bottom left;
+}
+
+.topic-page_stats {
+  @extend .content-page_stats;
+}
+
+.topic-page_body {
+  @extend .content-page_body;
+}
+
+.topic-page_practices {
+  padding-top: 45px;
+  padding-bottom: 150px;
+  background-color: white;
+  text-align: center;
+
+  h2 {
+    font-size: 24px;
+  }
+}

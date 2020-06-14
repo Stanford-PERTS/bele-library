@@ -1,0 +1,50 @@
+.book-list {
+  &-item {
+    min-height: 135px;
+
+    &:not(:last-child) {
+      margin-bottom: 32px;
+    }
+
+    .book-image {
+      border: 2px solid white;
+      box-shadow: 4px 4px #D4D4D4, 8px 8px #E6E6E6, 12px 12px #F7F7F7;
+    }
+
+    .book-header {
+      display: flex;
+    }
+
+    .book-title {
+      font-size: 28px;
+      font-family: $oswald-font;
+      line-height: 31px;
+      color: $dark-font-color;
+      font-weight: bold;
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+
+    .book-meta {
+      align-self: center;
+      flex-shrink: 0;
+      color: #79808A;
+      font-family: $sans-serif-font;
+      font-size: 13px;
+      line-height: 20px;
+      margin-left: 15px;
+
+      i {
+        font-size: 16px;
+        line-height: 16px;
+      }
+    }
+
+    .book-description {
+      color: #666;
+      font-size: 13px;
+      line-height: 20px;
+      font-family: $sans-serif-font;
+    }
+  }
+}

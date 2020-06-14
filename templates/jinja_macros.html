@@ -1,0 +1,56 @@
+{% macro render_page_field(content_property) %}
+  {% set scope_prop = content_property.scope_prop %}
+  {% if not content_property['is_empty'] %}
+  <div class="content-section">
+    <div class="controls" ng-click="setExpanded('{{scope_prop}}')">
+      <h2>{{content_property.heading_title}}</h2>
+      <i
+        ng-class="{ hidden: !expanded['{{scope_prop}}'] }"
+        class="fa fa-angle-up"
+      ></i>
+      <i
+        ng-class="{ hidden: expanded['{{scope_prop}}'] }"
+        class="fa fa-angle-down"
+      ></i>
+    </div>
+    <div class="body-text" ng-class="{ hidden: !expanded['{{scope_prop}}'] }">{{ content_property['display_value'] | safe }}</div>
+  </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro render_author(author, forced_header_text, may_remove, may_view_email) %}
+<li class="author">
+  <a class="avatar" ng-href="{{'/users/' + author.canonical_username if author.username else ''}}" target="_self">
+    {% if author.image_url %}
+      <img src="{{ author.image_url }}" />
+    {% else %}
+      <img class="default-icon" src="/static/images/default-user.png" />
+    {% endif %}
+  </a>
+  <div class="user-data">
+    {% if forced_header_text %}
+      <h6>{{ forced_header_text }}</h6>
+    {% else %}
+      <a href="{{'/users/' + author.canonical_username if author.username else ''}}">{{ '@{}'.format(author.username) }}</a>
+    {% endif %}
+    <p>
+      <span>
+        {{ author.first_name or '' }}
+        {{ author.last_name or '' }}
+      </span>
+    </p>
+    {% if may_view_email %}
+      <p>
+        <span class="author-link">
+          <a ng-href="mailto:{{author.email}}" target="_blank">{{author.email}}</a>
+        </span>
+      </p>
+    {% endif %}
+  </div>
+  {% if may_remove %}
+  <div class="remove-author" ng-click="handleClickRemoveAuthor('{{ author.uid }}', '{{ author.first_name or '' }} {{ author.last_name or '' }}')">
+    <i class="fa fa-close"></i>
+  </div>
+  {% endif %}
+</li>
+{% endmacro %}

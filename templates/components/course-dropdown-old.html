@@ -1,0 +1,37 @@
+<div ng-class="{active: showCourses, showing: showingCourse}" class="navbar-dropdown course-dropdown">
+  {% for course in courses %}
+  <div class="dropdown_topics-section"
+       ng-class="{active: showingCourse == '{{course.uid}}'}"
+       ng-mouseover="showingCourse = '{{course.uid}}'"
+       ng-mouseleave="showingCourse = null">
+    <div class="dropdown_title">
+      TOPICS
+    </div>
+    <ul>
+      {% for topic in course.topics_list %}
+      <li>
+          <a target="_self" href="/{{ course.short_uid }}/{{ topic.short_uid }}">{{ topic.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+  <div class="dropdown_course-section">
+    <div class="dropdown_title">
+      COURSES
+    </div>
+    <ul>
+      {% for course in courses %}
+      <li ng-mouseover="showingCourse = '{{course.uid}}'"
+          ng-mouseleave="showingCourse = null">
+          <a target="_self" href="/{{ course.short_uid }}">
+            {{ course.name }}
+          </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <a class="dropdown_search" href="/search">
+      <i class="fa fa-search">&nbsp;&nbsp;</i>Search resources
+    </a>
+  </div>
+</div>

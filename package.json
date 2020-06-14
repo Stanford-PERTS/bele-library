@@ -1,0 +1,39 @@
+{
+  "name": "bele-library",
+  "version": "0.0.0",
+  "engines": {
+    "node": "8.11.1"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PERTS/bele-library.git"
+  },
+  "scripts": {
+    "postinstall": "bower install",
+    "start": "grunt serve",
+    "server": "dev_appserver.py . --port=3001 --admin_port=3002 --storage_path=.gae_sdk --enable_console=yes --support_datastore_emulator=true",
+    "build": "grunt build",
+    "deploy-client": "gcloud --project='bele-client-staging' app deploy app.yaml index.yaml"
+  },
+  "devDependencies": {
+    "babel-plugin-angularjs-annotate": "^0.10.0",
+    "bower": "1.8.2",
+    "grunt": "1.0.2",
+    "grunt-cli": "1.2.0",
+    "grunt-concurrent": "2.3.1",
+    "grunt-contrib-clean": "1.1.0",
+    "grunt-contrib-compass": "1.0.3",
+    "grunt-contrib-concat": "1.0.1",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-cssmin": "2.2.1",
+    "grunt-contrib-jshint": "1.1.0",
+    "grunt-contrib-uglify-es": "^3.3.0",
+    "grunt-contrib-watch": "1.0.0",
+    "grunt-ng-annotate": "3.0.0",
+    "grunt-rev": "0.1.0",
+    "grunt-usemin": "3.0.0",
+    "grunt-wiredep": "3.0.1",
+    "jshint-stylish": "2.2.1"
+  }
+}

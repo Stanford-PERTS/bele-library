@@ -1,0 +1,79 @@
+@import '_colors';
+@import '_fonts';
+@import '_bootstrap';
+@import '_animations';
+@import 'compass';
+
+.authorship {
+  .users-list {
+    padding-left: 0;
+    display: flex;
+    li {
+      padding: 4px 6px;
+      border: 1px solid black;
+      border-radius: 8px;
+      margin-right: 4px;
+    }
+    i {
+      -webkit-text-stroke: 2px white; /* lighten the icon */
+    }
+  }
+  li {
+    list-style: none;
+  }
+  .search-input {
+    position: relative;
+    margin-top: 12px;
+    margin-bottom: 24px;
+    font-size: 26px; /* Same size as original search */
+    input {
+      border: 0;
+      outline: 0;
+    }
+  }
+  .search-input_dropdown {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    z-index: 50;
+    font-size: 14px;
+
+    &.active {
+      display: block;
+      @include animation(fade-left 0.8s ease-out);
+    }
+
+    ul {
+      margin: 0px;
+      padding: 0px;
+      background-color: white;
+      @include box-shadow(0px 1px 2px rgba(0,0,0,0.3));
+      @include border-radius(5px);
+      overflow: hidden;
+    }
+
+    li {
+      padding: 8px 15px;
+      list-style: none;
+      width: 300px;
+      position: relative;
+
+      &:hover {
+        background-color: $search-accent-color;
+        color: white;
+      }
+      &:after {
+        font-family: 'FontAwesome';
+        display: block;
+        position: absolute;
+        top: 8px;
+        right: 15px;
+      }
+
+      &:first-child:after {
+        content: "\f002";
+      }
+    }
+  }
+}

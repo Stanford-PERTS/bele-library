@@ -1,0 +1,20 @@
+<div class="search-input simple-search">
+  <form ng-submit="updateSearch()">
+    <div class="page-search-input">
+      <input ng-model="queryString"
+             placeholder="Search pages"
+             ng-change="updateSearch(true)"
+             type="text" />
+
+      <a class="search-input_icon" ng-click="updateSearch()">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+    <div class="page-library-list">
+      <label ng-repeat="entity in suggestions">
+        <input type="radio" name="entity.uid" ng-model="model.selectedPage" ng-value="entity"/>
+        <img src="{{entity.icon}}">
+        <span>{{ entity.title }}</span>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,75 @@
+<!-- Modal for beta feedback -->
+
+<div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div ng-controller="AuthCtrl" class="modal-content">
+
+      <form id="registerForm"  ng-submit="register()">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Sign up</h4>
+        </div>
+
+        <div class="modal-body authorizing" ng-show="oauthing" ng-cloak>
+          Authorizing&nbsp;&nbsp;<i class="fa fa-spinner fa-spin fa-lg"></i>
+        </div>
+
+        <div class="modal-body" ng-hide="oauthing" ng-cloak>
+
+          <p>
+            {[ signupText || 'Create an account to view or upload content and join discussions']}
+          </p>
+
+          <form name="signupForm">
+
+          <div class="email-auth">
+
+            <div class="input-wrapper">
+              <label>First name</label>
+              <input ng-model="firstName" name="firstName" placeholder="First name" required="true"></input>
+            </div>
+            <div class="input-wrapper">
+              <label>Last name</label>
+              <input ng-model="lastName" name="lastName" placeholder="Last name" required="true"></input>
+            </div>
+            <div class="input-wrapper">
+              <label>Email</label>
+              <input ng-model="email" name="email" type="email" placeholder="Email" required="true"></input>
+            </div>
+            <div class="input-wrapper">
+              <label>Password</label>
+              <input ng-model="password" name="password" type="password" placeholder="Password" required="true"></input>
+            </div>
+
+            <div class="action-buttons">
+              <button ng-hide="loading" type="submit" class="main-action">Sign up</button>
+              <button ng-hide="loading" type="button" class="cancel-action" data-dismiss="modal">Close</button>
+              <!-- Loading spinner -->
+              <div ng-show="loading" class="pull-right">
+                <i ng-cloak class="fa fa-spinner fa-spin fa-2x"></i>
+              </div>
+            </div>
+
+          </div>
+
+          <div>
+            By signing in or creating an account, you agree to our
+            <a href="https://perts.net/terms-of-use">Terms of Use</a> and
+            <a href="https://perts.net/privacy">Privacy Policy</a>.
+          </div>
+
+          </form>
+
+          <p class="error-message">{[ errorMessage ]}</p>
+
+          <div class="other-options">
+            Already have an account? <a href="" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Login.</a>
+          </div>
+
+        </div>
+
+      </form>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

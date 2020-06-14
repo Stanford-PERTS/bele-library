@@ -1,0 +1,87 @@
+<!-- Modal for beta feedback -->
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div ng-controller="AuthCtrl" type="login" class="modal-content">
+
+      <form id="registerForm" ng-submit="submitLogin()">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Log in</h4>
+        </div>
+
+        <div class="modal-body authorizing" ng-show="oauthing" ng-cloak>
+          Authorizing&nbsp;&nbsp;<i class="fa fa-spinner fa-spin fa-lg"></i>
+        </div>
+
+        <div class="modal-body" ng-hide="oauthing" ng-cloak>
+
+          <p>
+            {[ loginText || 'Log in to your account to view or upload content and join discussions.']}
+          </p>
+
+          <!-- Google and Facebook login buttons -->
+
+          <span ng-show="forgotPassword" ng-cloak>
+            Reset your password
+          </span>
+
+          <!-- Email login form -->
+
+          <div class="input-wrapper">
+            <label>Email</label>
+            <input ng-model="email" name="email" type="email"
+                   placeholder="Email" required="true"></input>
+          </div>
+          <div class="input-wrapper">
+            <label>Password</label>
+            <input ng-model="password" name="password" type="password"
+                   ng-hide="forgotPassword"
+                   placeholder="Password" ng-required="!forgotPassword"></input>
+            </div>
+
+          <p class="error-message">{[ errorMessage ]}</p>
+          <p class="success-message">{[ successMessage ]}</p>
+
+          <div class="action-buttons">
+            <button type="button" class="forgot-action"
+                    ng-click="forgotPassword = true; errorMessage = ''"
+                    ng-hide="forgotPassword || loading" style="padding-left: 5px;">
+              Forgot password?
+            </button>
+            <button type="submit" class="main-action" ng-hide="forgotPassword || loading">
+              Log in
+            </button>
+            <button type="submit" class="main-action" ng-show="forgotPassword && !loading">
+              Reset password
+            </button>
+            <button type="button" class="cancel-action" data-dismiss="modal"
+                    ng-hide="forgotPassword || loading">
+              Close
+            </button>
+            <button type="button" class="cancel-action"
+                    ng-show="forgotPassword && !loading" ng-click="forgotPassword = false">
+              Cancel
+            </button>
+            <!-- Loading spinner -->
+            <div ng-show="loading" class="pull-right">
+              <i ng-cloak class="fa fa-spinner fa-spin fa-2x"></i>
+            </div>
+          </div>
+          <div ng-hide="forgotPassword">
+            By signing in or creating an account, you agree to our
+            <a href="https://perts.net/terms-of-use">Terms of Use</a> and
+            <a href="https://perts.net/privacy">Privacy Policy</a>.
+          </div>
+
+          <div class="other-options">
+            No account? <a href="" data-dismiss="modal" data-toggle="modal" data-target="#signupModal">Click here to sign up</a>
+          </div>
+
+        </div>
+
+      </form>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

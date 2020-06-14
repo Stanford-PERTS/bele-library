@@ -1,0 +1,75 @@
+@import 'colors';
+@import 'fonts';
+@import 'animations';
+@import 'responsive';
+@import 'compass/css3';
+
+// Used for extending overall 'content' styling
+@import 'content';
+
+.theme-page_masthead {
+  @extend .content-page_masthead;
+  height: 420px;
+  padding-top: 120px;
+
+  h1.masthead_title {
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .masthead_spacer {
+    display: inline-block;
+    width: 250px;
+    height: 8px;
+    margin-bottom: 30px;
+  }
+
+  @include mobile {
+    padding-top: 60px;
+    height: auto;
+  }
+
+  .book-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    opacity: 0.75;
+  }
+}
+
+.theme-page_stats {
+  @extend .content-page_stats;
+  color: white;
+  .stat {
+    border-bottom-color: rgba(255,255,255,0.3);
+  }
+  .stats_value {
+    color: white;
+  }
+}
+
+.theme-page_body {
+  @extend .content-page_body;
+  padding-top: 0px;
+
+  h2 {
+    font-size: 18px;
+    display: block;
+    margin: 60px auto 10px auto;
+  }
+
+  p.topic-summary {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+  }
+}
+
+/* Funding section */
+
+.content-section.partner-section {
+  padding-top: 60px;
+  padding-bottom: 15px;
+  color: $light-font-color;
+  text-align: center;
+}

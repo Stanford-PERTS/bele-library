@@ -1,0 +1,41 @@
+<!-- Modal for beta authorship -->
+
+<div class="modal fade authorship modal-no-padding" id="authorshipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-dismiss="modal" data-backdrop="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form ng-submit="inviteUsers()" name="authorship">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Invite authors</h4>
+        </div>
+        <div class="modal-body">
+          <div class="search-input simple-search">
+            <form ng-submit="updateSearch()">
+              <div class="page-search-input">
+                <input ng-model="queryString"
+                       placeholder="Search users"
+                       ng-change="updateSearch(true)"
+                       type="text" />
+
+                <a class="search-input_icon" ng-click="updateSearch()">
+                  <i class="fa fa-search"></i>
+                </a>
+              </div>
+              <div class="users-search-list" ng-show="suggestions.length > 0">
+                <label ng-repeat="entity in suggestions">
+                  <input type="radio" name="entity.uid" ng-model="model.selectedUser" ng-value="entity"/>
+                  <img src="{[ entity.image_url || '/static/images/default-user.png' ]}">
+                  <span>{[ entity.first_name ]} {[entity.last_name]} ({[ entity.email ]})</span>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-lg btn-secondary-override" ng-click="hideAuthorshipModal()">Close</button>
+          <button type="submit" ng-hide="sendingInvites" class="btn btn-primary btn-lg" ng-click="inviteUsers()">Submit</button>
+          <i class="fa fa-spin fa-spinner" ng-show="sendingInvites"></i>
+        </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,214 @@
+/* Styles for Practice Library home and search page */
+
+@import '_colors';
+@import '_fonts';
+@import '_animations';
+@import '_responsive';
+@import 'compass';
+
+.mindsetmeter-page {
+
+  h2 {
+    font-size: 28px;
+  }
+
+  p, ul li {
+    font-size: 17px;
+  }
+
+  .page-content {
+    padding-bottom: 120px;
+  }
+
+  .assessments {
+    margin: 30px 0px;
+
+    .assessment {
+      padding: 10px;
+      background-color: #eee;
+      border: 1px solid #aaa;
+      margin-bottom: 5px;
+      border-radius: 5px;
+
+      .name {
+        font-size: 18px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 100%;
+      }
+
+      a.btn {
+        margin: 0 5px 0 0;
+      }
+
+      a.btn:first-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .survey-table {
+
+    padding: 0 10px;
+
+    .survey-table_header {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 0px;
+      border-bottom: 2px solid #ccc;
+    }
+
+    div[survey-row] {
+      padding: 10px 0px;
+      border-bottom: 1px solid #ccc;
+
+      .title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .survey-links {
+        font-size: 14px;
+        border: 1px solid gray;
+        padding: 0 5px;
+        margin-top: 20px;
+
+        legend {
+          width: initial;
+          margin-bottom: 0;
+          border: none;
+          font-size: 14px
+        }
+
+        a {
+          text-decoration: underline;
+          display: block;
+          margin: 18px 0;
+        }
+
+        a.btn {
+          text-decoration: none;
+          margin: 15px 0;
+        }
+      }
+      .survey-notes {
+        position: relative;
+      }
+      .updating-spinner, .updated-confirmation {
+        position: absolute;
+        left: -15px;
+        top: 0px;
+        height: 15px;
+        width: 15px;
+      }
+    }
+
+    p {
+      padding: 5px 30px;
+      font-style: italic;
+    }
+
+    p:first-child {
+      margin-top: 30px;
+    }
+  }
+}
+
+.create-survey-modal {
+
+  .suggestion-input {
+    position: relative;
+    margin-bottom: 30px;
+
+    input {
+      height: 35px;
+      padding: 0px 10px;
+      line-height: 35px;
+    }
+  }
+
+  .suggestions {
+    position: absolute;
+    top: 35px;
+    width: 250px;
+    z-index: 10000;
+    @include box-shadow(0px 3px 5px rgba(0,0,0,0.3));
+
+    .suggestion {
+      width: 100%;
+      background-color: white;
+      padding: 8px 12px;
+
+      &:hover {
+        background-color: $color-kits;
+        color: white;
+      }
+    }
+  }
+
+  .fake-link {
+    color: #777;
+    font-style: italic;
+  }
+}
+
+.mindsetmeter-participant-page {
+
+  .form-content {
+    text-align: center;
+    min-height: 250px;
+  }
+
+  p, ul li {
+    font-size: 17px;
+  }
+
+  label {
+    font-size: 21px;
+    font-family: $sans-serif-font;
+  }
+
+  input[type="text"], input[type="number"] {
+    height: 50px;
+    padding: 0 15px;
+    margin: 12px 20px;
+    font-size: 21px;
+    font-weight: 300;
+    color: $font-color;
+    border: 1px solid #ccc;
+  }
+
+  .page-content {
+    padding-bottom: 120px;
+  }
+
+  .nav-footer {
+    margin-top: 30px;
+    text-align: center;
+
+    p {
+      text-align: center;
+      width: 75%;
+      margin: 30px auto;
+      color: #777;
+    }
+
+    button {
+      width: 150px;
+      border-color: $plum-color;
+      color: $plum-color;
+
+      &:hover, &:focus {
+        color: white;
+      }
+
+      &[disabled] {
+        background-color: #ddd;
+      }
+    }
+  }
+
+
+}

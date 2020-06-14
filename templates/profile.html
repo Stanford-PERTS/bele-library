@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "Profile: " + profile_user.first_name + ' ' + (profile_user.last_name or '') %}
+{% set desc = "Mindset resources and more from " + profile_user.first_name + ". " + (profile_user.short_bio or '') %}
+
+{% set controller = "ProfileCtrl" %}
+{% set init = "init(" + profile_user_json + ")"%}
+
+{% block content %}
+
+
+<div class="full-container profile-page clean-style">
+
+    <div class="masthead page-header--profile">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-3 col-md-2">
+            {% if profile_user.image_url %}
+            <div class="profile_user-image text-center" style="background-image: url('{{ profile_user.image_url }}');">
+            {% else %}
+            <div class="profile_user-image text-center" style="background-image: url('/static/images/default-user.png');">
+            {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9 col-md-10">
+            <div class="profile_user-info">
+              <h1>
+                {{profile_user.first_name}} {{profile_user.last_name if profile_user.last_name}}
+                {% if profile_user.username %}
+                <span class="username">
+                  @{{profile_user.username}}
+                </span>
+                {% endif %}
+              </h1>
+              <p>
+                {{profile_user.short_bio if profile_user.short_bio else 'No summary'}}
+              </p>
+              {% if your_profile %}
+              <a data-toggle="modal" data-target="#editModal">
+                <i class="fa fa-edit"></i>
+                <i>Edit Profile</i>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content--profile">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-md-9">
+
+            <div class="result-filters">
+              <a class="result-filter"
+                 ng-class="{active: resultType === 'books'}"
+                 ng-click="setResultType('books')">
+                {{ 'My' if your_profile else profile_user.first_name + '\'s' }} Books
+              </a>
+              <a class="result-filter"
+                 ng-class="{active: resultType === 'pages'}"
+                 ng-click="setResultType('pages')">
+                {{ 'My' if your_profile else profile_user.first_name + '\'s' }} Pages
+              </a>
+              {% if your_profile %}
+              <a class="result-filter"
+                 ng-class="{active: resultType === 'likes'}"
+                 ng-click="setResultType('likes')">
+                {{ '' if your_profile else profile_user.first_name + '\'s' }} Likes
+              </a>
+              {% endif %}
+            </div>
+
+            <div ng-show="resources.length > 0" ng-cloak>
+
+              <search-result
+                ng-repeat='resource in resources'
+                result="resource"
+                result-type="resultType"
+                profile-result="true"
+                {{'is-yours="true"' if your_profile else ''}}
+              ></search-result>
+
+              <button class="paginate-button" ng-class="{active: shouldPaginate}" ng-click="loadMore()">
+                <div class="button-overlay">
+                  <i class="fa fa-chevron-down fa-inverse fa-lg"></i>
+                </div>
+                Load more
+              </button>
+            </div>
+            <div ng-show="resources.length === 0 && resultType === 'books'">
+              {% if your_profile %}
+              You haven't created any books yet!  <a href="" ng-click="initEditBookModal()">Create one now.</a>
+              {% else %}
+              {{profile_user.first_name}} hasn't uploaded anything yet!
+              {% endif %}
+            </div>
+            <div ng-show="resources.length === 0 && resultType === 'pages'" ng-cloak>
+              {% if your_profile %}
+              You haven't created any pages yet!  <a href="/pages/upload">Create one now.</a>
+              {% else %}
+              {{profile_user.first_name}} hasn't uploaded anything yet!
+              {% endif %}
+            </div>
+            <div ng-show="resources.length === 0 && resultType === 'likes'" ng-cloak>
+              {% if your_profile %}
+              You haven't &ldquo;liked&rdquo; anything yet! Try <a href="/discover">searching for new content</a>.
+              {% else %}
+              {{profile_user.first_name}} hasn't liked anything yet!
+              {% endif %}
+            </div>
+<!--             <i ng-show="loading" class="fa fa-spinner fa-spin fa-2x"></i> -->
+
+          </div>
+
+          <!-- Aside -->
+
+          <div class="col-md-3 text-center">
+            <div ng-style="{ paddingTop: '60px', paddingBottom: '30px' }">
+              <button class="btn btn-lg btn-primary w-100" ng-click="initEditBookModal()">
+                <i style="position:relative; bottom:3px; margin-right: 4px;" class="fa fa-pencil fa-lg"></i>
+                ADD A BOOK
+              </button>
+              <a class="btn btn-lg btn-primary w-100" href="/pages/upload" target="_self">
+                <i style="position:relative; bottom:3px; margin-right: 4px;" class="fa fa-pencil fa-lg"></i>
+                 ADD A PAGE
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block modals %}
+
+{{ super() }}
+
+<!-- Modal for creating objects -->
+{% if your_profile %}
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="edit-profile-modal">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <h4>Edit your info</h4>
+
+        <form name="userForm" ng-submit="updateInfo(userForm.$valid)" novalidate ng-class="{submitted: submitted}">
+
+          <div class="input-wrapper half-width">
+            <label>First name</label>
+            <input ng-model="profileUser.first_name"placeholder="First name" required/>
+          </div><div class="input-wrapper half-width">
+            <label>Last name</label>
+            <input ng-model="profileUser.last_name" placeholder="Last name" />
+          </div><div class="input-wrapper">
+            <label>Email address</label>
+            <input ng-model="profileUser.email" name="email" type="email" placeholder="Email" required />
+          </div><div class="input-wrapper">
+            <label>Username</label>
+            <input ng-model="profileUser.username" name="username" placeholder="Username" />
+          </div><div class="input-wrapper">
+            <label>Short Bio</label>
+            <input ng-model="profileUser.short_bio" name="short_bio" placeholder="Short Bio" />
+          </div><div class="input-wrapper">
+            <label>Update profile image</label>
+            <input type="file" ngf-select ng-model="file" ngf-multiple="false"/>
+          </div>
+
+          <p>
+            <input type="checkbox" ng-model="profileUser.receives_updates" style="width: auto">
+            <span>Receive email updates regarding new materials?</span>
+          </p>
+
+          <a ng-click="showPasswordModal()">
+            Change your password
+          </a>
+          <br>
+
+          <button ng-show="!updating && !updated" style="margin-top: 8px;" class="btn btn-primary" type="submit">UPDATE</button>
+          <i ng-show="updating" ng-cloak class="fa fa-spinner fa-spin fa-lg"></i>
+          <button ng-show="updated" ng-cloak class="bordered-button--success">Updated!</button>
+          <span class="error-message" ng-bind="errorMessage"></span>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="edit-profile-modal">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <h4>Change your password</h4>
+
+        <form name="passwordForm" ng-submit="updatePassword(passwordForm.$valid)" novalidate ng-class="{submitted: submitted}">
+
+          <div class="input-wrapper">
+            <label>New password</label>
+            <input ng-model="password" type="password" placeholder="New password" />
+          </div><div class="input-wrapper">
+            <label>Repeat password</label>
+            <input ng-model="repeatPassword" type="password" placeholder="Repeat password" />
+          </div>
+
+          <button ng-show="!updating && !updated" class="bordered-button" type="submit">Update password</button>
+          <i ng-show="updating" ng-cloak class="fa fa-spinner fa-spin fa-lg"></i>
+          <button ng-show="updated" ng-cloak class="bordered-button--success">Updated!</button>
+          <span class="error-message" ng-bind="errorMessage"></span>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

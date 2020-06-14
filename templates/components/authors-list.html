@@ -1,0 +1,24 @@
+{% import 'jinja_macros.html' as macros %}
+
+{% set may_remove = (is_author or is_admin) and additional_authors|length > 0 %}
+{% set may_view_email = is_admin %}
+
+  <ul class="authors-list">
+  	{% if creator %}
+    	{{ macros.render_author(creator, 'Created by', may_remove, may_view_email) }}
+    {% endif %}
+
+    {% if False and last_editor %}
+    	{{ macros.render_author(last_editor, 'Last edited by', may_remove, may_view_email) }}
+    {% endif %}
+
+    {% if additional_authors|length > 0 %}
+
+      <div class="spacer"></div>
+
+      {% for author in additional_authors %}
+    		{{ macros.render_author(author, 'Author', may_remove, may_view_email) }}
+    	{% endfor %}
+
+    {% endif %}
+  </ul>

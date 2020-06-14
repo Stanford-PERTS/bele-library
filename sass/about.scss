@@ -1,0 +1,171 @@
+/* Styles for about pages */
+
+@import '_colors';
+@import '_fonts';
+@import '_animations';
+@import '_responsive';
+@import 'compass';
+
+$circle-button-size: 66px;
+$about-color: #58b09c;
+
+.about-page {
+
+  p a {
+    color: $about-color;
+    font-weight: 600;
+  }
+
+  .masthead--about {
+    background-color: $about-color;
+    padding-top: 150px;
+    background-image: url('/static/images/about-background.png');
+    background-position: top left;
+    @include background-size(cover);
+
+    .container {
+      position: relative;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .circle-holder {
+      position: relative;
+      width: 100%;
+      height: 0px;
+    }
+
+    a.circle-button {
+      position: absolute;
+      display: block;
+      bottom: -$circle-button-size/2;
+      right: 0px;
+      height: $circle-button-size;
+      width: $circle-button-size;
+      background-color: $plum-color;
+      text-align: center;
+      padding-top: 19px;
+      color: white;
+      text-decoration: none;
+      @include border-radius($circle-button-size/2);
+      border: 4px solid white;
+
+      &:hover {
+        background-color: darken($plum-color, 10);
+      }
+    }
+  }
+
+  .about-page_body {
+    padding-top: 45px;
+
+    .callout {
+      font-size: 22px;
+      // font-weight: $font-weight-bold;
+      font-weight: 600;
+      font-style: italic;
+      margin: 15px auto 45px auto;
+    }
+
+    p {
+      font-size: 19px;
+      line-height: 1.65;
+      margin: 15px auto 15px auto;
+
+    }
+
+    .perts-logo-wrapper {
+      text-align: center;
+      margin: 30px 0 60px 0;
+    }
+
+    h3 {
+      margin: 45px auto 30px auto;
+      font-size: 22px;
+      // font-family: $sans-serif-font;
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .mindset-section {
+      text-align: center;
+      margin-bottom: 45px;
+
+      img {
+        margin: 15px auto 20px auto;
+        height: 150px;
+      }
+
+      p {
+        margin-top: 10px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .subscription-box {
+    margin: 90px auto 45px auto;
+    @include border-radius(12px);
+    padding: 30px 15px 45px 15px;
+    background-color: #f0f0f0;
+    border-bottom: 3px solid #e3e3e3;
+    text-align: center;
+
+    p {
+      font-size: 18px;
+      max-width: 450px;
+      margin: 15px auto;
+    }
+
+    .input-wrapper {
+      margin-top: 30px;
+
+      a.rounded-button {
+        background-color: $plum-color;
+        border-bottom-color: darken($plum-color, 10);
+        color: white;
+      }
+    }
+  }
+
+  .resources-section {
+
+    .partner-wrapper {
+      text-align: left;
+      margin-top: 45px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ccc;
+
+      h4 {
+        font-size: 20px;
+        a {
+          color: $font-color;
+        }
+      }
+
+      img {
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 19px;
+        line-height: 1.54;
+        margin: 5px auto 15px auto;
+      }
+    }
+  }
+
+  /* Funding section */
+
+  .content-section.funding-section {
+    padding: 60px 0px 90px 0px;
+    background-color: #fff;
+    color: $light-font-color;
+    text-align: center;
+  }
+
+}

@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"></meta>
+    {% include '_styles.html' %}
+    <style type="text/css">
+      a.cta, button.cta {
+        background-color: #EF472F;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table class="email-outer">
+      <tr>
+        <td>
+          <table class="email-inner">
+            <tr>
+              <td>
+                <table class="email-header">
+                  <tr>
+                    <td>
+                      <a href="{{ domain }}">
+                        <img src="{{ domain }}/" height="48px">
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="email-body">
+                  <tr>
+                    <td>
+                      <p>
+                        Dear {{ short_name }},
+                      </p>
+                      <p>
+                        You&rsquo;ve been removed as
+                        {# 'author' or 'editor' #}
+                        an {{ role }} on <em>{{ entity_title }}</em> by
+                        {{ remover_name }} (<a href="mailto:{{ remover_email }}">{{ remover_email }}</a>).
+                      </p>
+                      <p>
+                        If you have any questions, please contact
+                        <a href="mailto:{{ remover_email }}">{{ remover_email }}</a>.
+                      <p>
+                        Thank you for contributing to the BELE Library!
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table class="email-footer">
+            This message was intended for {{ full_name }}<br>
+            PERTS &copy; {{ year }}  |   All Rights Reserved<br>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

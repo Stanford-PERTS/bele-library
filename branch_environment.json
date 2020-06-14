@@ -1,0 +1,27 @@
+{
+    "_description": "A meta config file. Used to modify other config files when building various branches in codeship.",
+    "master": {
+        "app.yaml": {
+            "_description": "Values to interpolate into app.yaml. Note that environment variables, like HOSTING_DOMAIN, need single quotes if they are strings.",
+            "PROJECT_ID": "",
+            "APP_ENGINE_VERSION": "",
+            "HOSTING_DOMAIN": ""
+        },
+        "cron.yaml": {
+            "_description": "Specific cron jobs can be enabled and disabled, keyed by their url. Default is True, i.e. enabled. The _all key overrides all others, enabling or disabling all cron jobs.",
+            "_all": true
+        }
+    },
+    "dev": {
+        "app.yaml": {
+            "_description": "Values to interpolate into app.yaml. Note that environment variables, like HOSTING_DOMAIN, need single quotes if they are strings.",
+            "PROJECT_ID": "",
+            "APP_ENGINE_VERSION": "",
+            "HOSTING_DOMAIN": ""
+        },
+        "cron.yaml": {
+            "_description": "Specific cron jobs can be enabled and disabled, keyed by their url. Default is True, i.e. enabled. The _all key overrides all others, enabling or disabling all cron jobs.",
+            "/cron/send_pending_email": true
+        }
+    }
+}

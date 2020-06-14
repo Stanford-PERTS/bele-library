@@ -1,0 +1,113 @@
+<div id="discussion-box">
+
+  <div id="discussion"></div>
+
+  <h3>Comments and Discussion</h3>
+
+ <!--  <a ng-hide="isHidden" id="display-toggle" class="pull-right" ng-click="isHidden = true">Hide</a>
+  <a ng-show="isHidden" id="display-toggle" class="pull-right" ng-click="isHidden = false">Show</a> -->
+
+  <div class="discussion-inner" ng-hide="isHidden">
+
+    <!-- Login if user not found -->
+
+    <div ng-hide="user" class="create-block--gray">
+      <div class="poster-image">
+        <i class="fa fa-lg fa-question"></i>
+      </div>
+      <span>You need an account to comment</span><br>
+      <a data-toggle="modal" data-target="#signupModal">Sign up</a>&nbsp;or&nbsp;
+      <a data-toggle="modal" data-target="#loginModal">login</a>&nbsp;to an existing account
+    </div>
+
+    <!-- Add comment if user found -->
+    <div ng-show="user" class="create-block-container">
+      <div class="create-block">
+        <div class="poster-image" class="user-image" user-image="" user="user">
+          <div class="success-marker" ng-class="{active: commented}">
+            <i class="fa fa-check fa-lg"></i>
+          </div>
+        </div>
+        <div ng-hide="commented">
+          <textarea ng-show="user" ng-model="commentText" placeholder="Enter a comment" rows="1" ng-change="checkShowButton()" id="commentBox"></textarea>
+          <!-- <a ng-show="showButton && !postingComment" class="comment-button colored-button" ng-click="addComment()">Post comment</a> -->
+          <div class="button-container">
+            <button class="btn btn-secondary btn-sm btn-secondary-override" ng-click="cancelComment()" ng-disabled="!showButton">Cancel</button>
+            <button class="btn btn-primary btn-sm"
+                    ng-click="addComment()"
+                    ng-disabled="!showButton">
+                    Submit
+            </button>
+          </div>
+          <i class="fa fa-spin fa-spinner" ng-show="postingComment"></i>
+        </div>
+      </div>
+      <div class="success-text" ng-show="commented">
+        <i>Thanks for the comment!</i>
+      </div>
+    </div>
+
+    <div class="spacer" ng-hide="user"></div>
+
+    <!-- List comments -->
+    <div class="comment-block-container">
+      <div class="comment-block" ng-repeat="comment in comments">
+        <a href="{[comment.user.username ? '/users/' + comment.user.canonical_username : '']}" class="poster-image" user-image="" user="comment.user" class="user-image" ></a>
+
+        <b>{[comment.user.first_name]} {[ comment.user.last_name[0] || '' ]}</b>
+        <div class="created-date">
+          {[comment.created | prettyDate]}
+        </div>
+        <div class="delete-comment"
+             ng-show="user && (user.uid === comment.user.uid || user.is_admin)">
+          <a ng-click="deleteComment(comment)">
+            <i class="fa fa-close"></i>&nbsp;Remove</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+        </div>
+
+        <p class="comment-text">{[comment.body]}</p>
+        <a ng-click="reply(comment)" class="reply-btn-new">
+          <button class="btn btn-secondary btn-sm btn-secondary-override">Reply</button>
+        </a>
+      </div>
+    </div>
+    <a class="show-more" ng-click="viewAll = true" ng-show="hasMore && !viewAll">
+      Show more&nbsp;<i class="fa fa-chevron-down"></i>
+    </a>
+
+    <!-- List comments past limit -->
+
+    <div ng-show="viewAll">
+      <div class="comment-block-container">
+        <div class="comment-block" ng-repeat="comment in moreComments">
+          <div class="poster-image" ng-hide="comment.user.facebook_id"></div>
+          <div class="poster-image" ng-show="comment.user.facebook_id" class="user-image" style="background-image: url('//graph.facebook.com/{[comment.user.facebook_id]}/picture?type=square')" ng-cloak></div>
+          <b>{[comment.user.first_name]} {[ comment.user.last_name[0] || '' ]}</b>
+          <div class="created-date">
+            {[comment.created | prettyDate]}
+          </div>
+          <div class="delete-comment"
+               ng-show="user && user.uid === comment.user.uid">
+            <a ng-click="deleteComment(comment)">
+              <i class="fa fa-close"></i>&nbsp;Remove</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+          </div>
+
+          <p>{[comment.body]}</p>
+          <a ng-click="reply(comment)" class="reply-btn-new">
+            <button class="btn btn-secondary btn-sm btn-secondary-override">Reply</button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <a class="show-more" ng-click="loadMore()" ng-show="viewAll && canLoadMore">
+      Load more&nbsp;<i class="fa fa-chevron-down"></i>
+    </a>
+
+    <div class="no-comments">
+      <p ng-hide="commentCount > 0" class="no-comments">Be the first to comment on this</p>
+    </div>
+
+  </div><!-- div[ng-hide="isHidden"] -->
+</div>

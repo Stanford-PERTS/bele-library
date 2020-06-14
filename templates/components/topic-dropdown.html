@@ -1,0 +1,31 @@
+<!-- IMPORTANT! Include target="_self" on all links to prevent navigation errors from the (Angular $location using) search page -->
+
+<div ng-class="{active: showCourses}" class="navbar-dropdown course-dropdown">
+  <div class="dropdown_course-section">
+    <div class="dropdown_title">
+      Belonging Course
+    </div>
+    <ul>
+      <li>
+        <a class="topic-link" target="_self" href="/belonging">
+          Belonging for Educators
+        </a>
+      </li>
+    </ul>
+    <div class="dropdown_title">
+      Growth Mindset Topics
+    </div>
+    <ul>
+      {% for topic in teacher_topics %}
+      <li>
+        <a class="topic-link" target="_self" href="/topics/{{ topic.short_uid }}">
+          {{ topic.name }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <!-- <a class="dropdown_search" href="/search" target="_self">
+      <i class="fa fa-search">&nbsp;&nbsp;</i>Search resources
+    </a> -->
+  </div>
+</div>

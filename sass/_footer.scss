@@ -1,0 +1,141 @@
+/* Styles for components/footer.html */
+
+footer {
+  $footer-height: 116px;
+  background-color: $footer-color;
+  color: #eaeaea;
+  width: 100%;
+
+  a, a i {
+    color: #eaeaea;
+    text-decoration: none;
+  }
+
+  a:hover, a:hover i {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .footer_links {
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: $font-weight-bold;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    a {
+      margin-left: 32px;
+      margin-bottom: 20px;
+      &:first-child {
+        margin-left: 0px;
+      }
+    }
+  }
+
+  .footer_mailto {
+    font-size: 24px;
+    line-height: 26px;
+    font-weight: bold;
+    font-family: $archivo-font;
+  }
+
+  .footer_social-links {
+    height: $footer-height;
+  }
+
+  .footer_social-links .footer_social-link {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    padding-top: 8px;
+    margin: 0px 5px;
+    border: 2px solid rgba(255,255,255,0.3);
+    @include border-radius(20px);
+    text-align: center;
+
+    &[share-type="facebook"] {
+      background-color: #3c5d96;
+      background-color: transparent;
+      &:hover {
+        border-color: white;
+        // background-color: darken(#3c5d96, 10);
+      }
+    }
+
+    &[share-type="twitter"] {
+      background-color: #3fadea;
+      background-color: transparent;
+      &:hover {
+        border-color: white;
+        // background-color: darken(#3fadea, 10);
+      }
+    }
+
+    &[share-type="google"] {
+      background-color: #d05d46;
+      background-color: transparent;
+      &:hover {
+        border-color: white;
+        // background-color: darken(#d05d46, 10);
+      }
+    }
+  }
+
+  .creative-commons {
+    position: relative;
+    padding-left: 98px;
+    margin-bottom: 30px;
+
+    a.license {
+      position: absolute;
+      top: 6px;
+      left: 0px;
+    }
+    span {
+      font-size: 12px;
+      color: #aaa;
+      line-height: 1.1;
+      a {
+        color: #aaa;
+      }
+    }
+  }
+
+  .footer_legal {
+    font-size: 13px;
+    color: #79808a;
+    height: $footer-height;
+  }
+}
+
+// Mobile styling
+
+@include mobile {
+
+  footer {
+    .footer_links {
+      text-align: center;
+      a {
+        display: inline-block;
+        margin-bottom: 5px;
+      }
+    }
+    .footer_social-links {
+      text-align: center;
+      height: 80px;
+    }
+    .footer_legal {
+      text-align: center;
+      height: 40px;
+    }
+    .footer_mailto {
+      font-size: 17px;
+    }
+  }
+}
+
+@media print {
+  footer {
+    display: none;
+  }
+}

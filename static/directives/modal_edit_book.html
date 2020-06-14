@@ -1,0 +1,105 @@
+<div class="modal fade modal-no-padding" id="editBookModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="edit-book-modal">
+        <h4>{[ modalTitle || 'New Book' ]}</h4>
+
+        <form name="addBookForm" ng-submit="createBook(addBookForm.$valid)" novalidate ng-class="{submitted: submitted}">
+
+          <div class="image-upload" ngf-select ng-model="bookImage" ngf-multiple="false" ngf-change="handleFiles('bookImage')" style="background-image: url({[ bookImageTempPath ]}); background-position: center; background-size: cover;">
+            <i class="fa fa-image" ng-show="!bookImageTempPath"></i>
+            <span ng-show="!bookImageTempPath">Upload an image for the book home page</span>
+          </div>
+
+          <ul class="book-tabs">
+            <li ng-class="{ active: selectedTab == 'details' }">
+              <button type="button" class="button-reset" ng-click="handleTabSelect('details')">Details</button>
+            </li>
+            <li ng-class="{ active: selectedTab == 'postscript' }">
+              <button type="button" class="button-reset" ng-click="handleTabSelect('postscript')">Postscript</button>
+            </li>
+          </ul>
+
+          <div class="tabContainer" ng-show="selectedTab == 'details'">
+            <div class="input-wrapper" ng-class="{ error: models.bookName.displayError }">
+              <label>Title</label>
+              <p class="input-description">
+                Be as concise as possible
+              </p>
+              <input  ng-model="models.bookName.value"
+                      type="text"
+                      placeholder="Give your book a title"
+                      ng-focus="handleFocus('bookName')"
+                      ng-blur="handleBlur('bookName')"
+                      ng-change="handleChange('bookName')"/>
+              <p class="my-error" ng-show="models.bookName.displayError">Book Title</p>
+              <p class="my-error-message" ng-show="models.bookName.displayError">{[ models.bookName.errorMessage ]}</p>
+            </div>
+
+            <div class="input-wrapper" ng-class="{ error: models.bookSummary.displayError }">
+              <label>Description</label>
+              <p class="input-description">Up to 160 characters, this will appear in search</p>
+              <div class="textarea-wrapper" ng-class="{focus: models.bookSummary.isFocused}">
+                <textarea ng-model="models.bookSummary.value"
+                          placeholder="Enter a summary"
+                          ng-focus="handleFocus('bookSummary')"
+                          ng-blur="handleBlur('bookSummary')"
+                          ng-change="handleChange('bookSummary')"></textarea>
+              </div>
+              <p class="my-error" ng-show="models.bookSummary.displayError">Book Summary</p>
+              <p class="my-error-message" ng-show="models.bookSummary.displayError">{[ models.bookSummary.errorMessage ]}</p>
+            </div>
+
+            <div class="icon-upload book-info" ngf-select ng-model="bookIcon" ngf-multiple="false" ngf-change="handleFiles('bookIcon')">
+              <div class="image-container" style="background-image: url({[ bookIconTempPath ]}); background-position: center; background-size: cover;">
+                <i class="fa fa-image" ng-show="!bookIconTempPath"></i>
+              </div>
+              <div class="content-wrapper">
+                <div class="header">
+                  <span>
+                    book icon
+                  </span>
+                </div>
+                <p>
+                  Optional. Icon sized image that shows up next to the book in search results. 
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabContainer" ng-show="selectedTab == 'postscript'"  ng-if="tinymceOptions">
+            <div class="input-wrapper tiny" ng-class="{ error: models.bookName.displayError }">
+              <label>Acknowledgements</label>
+              <p class="input-description">
+                Up to 1000 characters, HTML text with the ability to include links and images
+              </p>
+              <textarea ng-model="models.bookAcknowledgements.value"
+                    ui-tinymce="tinymceOptions"
+                    placeholder="This is a text editor.  Add and edit as you wish.">
+              </textarea>
+              <p class="my-error" ng-show="models.bookAcknowledgements.displayError">Book Acknowledgements</p>
+              <p class="my-error-message" ng-show="models.bookAcknowledgements.displayError">{[ models.bookAcknowledgements.errorMessage ]}</p>
+            </div>
+
+            <div class="input-wrapper" ng-class="{ error: models.bookCitations.displayError }">
+              <label>Preferred Citation</label>
+              <p class="input-description">Up to 1000 characters, plain text.</p>
+              <textarea ng-model="models.bookCitations.value" placeholder="Add preferred citations" ng-blur="checkValidation()"></textarea>
+              <p class="my-error" ng-show="models.bookCitations.displayError">Preferred Citations</p>
+              <p class="my-error-message" ng-show="models.bookCitations.displayError">{[ models.bookCitations.errorMessage ]}</p>
+            </div>
+          </div>
+
+          <div class="button-container">
+            <button class="btn btn-secondary btn-large btn-secondary-override" data-dismiss="modal">cancel</button>
+            <button class="btn btn-primary btn-large">save</button>
+          </div>
+
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

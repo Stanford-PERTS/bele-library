@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "Resources for more equitable and empowering learning environments" %}
+{% set desc = "The Building Equitable Learning Environments (BELE) Library helps educators, parents, and policy makers find resources and recommendations for creating more equitable and empowering learning environments." %}
+
+{% set controller = "LandingCtrl" %}
+
+{% block content %}
+
+<div scroll="" class="full-container main-page-new">
+
+  <div class="masthead">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-sm-8">
+          <!-- masthead text -->
+          <div class="masthead-inner">
+            <h1 class="masthead_title">
+              Building Equitable Learning
+              Environments Library
+            </h1>
+            <p class="masthead_text">
+              The Equitable Learning Library helps educators, parents, and
+              policy makers find resources and recommendations for creating more
+              equitable and empowering learning environments.
+            </p>
+          </div>
+        </div>
+        {% if user %}
+          <div class="col-sm-4">
+            <a
+              style="border: 2px solid white; margin-bottom: 20px"
+              class="btn btn-lg btn-primary w-100"
+              ng-click="initEditBookModal()"
+            >
+              <i
+                style="position:relative; bottom:3px; margin-right: 4px;"
+                class="fa fa-pencil fa-lg"
+              ></i>
+              ADD A BOOK
+            </a>
+            <a
+              style="border: 2px solid white; margin-bottom: 20px"
+              class="btn btn-lg btn-primary w-100"
+              href="/pages/upload"
+              target="_self"
+            >
+              <i
+                style="position:relative; bottom:3px; margin-right: 4px;"
+                class="fa fa-pencil fa-lg"
+               ></i>
+               ADD A PAGE
+            </a>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  <div class="main-page_body">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-xs-12">
+              <h2>Featured Books</h2>
+              <h3>Sequenced sets of pages</h3>
+              <hr />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="main-page_book-list">
+                {% block bookList %}
+                {% set books = featuredBooks %}
+                {% include 'components/book-list.html' %}
+                {% endblock bookList %}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="text-center">
+                <a ng-href="/discover?kind=Book" class="btn btn-primary btn-lg align-self-center">SEE ALL AVAILABLE BOOKS</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-xs-12">
+              <h2>Featured Pages</h2>
+              <h3>Individual activities or resources</h3>
+              <hr />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="main-page_page-list">
+                <div class="page-list">
+                  {% for page in featuredPages %}
+                  <div class="row page-list-item">
+                    <div class="col-xs-2 page-icon-wrapper">
+                      <a href="/pages/{{ page.short_uid }}" target="_self">
+                        <div class="page-icon" style="background-image: url('{{ page.icon_thumbnail or '/' }}');"></div>
+                      </a>
+                    </div>
+                    <div class="col-xs-10">
+                      <a href="/pages/{{ page.short_uid }}" target="_self" class="page-title">{{ page.title }}</a>
+                      <p class="page-summary">{{ page.short_description }}</p>
+                      <div class="page-meta">
+                        <i class="fa fa-heart"></i>
+                        {{ page.votes_for }}
+                        <i class="fa fa-comment"></i>
+                        {{ page.num_comments }}
+                      </div>
+                      <div class="search-result-authors">
+                        {% for author in page.author_users %}
+                        <a
+                          href="/users/{{author.canonical_username}}"
+                          target="_self"
+                          class="author-row user-info"
+                        >
+                          {% if author.image_url %}
+                          <div
+                            class="user-image"
+                            user="author"
+                            style="background-image: url('{{author.image_url}}');"
+                          ></div>
+                          {% else %}
+                          <div
+                            class="user-image"
+                            user="author"
+                            style="background-image: url('/static/images/default-user.png');"
+                          ></div>
+                          {% endif %}
+                          <div class="posting-data">
+                            <div class="byline">
+                              {{ author.first_name or '' }} {{ author.last_name or '' }}
+                            </div>
+                            {#
+                            <div class="date">
+                              {{ result.createdPrettyDate }}
+                            </div>
+                            #}
+                          </div>
+                        </a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="text-center">
+                <a ng-href="/discover?kind=Page" class="btn btn-primary btn-lg align-self-center">SEE ALL AVAILABLE PAGES</a>
+              </div>
+            </div>
+          </div>
+          <!--
+          <div class="main-page_page-list">
+            <div class="page-list">
+              {% for page in featuredPages %}
+              <div class="row page-list-item">
+                <div class="col-sm-2 page-icon-wrapper">
+                  <div class="page-icon" style="background-image: url('{{ page.icon_thumbnail or '/' }}');"></div>
+                </div>
+                <div class="col-sm-10">
+                  <a href="/pages/{{ page.short_uid }}" target="_self" class="page-title">{{ page.title }}</a>
+                  <p class="page-summary">{{ page.short_description }}</p>
+                  <div class="page-meta">
+                    <i class="fa fa-heart"></i>
+                    {{ page.votes_for }}
+                    <i class="fa fa-comment"></i>
+                    {{ page.num_comments }}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block feedback %}
+{% endblock %}
+
+{% block videomodal %}
+<div class="modal fade video-modal" tabindex="-1" role="dialog" id="videoModal">
+  <div class="modal-dialog" onclick="yt_players['videoPlayer'].pauseVideo();" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe id="videoPlayer" class="ytplayer" src="https://www.youtube.com/embed/K7xJUABW9Wg?enablejsapi=1&amp;wmode=transparent&amp;rel=0&amp;showinfo=0" allowfullscreen="true">
+          </iframe>
+        </div>
+      </div>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div aria-hidden="true">×</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+var yt_int,
+  yt_players = {},
+  initYT = function() {
+    $('.ytplayer').each(function() {
+      yt_players[this.id] = new YT.Player(this.id);
+    });
+  };
+$.getScript('//www.youtube.com/player_api', function() {
+  yt_int = setInterval(function() {
+    if (typeof YT === 'object') {
+      initYT();
+      clearInterval(yt_int);
+    }
+  }, 500);
+});
+$('body').on('click', function(e) {
+  if (yt_players['videoPlayer']) {
+    yt_players['videoPlayer'].pauseVideo();
+  }
+});
+</script>
+{% endblock %}

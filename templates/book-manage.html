@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% set controller = "ContentManagerCtrl" %}
+{% set init = "init('" + (expand or "") + "')" %}
+
+<!-- SEO tags -->
+
+{% set title = "Manage Books" %}
+
+{% block content %}
+
+<div class="full-container manage-books" ng-init="book = {{ book_json }}">
+  <div class="banner">
+    <span>
+      <span>Manage Content</span>
+    </span>
+  </div>
+  <div class="book-info" ngStyle>
+    <div class="book-icon" style="background-image: url('{{ book.icon or '/' }}');"></div>
+    <div class="content-wrapper">
+      <div class="header">
+        <h2>{{ book.title }}</h2>
+        <p>
+          {{ book.short_description }}
+        </p>
+      </div>
+      <div class="button-container">
+        <button
+          class="btn btn-sm btn-secondary-override"
+          ng-cloak
+          data-toggle="modal"
+          data-target="#editBookModal"
+        >
+          <i class="fa fa-edit"></i>
+          Details
+        </button>
+        <a class="btn btn-sm btn-secondary-override" ng-href="/books/{[book.short_uid]}">
+          <i class="fa fa-eye"></i>
+          View
+        </a>
+        <button
+          class="btn btn-sm btn-secondary-override"
+          ng-cloak
+          ng-click="openConfirmDeleteModal()"
+        >
+          <i class="fa fa-trash"></i>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {% include 'components/content-manager.html' %}
+
+</div>
+
+{% endblock %}
+
+{% block modals %}
+{{ super() }}
+
+<div class="modal fade" id="addChapterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="edit-chapter-modal">
+        <h4>{[ chapterModalType == 'edit' ? 'Edit Chapter' : 'New Chapter' ]}</h4>
+        <form name="addChapterForm" ng-submit="addChapter(addChapterForm.$valid)" novalidate ng-class="{submitted: submitted}">
+
+          <div class="input-wrapper" ng-class="{ error: chapterModalModel.title.displayError }">
+            <label>Title</label>
+            <p class="input-description">
+              Be as concise as possible
+            </p>
+            <input  ng-model="chapterModalModel.title.value"
+                    type="text"
+                    placeholder="Give your chapter a title"
+                    ng-focus="handleFocus('title')"
+                    ng-blur="handleBlur('title')"
+                    ng-change="handleChange('title')" />
+            <p class="my-error" ng-show="chapterModalModel.title.displayError">Chapter Title</p>
+            <p class="my-error-message" ng-show="chapterModalModel.title.displayError">{[ chapterModalModel.title.errorMessage ]}</p>
+          </div>
+
+          <div class="input-wrapper" ng-class="{ error: chapterModalModel.description.displayError }">
+            <label>Description</label>
+            <p class="input-description">Up to 160 characters, this will appear in search</p>
+            <div class="textarea-wrapper" ng-class="{focus: chapterModalModel.description.isFocused}">
+              <textarea   ng-model="chapterModalModel.description.value"
+                          placeholder="Enter a summary"
+                          ng-blur="handleBlur('description')"
+                          ng-focus="handleFocus('description')"
+                          ng-change="handleChange('description')"></textarea>
+            </div>
+            <p class="my-error" ng-show="chapterModalModel.description.displayError">Chapter Description</p>
+            <p class="my-error-message" ng-show="chapterModalModel.description.displayError">{[ chapterModalModel.description.errorMessage ]}</p>
+          </div>
+          <div class="button-container">
+            <button class="btn btn-secondary btn-large btn-secondary-override" data-dismiss="modal">cancel</button>
+            <button type="submit" class="btn btn-primary btn-large">save</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-no-padding" id="addExistingPageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="add-existing-page-modal">
+        <h4>Add Existing Page</h4>
+        <div class="add-existing-page">
+          <div class="input-wrapper">
+            <input type="text" ng-model="addExistingPageURL" placeholder="Paste page url here" ng-change="matchExistingPageURL()" />
+          </div>
+
+          <div class="matched-page" ng-show="matchedPage">
+            <div class="matched-page-icon" style="background-image: url('{[ matchedPage.iconPath || '' ]}');">
+            </div>
+            <div class="matched-page-info">
+              <h3 class="matched-page-title">{[ matchedPage.title ]}</h3>
+              <p class="matched-page-summary">{[ matchedPage.short_description ]}</p>
+            </div>
+          </div>
+
+          <div class="button-container">
+            <button class="btn btn-secondary btn-lg btn-secondary-override" data-dismiss="modal">cancel</button>
+            <button class="btn btn-primary btn-lg" ng-click="addExistingPage()">save</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% include 'components/footer.html' %}
+{% endblock %}

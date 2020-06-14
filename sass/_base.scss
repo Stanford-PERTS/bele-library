@@ -1,0 +1,92 @@
+.w-100 {
+  width: 100%;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.align-self-center {
+  align-self: center;
+}
+
+.button-reset {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    overflow: visible;
+
+    background: transparent;
+
+    /* inherit font & color from ancestor */
+    color: inherit;
+    font: inherit;
+
+    /* Normalize `line-height`. Cannot be changed from `normal` in Firefox 4+. */
+    line-height: normal;
+
+    /* Corrects font smoothing for webkit */
+    -webkit-font-smoothing: inherit;
+    -moz-osx-font-smoothing: inherit;
+
+    /* Corrects inability to style clickable `input` types in iOS */
+    -webkit-appearance: none;
+}
+
+.fa-grip-vertical:before {
+    content: "\f142 \f142";
+    letter-spacing: 0.1em;
+    cursor: grab;
+}
+
+.landscape-img {
+  width: 100%;
+  padding-bottom: 75%;
+  background-size: cover;
+  background-position: center;
+
+  &__book {
+    border: 2px solid white;
+    box-shadow: 4px 4px #D4D4D4, 8px 8px #E6E6E6, 12px 12px #F7F7F7;
+  }
+}
+
+.portrait-img {
+  width: 100%;
+  padding-bottom: 141%;
+  background-size: cover;
+  background-position: center;
+
+  &__book {
+    border: 2px solid white;
+    box-shadow: 4px 4px #D4D4D4, 8px 8px #E6E6E6, 12px 12px #F7F7F7;
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+.anchor {
+  display: block;
+  position: relative;
+  top: -104px;
+  visibility: hidden;
+}
+
+.liked {
+  color: #EF472F;
+  
+  &:hover {
+    color: #EF472F;
+  }
+}
+
+@mixin fill-height {
+  min-height: calc(100vh - 116px - 94px);
+}

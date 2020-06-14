@@ -1,0 +1,86 @@
+###############################################################################
+##                                                                           ##
+##                    !!  EDIT ONLY IN TEMPLATE  !!                          ##
+##                                                                           ##
+##  Only edit the following if this is the cron.yaml.template file. Specific ##
+##  cron jobs can be enabled or disabled via the branch_environment.json     ##
+##  file. Then generate cron.yaml by running `python branch_environment.py`  ##
+##  at the command line.                                                     ##
+##                                                                           ##
+###############################################################################
+cron:
+- description: update search index
+  url: /cron/index
+  schedule: every 1 minutes
+- description: send any emails that are due according to the queue
+  url: /cron/send_pending_email
+  schedule: every 1 minutes
+- description: check for errors and email us
+  url: /cron/check_for_errors
+  schedule: every 1 minutes
+- description: run all unit tests
+  url: /cron/run_unit_tests
+  schedule: every 15 minutes
+- description: index all content
+  url: /cron/index_all
+  schedule: every 24 hours
+# Constructing Backup URLs: (using gcs daily backup 1 for example)
+# name = backup-daily-1
+# kind = Comment, Feedback, Lesson, Practice, Theme, Topic, Unique, User,
+#        UserImage, ViewCounterShard, ViewCounterShardConfig, Vote
+# queue = (Optional, not used here. If left out, backup runs on "default" queue.)
+# filesystem = gs (for Google Cloud Storage)
+# gs_bucket_name = mindsetkit-backup-daily-1
+# namespace = (Optional. When specified, only entities from namespace are backed up.)
+#
+# Scheduled Backups with Cron documentation:
+# developers.google.com/appengine/articles/scheduled_backups
+#
+# Daily 1 set
+- description: gcs daily backup 1
+  url: /_ah/datastore_admin/backup.create?name=backup-daily-1&filesystem=gs&gs_bucket_name=mindsetkit-backup-daily-1&kind=Comment&kind=Feedback&kind=Lesson&kind=Practice&kind=Theme&kind=Topic&kind=Unique&kind=User&kind=UserImage&kind=ViewCounterShard&kind=ViewCounterShardConfig&kind=Vote
+  schedule: every mon,wed,fri,sun 09:00
+  target: ah-builtin-python-bundle
+- description: clean out mindsetkit-backup-daily-1
+  url: /cron/clean_gcs_bucket/mindsetkit-backup-daily-1
+  schedule: every mon,wed,fri,sun 08:45
+# Daily 2 set
+- description: gcs daily backup 2
+  url: /_ah/datastore_admin/backup.create?name=backup-daily-2&filesystem=gs&gs_bucket_name=mindsetkit-backup-daily-2&kind=Comment&kind=Feedback&kind=Lesson&kind=Practice&kind=Theme&kind=Topic&kind=Unique&kind=User&kind=UserImage&kind=ViewCounterShard&kind=ViewCounterShardConfig&kind=Vote
+  schedule: every tue,thu,sat 09:00
+  target: ah-builtin-python-bundle
+- description: clean out mindsetkit-backup-daily-2
+  url: /cron/clean_gcs_bucket/mindsetkit-backup-daily-2
+  schedule: every tue,thu,sat 08:45
+# Weekly 1 set
+- description: gcs weekly backup 1
+  url: /_ah/datastore_admin/backup.create?name=backup-weekly-1&filesystem=gs&gs_bucket_name=mindsetkit-backup-weekly-1&kind=Comment&kind=Feedback&kind=Lesson&kind=Practice&kind=Theme&kind=Topic&kind=Unique&kind=User&kind=UserImage&kind=ViewCounterShard&kind=ViewCounterShardConfig&kind=Vote
+  schedule: 1,15 of month 09:00
+  target: ah-builtin-python-bundle
+- description: clean out mindsetkit-backup-weekly-1
+  url: /cron/clean_gcs_bucket/mindsetkit-backup-weekly-1
+  schedule: 1,15 of month 08:45
+# Weekly 2 set
+- description: gcs weekly backup 2
+  url: /_ah/datastore_admin/backup.create?name=backup-weekly-2&filesystem=gs&gs_bucket_name=mindsetkit-backup-weekly-2&kind=Comment&kind=Feedback&kind=Lesson&kind=Practice&kind=Theme&kind=Topic&kind=Unique&kind=User&kind=UserImage&kind=ViewCounterShard&kind=ViewCounterShardConfig&kind=Vote
+  schedule: 8,22 of month 09:00
+  target: ah-builtin-python-bundle
+- description: clean out mindsetkit-backup-weekly-2
+  url: /cron/clean_gcs_bucket/mindsetkit-backup-weekly-2
+  schedule: 8,22 of month 08:45
+# Monthly 1 set
+- description: gcs monthly backup 1
+  url: /_ah/datastore_admin/backup.create?name=backup-monthly-1&filesystem=gs&gs_bucket_name=mindsetkit-backup-monthly-1&kind=Comment&kind=Feedback&kind=Lesson&kind=Practice&kind=Theme&kind=Topic&kind=Unique&kind=User&kind=UserImage&kind=ViewCounterShard&kind=ViewCounterShardConfig&kind=Vote
+  schedule: 1 of jan,mar,may,jul,sep,nov 09:00
+  target: ah-builtin-python-bundle
+- description: clean out mindsetkit-backup-monthly-1
+  url: /cron/clean_gcs_bucket/mindsetkit-backup-monthly-1
+  schedule: 1 of jan,mar,may,jul,sep,nov 08:45
+# Monthly 2 set
+- description: gcs monthly backup 2
+  url: /_ah/datastore_admin/backup.create?name=backup-monthly-2&filesystem=gs&gs_bucket_name=mindsetkit-backup-monthly-2&kind=Comment&kind=Feedback&kind=Lesson&kind=Practice&kind=Theme&kind=Topic&kind=Unique&kind=User&kind=UserImage&kind=ViewCounterShard&kind=ViewCounterShardConfig&kind=Vote
+  schedule: 1 of feb,apr,jun,aug,oct,dec 09:00
+  target: ah-builtin-python-bundle
+- description: clean out mindsetkit-backup-monthly-2
+  url: /cron/clean_gcs_bucket/mindsetkit-backup-monthly-2
+  schedule: 1 of feb,apr,jun,aug,oct,dec 08:45

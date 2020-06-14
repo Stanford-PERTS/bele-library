@@ -1,0 +1,35 @@
+*.pyc
+.DS_Store
+.sass-cache
+.sass-cache/*
+**/.sass-cache/*
+**/.sass-cache
+*.sublime-project
+*.sublime-workspace
+node_modules/
+npm-debug.log
+bower_components/
+.tmp
+.idea
+dist/
+stylesheets/
+static/stylesheets/
+static/fonts/
+static/javascripts/*mindsetkit.min.js
+static/javascripts/*vendor.min.js
+
+# TinyMCE related files
+static/javascripts/bower.json
+static/javascripts/jquery.tinymce.js
+static/javascripts/jquery.tinymce.min.js
+static/javascripts/license.txt
+static/javascripts/plugins/
+static/javascripts/skins/
+static/javascripts/themes/
+static/javascripts/tinymce.js
+static/javascripts/tinymce.min.js
+
+system_notes.md
+
+# For running the sdk with --storage_path=.
+.gae_sdk

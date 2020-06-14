@@ -1,0 +1,622 @@
+/* Styles for all Administration pages */
+
+@import '_base';
+@import '_colors';
+@import '_fonts';
+@import '_animations';
+@import '_responsive';
+@import 'compass';
+
+$success-color: #71cd82;
+
+@include keyframes(fade-left) {
+  0%,25% { @include opacity(0.0); margin-left: 30px; }
+  100% { @include opacity(1.0); margin-left: 0px; }
+}
+
+.admin-page {
+  background-color: #f6f6f6;
+  padding-bottom: 90px;
+  @include fill-height;
+
+  // Override normal blue links
+
+  a {
+    color: #999;
+    text-decoration: none;
+    &:hover {
+      color: #666;
+      text-decoration: none;
+    }
+  }
+
+  // Button styling for most buttons
+
+  button.bordered-button {
+    background-color: white;
+    border: 4px solid #ccc;
+    color: #ccc;
+    padding: 5px 15px;
+    outline: none;
+
+    &:hover {
+      color: $font-color;
+      border-color: $font-color;
+      background-color: white;
+    }
+
+    &.success-button {
+      border-color: $success-color;
+      color: $success-color; 
+    }
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+  }
+
+  h3 {
+    font-size: 19px;
+  }
+
+  .sub-nav {
+    width: 100%;
+    height: 40px;
+    background-color: $primary;
+    padding-top: 10px;
+
+    a {
+      float: right;
+      padding-left: 20px;
+      color: white;
+    }
+  }
+
+  // Mindset Kit and Practice Libraries
+
+  .primary-option {
+    background-color: #ccc;
+    padding: 20px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: white;
+
+    &:hover {
+      background-color: #aaa;
+    }
+
+    &.active {
+      background-color: lighten($color-kits, 15);
+
+      &.promoted {
+        background-color: $promoted-color;
+        &:hover {
+          background-color: $promoted-color;
+        }
+      }
+
+      &.approved {
+        background-color: #71cd82;
+        &:hover {
+          background-color: #71cd82;
+        }
+      }
+
+      &.rejected {
+        background-color: #cd7171;
+        &:hover {
+          background-color: #cd7171;
+        }
+      }
+    }
+  }
+
+  .side-options {
+
+    .spacer {
+      margin-top: 30px;
+    }
+
+    a.button {
+      color: #999;
+      display: block;
+      width: 100%;
+      height: 45px;
+      border: 4px solid #999;
+      background-color: white;
+      text-align: center;
+      padding-top: 7px;
+      font-size: 16px;
+      text-decoration: none;
+      @include transition(0.14s ease-in-out);
+
+      &:hover {
+        background-color: #666;
+        border-color: #666;
+        color: white;
+      }
+    }
+  }
+
+  // Model overviews
+
+  .object-wrapper {
+    background-color: white;
+    position: relative;
+    margin-bottom: 10px;
+    padding: 15px;
+    @include animation(fade-left 0.4s ease-out);
+
+    .object_info {
+      display: inline-block;
+      width: 50%;
+      vertical-align: top;
+
+      h3 {
+        font-size: 22px;
+        margin-top: 0px;
+      }
+    }
+
+    .object_relations {
+      display: inline-block;
+      width: 35%;
+      vertical-align: top;
+    }
+
+    .object_actions {
+      display: inline-block;
+      width: 15%;
+      vertical-align: top;
+      text-align: right;
+
+      button {
+        width: 100%;
+        max-width: 100px;
+        height: 35px;
+        background-color: white;
+        border: 4px solid #ccc;
+        color: #ccc;
+        &:first-child {
+          margin-bottom: 10px;
+        }
+        &:hover {
+          border-color: #666;
+          color: #666;
+        }
+      }
+    }
+
+    &.child-object {
+      padding-left: 80px;
+    }
+
+    .object-position {
+      width: 70px;
+      height: 110px;
+      padding-top: 40px;
+      padding-left: 0px;
+      text-align: center;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      font-size: 20px;
+      font-weight: 600;
+
+      .edit-position {
+        position: absolute;
+        left: 26px;
+        color: #999;
+        
+        &:hover {
+          color: $color-kits;
+        }
+        &.move-up {
+          top: 10px;
+        }
+        &.move-down {
+          bottom: 10px;
+        }
+      }
+    }
+  }
+
+  // Object view
+
+  .edit-panel {
+    background-color: white;
+    padding: 15px;
+    padding-bottom: 60px;
+
+    label {
+      margin-top: 8px;
+      :first-child { margin-top: 0px; }
+    }
+
+    input, textarea {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .spacer {
+      margin: 15px auto 5px auto;
+      width: 100%;
+      border-bottom: 1px solid #ccc;
+    }
+
+    button.bordered-button {
+      float: right;
+      margin-top: 5px;
+      border-width: 2px;
+    }
+  }
+
+  // Practices
+
+  .practice-wrapper {
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 15px;
+    min-height: 110px;
+    @include animation(fade-left 0.4s ease-out);
+
+    h3 {
+      margin-top: 2px;
+
+      a {
+        color: $font-color;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    a {
+      color: #999;
+      text-decoration: none;
+      &:hover { color: $font-color; }
+    }
+
+    .practice_info {
+      display: inline-block;
+      width: 60%;
+    }
+    button {
+      display: inline-block;
+      width: 75px;
+      height: 80px;
+      outline: none;
+      border: none;
+      float: right;
+      background: white;
+      color: #aaa;
+
+      &:hover {
+        color: #666;
+      }
+
+      &.promoted {
+        color: $promoted-color;
+      }
+
+      &.approved {
+        color: #71cd82;
+      }
+
+      &.rejected {
+        color: #cd7171;
+      }
+    }
+  }
+
+    // Pages
+
+  .page-wrapper {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 15px;
+    min-height: 110px;
+    @include animation(fade-left 0.4s ease-out);
+
+    h3 {
+      margin-top: 2px;
+
+      a {
+        color: $font-color;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    a {
+      color: #999;
+      text-decoration: none;
+      &:hover { color: $font-color; }
+    }
+
+    .page_info {
+      display: inline-block;
+      width: 55%;
+    }
+    button {
+      display: inline-block;
+      width: 75px;
+      height: 80px;
+      outline: none;
+      border: none;
+      float: right;
+      background: white;
+      color: #aaa;
+
+      &:hover {
+        color: #666;
+      }
+
+      &.promoted {
+        color: $promoted-color;
+      }
+
+      &.approved {
+        color: #71cd82;
+      }
+
+      &.rejected {
+        color: #cd7171;
+      }
+    }
+  }
+
+  .book-wrapper .author-link, .page-wrapper .author-link {
+    color: blue;
+    a {
+      text-decoration: underline;
+    }
+
+    &:not(:last-child):after {
+      content: ", ";
+    }
+  }
+
+  // Books
+
+  .book-wrapper {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 15px;
+    min-height: 110px;
+    @include animation(fade-left 0.4s ease-out);
+
+    h3 {
+      margin-top: 2px;
+
+      a {
+        color: $font-color;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    a {
+      color: #999;
+      text-decoration: none;
+      &:hover { color: $font-color; }
+    }
+
+    .book_info {
+      display: inline-block;
+      width: 60%;
+    }
+    button {
+      display: inline-block;
+      width: 75px;
+      height: 80px;
+      outline: none;
+      border: none;
+      float: right;
+      background: white;
+      color: #aaa;
+
+      &:hover {
+        color: #666;
+      }
+
+      &.promoted {
+        color: $promoted-color;
+      }
+
+      &.approved {
+        color: #71cd82;
+      }
+
+      &.rejected {
+        color: #cd7171;
+      }
+    }
+  }
+}
+
+
+
+// Modal styles (used by various sections)
+
+.admin-modal {
+
+  .modal-dialog {
+    width: 450px;
+
+    .modal-content {
+      @include border-radius(0px);
+      min-height: 200px;
+      padding: 20px;
+    }
+  }
+
+  .error-text {
+    display: inline-block;
+    color: #ff6677;
+    margin-top: 10px;
+  }
+
+  button.bordered-button {
+    float: right;
+    margin-top: 5px;
+    &:hover {
+      color: $font-color;
+      border-color: $font-color;
+      background-color: white;
+    }
+
+    &.plain {
+      border: none;
+      padding-top: 9px;
+    }
+  }
+  
+  .footer-wrapper {
+    height: 60px;
+  }
+}
+
+// Child selection in "Add topic/lesson" modal
+
+.child-selection {
+  position: relative;
+  background-color: $color-kits;
+  color: white;
+  width: 100%;
+
+  .selected-object {
+    padding: 10px;
+  }
+
+  ul {
+    position: absolute;
+    top: 41px;
+    left: 0px;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: $color-kits;
+    max-height: 240px;
+    overflow-y: scroll;
+
+    li {
+      padding: 10px;
+      margin: 0px;
+      width: 100%;
+      list-style: none;
+      &.selected {
+        background-color: darken($color-kits, 10);
+      }
+    }
+  }
+}
+
+// Other odds and ends.
+
+.admin-page, .admin-modal, .password-page {
+
+  label {
+    margin-top: 15px;
+    margin-bottom: -5
+  }
+
+  input, textarea {
+    padding: 10px;
+    width: 100%;
+    margin-top: 10px;
+    outline: none;
+    border: 2px solid #ccc;
+
+    &:focus {
+      border-color: #666;
+    }
+
+    &[type="checkbox"] {
+      display: inline-block;
+      width: auto;
+      margin-right: 7px;
+    }
+
+    &[readonly] {
+      border-color: #ccc;
+      color: #ccc;
+    }
+
+    &.msk-blurred.ng-invalid {
+      border-color: red;
+    }
+  }
+
+  ul.content-tags {
+    margin: 10px 0px;
+    padding: 0px;
+  }
+
+  li.content-tag {
+    display: inline-block;
+    padding: 5px 15px;
+    @include border-radius(25px);
+    margin: 0px 5px 5px 0px;
+    border: 1px solid #999;
+    color: #666;
+
+    &.active {
+      border-color: $success-color;
+      color: $success-color;
+    }
+  }
+
+}
+
+.display-order {
+  display: inline-flex;
+  float: right;
+  flex-direction: column;
+  height: 80px;
+  align-items: center;
+
+  .fa {
+    font-size: 24px;
+  }
+
+  input {
+    border: 0;
+    margin-top: 0;
+    width: 65px;
+    text-align: center;
+    padding: 0;
+  }
+
+  button {
+    height: auto !important;
+    width: 65px !important;
+  }
+
+  /* Remove defaul number increment/decrement spin styles */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+  }
+  input[type=number] {
+      -moz-appearance:textfield; /* Firefox */
+  }
+}
+
+.error-text {
+  display: inline-block;
+  color: #ff6677;
+  margin-top: 10px;
+}

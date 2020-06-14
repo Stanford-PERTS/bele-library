@@ -1,0 +1,554 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+// Helpers
+@import 'colors';
+@import 'fonts';
+@import 'animations';
+@import 'responsive';
+@import 'compass/css3';
+
+// Partials
+@import 'search_result';
+@import 'discussion';
+@import 'footer';
+@import 'navbar';
+@import 'modal';
+
+// Remove uncool defaults
+input:required {box-shadow:none;}
+a:focus {outline: none;}
+img {max-width: 100% !important;}
+button::-moz-focus-inner {border: 0;}
+textarea {resize: none;}
+
+html {
+  @include box-sizing(border-box);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: $sans-serif-font;
+  font-weight: $font-weight-normal;
+  color: $font-color;
+}
+
+main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  z-index: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $font-weight-bold;
+}
+
+h1, h2, h3, h4 {
+  font-family: $sans-serif-font;
+}
+
+h1 {
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  outline: none;
+}
+
+.mobile-only {
+  display: none;
+}
+
+a, [ng-click], [data-toggle] {
+  cursor: pointer;
+
+  &.tag {
+    text-decoration: none;
+  }
+}
+
+.pull-right {
+  float: right;
+}
+
+.full-container {
+  width: 100%;
+  padding-top: 94px; // for navbar
+  z-index: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+$subheader-font-size: 17px;
+$subheader-padding: 12px;
+
+.clean-style {
+
+  h3 {
+    margin: 15px 0px;
+    font-size: $subheader-font-size;
+    padding-bottom: $subheader-padding;
+    border-bottom: 3px solid #aaa;
+  }
+}
+
+.container.four-oh-four {
+  padding-top: 90px;
+  padding-bottom: 150px;
+  text-align: center;
+
+  a.fake-document {
+    display: block;
+    color: $font-color;
+    text-decoration: none;
+    width: 250px;
+    margin: 45px auto 0px auto;
+    height: 300px;
+    border: 20px solid $font-color;
+    font-size: 90px;
+    font-weight: 800;
+    padding-top: 60px;
+    text-align: center;
+    @include transition(0.32s ease-in-out);
+
+    &:hover {
+      @include transform(rotateY(180deg));
+    }
+  }
+}
+
+// Unsubscribe page
+
+.subscription-page {
+  padding-top: 120px;
+  text-align: center;
+
+  h1 a {
+    color: $font-color;
+  }
+
+  .success-box {
+    margin: 30px auto;
+    padding: 45px 30px;
+    border: 4px solid #06d6a0;
+
+    p {
+      margin-top: 30px;
+      font-size: 20px;
+    }
+  }
+
+  p.subtext {
+
+    color: $light-font-color;
+    a {
+      color: $light-font-color;
+      text-decoration: underline;
+    }
+  }
+}
+
+// Trigger button for feedback (bottom right)
+
+a.feedback-trigger {
+  display: block;
+  position: absolute;
+  bottom: 20px;
+  font-size: 12px;
+  right: 30px;
+  padding: 10px 16px;
+  background-color: $feedback-color;
+  color: white;
+  border: 2px solid transparent;
+  text-decoration: none;
+  @include border-radius(25px);
+  @include transition(0.08s ease-in-out);
+
+  &:hover {
+    border: 2px solid white;
+  }
+}
+
+/* Misc. components, buttons etc. */
+
+a.mindset-stamp {
+  display: inline-block;
+  font-size: 11px;
+  @include border-radius(6px);
+  border: 2px solid white;
+  @include opacity(1.0);
+  color: white;
+  padding: 5px 10px;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  &:hover {
+    @include opacity(1.0);
+    background-color: white;
+  }
+}
+
+span.mindset-stamp {
+  display: inline-block;
+  font-size: 11px;
+  @include border-radius(6px);
+  border: 2px solid white;
+  @include opacity(0.7);
+  color: white;
+  padding: 5px 10px;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+// Rounded button
+
+a.rounded-button, .rounded-button, input[type=submit].rounded-button {
+  display: inline-block;
+  @include border-radius(5px);
+  line-height: 45px;
+  height: 45px;
+  background-color: white;
+  padding: 0px 30px;
+  font-size: 16px;
+  color: #999;
+  border: 0;
+
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+
+  &.inverted {
+    color: white;
+    background-color: $plum-color;
+    border-bottom-color: darken($plum-color, 10);
+  }
+}
+
+#reset-password button.bordered-button {
+  background-color: white;
+
+  &:hover {
+    background-color: $dark-blue-color;
+  }
+}
+
+a, button {
+  &.bordered-button {
+    display: inline-block;
+    outline: none;
+    border: 2px solid $dark-blue-color;
+    padding: 10px 20px;
+    color: $dark-blue-color;
+    margin-top: 20px;
+    background-color: transparent;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    letter-spacing: 1px;
+    @include transition(0.12s ease-in-out);
+
+    &:hover {
+      background-color: $dark-blue-color;
+      color: #fff;
+    }
+  }
+
+  &[disabled].bordered-button:hover {
+    background-color: transparent;
+    color: $dark-blue-color;
+  }
+}
+
+button.bordered-button--success {
+  @extend button.bordered-button;
+  color: $success-color;
+  border-color: $success-color;
+
+  &:hover {
+    background-color: white;
+    color: $success-color;
+  }
+}
+
+button.paginate-button {
+  position: relative;
+  width: 100%;
+  margin-top: 30px;
+  padding: 0px;
+  height: 0px;
+  background-color: lighten($color-kits, 10);
+  border: none;
+  outline: none;
+  overflow: hidden;
+  @include transition(0.16s ease-out);
+
+  .button-overlay {
+    position: absolute;
+    padding-top: 10px;
+    top: 44px;
+    height: 44px;
+    left: 0px;
+    width: 100%;
+    background-color: lighten($color-kits, 10);
+    text-align: center;
+    @include transition(0.16s ease-in-out);
+  }
+
+  &.active {
+    background-color: #f0f1f2;
+    height: 44px;
+    padding: 12px;
+  }
+
+  &:hover {
+    .button-overlay {
+      top: 0px;
+    }
+  }
+}
+
+/* UI Slider styling */
+
+$slider-height: 10px;
+$slider-handle-size: 20px;
+
+.ui-slider {
+  height: $slider-height;
+  background-color: #f0f1f2;
+  position: relative;
+}
+
+.ui-slider-range {
+  position: absolute;
+  height: $slider-height;
+  background-color: $font-color;
+}
+
+a.ui-slider-handle {
+  position: absolute;
+
+  &:after {
+    position: absolute;
+    content: '';
+    top: ($slider-handle-size - $slider-height)/-2;
+    left: -($slider-handle-size/2);
+    height: $slider-handle-size;
+    width: $slider-handle-size;
+    @include border-radius($slider-handle-size/2);
+    background-color: #f0f1f2;
+    border: 1px solid $light-font-color;
+  }
+
+  &.ui-state-active &:after {
+    background-color: $orange-color;
+    border-color: darken($orange-color, 10);
+  }
+}
+
+// Sticky social sharing links (used on practices and lessons)
+
+$share-size: 38px;
+
+.sticky-share {
+  position: absolute;
+  left: 30px;
+  top: 240px;
+
+  a[share-button], .share-counter, .share-toggler {
+
+    position: absolute;
+    display: block;
+    height: $share-size;
+    width: $share-size;
+    text-align: center;
+    @include border-radius($share-size/2);
+    background-color: $light-font-color;
+    color: white;
+    padding-top: 8px;
+    border: 2px solid rgba(255,255,255,0.3);
+
+    &[share-type="facebook"] {
+      top: 0px;
+
+      &:hover {
+        background-color: darken(#3c5d96, 0);
+      }
+    }
+
+    &[share-type="twitter"] {
+      top: $share-size + 10px;
+
+      &:hover {
+        background-color: darken(#3fadea, 0);
+      }
+    }
+
+    &[share-type="google"] {
+      top: ($share-size + 10px)*2;
+
+      &:hover {
+        background-color: darken(#d05d46, 0);
+      }
+    }
+
+  }
+
+  .share-counter {
+    font-size: 10px;
+    letter-spacing: 0.25px;
+    padding-top: 8px;
+    top: 180px;
+    line-height: 14px;
+
+    span {
+      font-size: 14px;
+      line-height: 14px;
+    }
+  }
+
+  .share-toggler {
+    display: none;
+  }
+}
+
+// Styles specific to ie7,8,9
+
+.lt-ie10 {
+
+}
+
+@include desktop {
+
+  .sticky-share {
+    left: 15px;
+    top: 225px;
+  }
+}
+
+@include tablet {
+
+  .sticky-share {
+    top: auto;
+    left: 15px;
+    bottom: 15px;
+
+    a[share-button] {
+      opacity: 0.0;
+      @include transition(0.25s ease-in-out);
+      left: 0px;
+      bottom: 0px;
+
+      &[share-type="facebook"], &[share-type="twitter"], &[share-type="google"] {
+        top: auto;
+      }
+    }
+
+    .share-counter {
+      display: none;
+    }
+
+    .share-toggler {
+      display: block;
+      top: auto;
+      bottom: 0px;
+      background-color: $feedback-color;
+    }
+
+    &.active {
+      a[share-button] {
+        &[share-type="facebook"] { left: 60px; opacity: 1.0; }
+        &[share-type="twitter"] { left: 120px; opacity: 1.0; }
+        &[share-type="google"] { left: 180px; opacity: 1.0; }
+      }
+    }
+  }
+}
+
+.fake-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Mobile styles */
+
+@include mobile {
+
+  .mobile-only {
+    display: inline-block;
+  }
+
+  div.mobile-only {
+    display: block;
+  }
+
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  a.feedback-trigger {
+    display: none;
+  }
+}
+
+/* Print page styling */
+
+@media print {
+
+  html, body, main, .full-container {
+    height: auto;
+  }
+
+  .full-container {
+    padding-top: 0px;
+  }
+
+  .container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  ul, img {
+    page-break-inside: avoid;
+  }
+  img, canvas {
+    max-width: 100% !important;
+  }
+  button.toggle-button {
+    display: none;
+  }
+
+  // Specific objects
+
+  .navbar {
+    display: none;
+  }
+
+  a.feedback-trigger {
+    display: none;
+  }
+
+  .sticky-share {
+    display: none;
+  }
+
+}
+
+/* Margins for printed page */
+
+@page {
+
+  size: 8.5in 11in;
+  margin: 2.5cm;
+
+}
+

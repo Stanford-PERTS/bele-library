@@ -1,0 +1,131 @@
+###############################################################################
+##                                                                           ##
+##                          !!  DO NOT EDIT !!                               ##
+##                                                                           ##
+##  instead, edit branch_environment.json, and then generate app.yaml by     ##
+##  running `python branch_environment.py` at the command line.              ##
+##                                                                           ##
+###############################################################################
+
+env_variables:
+  PROJECT_ID: ${PROJECT_ID}
+  APP_ENGINE_VERSION: ${APP_ENGINE_VERSION}
+  HOSTING_DOMAIN: ${HOSTING_DOMAIN}
+
+###############################################################################
+##                                                                           ##
+##                    !!  EDIT ONLY IN TEMPLATE  !!                          ##
+##                                                                           ##
+##  Only edit the following if this is the app.yaml.template file; then      ##
+##  generate app.yaml by running `python branch_environment.py` at the       ##
+##  command line.                                                            ##
+##                                                                           ##
+###############################################################################
+
+runtime: python27
+api_version: 1
+threadsafe: true
+
+includes:
+- mapreduce/include.yaml
+
+handlers:
+- url: /static
+  static_dir: static
+  secure: always
+  # Allow cross-domain requests for these resources.
+  # https://developers.google.com/appengine/docs/python/config/appconfig#cors_support
+  http_headers:
+    Access-Control-Allow-Origin: '*'
+
+- url: /robots\.txt
+  static_files: static/robots.txt
+  upload: robots\.txt
+
+- url: /bower_components
+  static_dir: bower_components
+  secure: always
+
+# Basic browserconfig.xml file for crawlers
+- url: /browserconfig\.xml
+  static_files: static/browserconfig.xml
+  upload: browserconfig\.xml
+
+# Setup icons for bookmarking on Apple devices
+- url: /apple-touch-icon\.png
+  static_files: static/apple-touch-icon.png
+  upload: apple-touch-icon\.png
+
+- url: /apple-touch-icon-precomposed\.png
+  static_files: static/apple-touch-icon-precomposed.png
+  upload: apple-touch-icon-precomposed\.png
+
+- url: /apple-touch-icon-152x152\.png
+  static_files: static/apple-touch-icon-152x152.png
+  upload: apple-touch-icon-152x152\.png
+
+- url: /apple-touch-icon-152x152-precomposed\.png
+  static_files: static/apple-touch-icon-152x152-precomposed.png
+  upload: apple-touch-icon-152x152-precomposed\.png
+
+- url: /apple-touch-icon-120x120\.png
+  static_files: static/apple-touch-icon-120x120.png
+  upload: apple-touch-icon-120x120\.png
+
+- url: /apple-touch-icon-120x120-precomposed\.png
+  static_files: static/apple-touch-icon-120x120-precomposed.png
+  upload: apple-touch-icon-120x120-precomposed\.png
+
+- url: /favicon\.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon\.ico
+  secure: always
+
+# Api endpoints
+- url: /api.*
+  script: api_handlers.application
+  secure: always
+
+- url: /cron.*
+  script: cron_handlers.application
+  login: admin
+  secure: always
+
+# A simple control panel for starting and viewing mapreduce jobs. Handled
+# by code in the mapreduce library.
+- url: /mapreduce(/.*)?
+  # Yes, the APP is in upper case. Yes, it's annoying. Leave it alone.
+  script: mapreduce.main.APP
+  login: admin
+  secure: always
+
+# URLs to initiate our map reduce jobs.
+- url: /map.*
+  script: map_handlers.app
+  login: admin
+  secure: always
+
+- url: /admin.*
+  script: mindsetkit.application
+  login: admin
+  secure: always
+
+- url: /.*
+  script: mindsetkit.application
+  secure: always
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: 2.6
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^.*bower\_components$
+- ^.*node\_modules$
+- ^sass$

@@ -1,0 +1,416 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "Upload a Resource" %}
+{% set desc = "Students who have a growth mindset do better in school. Learn more about a growth mindset, the evidence showing its power, and the practices that promote it." %}
+
+{% set controller = "CreateCtrl" %}
+
+{% block content %}
+
+<div class="full-container">
+
+  <!-- Panels -->
+
+  <div id="panels" class="padded-left">
+
+    <div id="sidepanel" class="upload-practice affix">
+
+      <div class="top-section">
+        <div class="upload-image" style="text-align: center; padding-top: 8px; padding-left: 4px;">
+          <i class="fa fa-3x fa-pencil"></i>
+        </div>
+        {% if practice_id %}
+        <h2>Edit this Resource</h2>
+        {% else %}
+        <h2>Upload a Resource</h2>
+        {% endif %}
+      </div>
+
+      <div class="step-list">
+        <div class="step-item" ng-class="{active: step === 1}">
+          <div class="step-indicator">
+            <i class="fa fa-lg fa-chevron-right"></i>
+          </div>
+          <h3>Step 1</h3>
+          <p>Upload Your Content</p>
+        </div>
+        <div class="step-item" ng-class="{active: step === 2}">
+          <div class="step-indicator">
+            <i class="fa fa-lg fa-chevron-right"></i>
+          </div>
+          <h3>Step 2</h3>
+          <p>Additional Information</p>
+        </div>
+        <div class="step-item" ng-class="{active: step === 3}">
+          <div class="step-indicator">
+            <i class="fa fa-lg fa-chevron-right"></i>
+          </div>
+          <h3>Step 3</h3>
+          <p>Save &amp; Share</p>
+        </div>
+      </div>
+    </div><!-- /#sidepanel -->
+
+    <div class="main-container upload-container">
+
+      <!-- Step 1 -->
+
+      <div class="main-container-inner" ng-class="{active: step === 1}">
+        {% if practice_id %}
+        <h1><span class="light-text">Step 1: </span>Edit Content</h1>
+        {% else %}
+        <h1><span class="light-text">Step 1: </span>Add Your Content</h1>
+        {% endif %}
+
+        <!-- Name and summary text inputs -->
+
+        <h4>Name this resource</h4>
+        <label>Be as concise as possible</label>
+        <div class="input-wrapper">
+          <input placeholder="Resource name" ng-model="practiceName" ng-change="checkValidation()"></input>
+        </div>
+
+        <h4>Provide a short summary</h4>
+        <label>Up to 250 characters, this will appear in search</label>
+        <div class="input-wrapper">
+          <textarea placeholder="Enter summary" ng-model="practiceSummary" ng-change="checkValidation()"></textarea>
+        </div>
+
+        <!-- Practice body textarea -->
+
+        <h4>Tell us more about this resource</h4>
+        <label>
+          This is the "body" of your content. Provide as much detail as you'd like!
+        </label>
+
+        <textarea ng-model="practiceBody"
+                  ng-change="checkValidation()"
+                  redactor="{
+                    buttons: ['source', 'format', 'bold', 'italic', 'lists', 'table', 'link'],
+                    formatting: ['p', 'blockquote', 'pre', 'h2', 'h3', 'h4'],
+                    plugins: ['table', 'source'],
+                    script: false}"
+                  placeholder="Write about this resource">
+        </textarea>
+
+        <!-- Supporting files -->
+
+        <h4>Add supporting files or videos</h4>
+        <label>
+          YouTube videos and downloadable files can help your content stand out
+        </label>
+
+        <div class="content-options">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="content-option-wrapper" ngf-select ng-model="freshFiles" ngf-multiple="true" ngf-change="handleFiles()">
+                <div class="content-option">
+                  <i class="fa fa-file-text-o fa-2x"></i>
+                </div>
+                <h4>Attach a file</h4>
+                <label>From Power Point to PDF (&lt; 15 MB)</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="content-option-wrapper" data-toggle="modal" data-target="#videoModal" ng-click="addResourceType('video')">
+                <div class="content-option">
+                  <i class="fa fa-youtube-play fa-2x"></i>
+                </div>
+                <h4>Add a YouTube video</h4>
+                <label>Use any YouTube URL</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="content-option-wrapper" data-toggle="modal" data-target="#iframeModal">
+                <div class="content-option">
+                  <i class="fa fa-code fa-2x"></i>
+                </div>
+                <h4>Embed a video</h4>
+                <label>Add videos from sites like Vimeo or TeacherTube</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Show uploaded files -->
+
+        <div ng-repeat="file in files">
+          <div class="file-wrapper">
+            <i class="fa fa-file"></i>&nbsp;&nbsp;<b>{[ file.name ]}</b>
+            <a class="file-removal" ng-click="removeFile(file)">
+              <i class="fa fa-lg fa-close"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="file-wrapper video-wrapper" ng-show="youtubeId">
+          <i class="fa fa-youtube"></i>&nbsp;&nbsp;<b>{[ youtubeId ]}</b>
+          <a class="file-removal" ng-click="removeVideo()">
+            <i class="fa fa-lg fa-close"></i>
+          </a>
+        </div>
+
+        <div class="file-wrapper video-wrapper" ng-show="iframeSource">
+          <i class="fa fa-code"></i>&nbsp;&nbsp;<b>{[ iframeSource ]}</b>
+          <a class="file-removal" ng-click="removeIframe()">
+            <i class="fa fa-lg fa-close"></i>
+          </a>
+        </div>
+
+        <h5 ng-show="oldFiles">Existing files</h5>
+
+        <!-- Show files from uploaded practice -->
+        <div ng-repeat="oldFile in oldFiles">
+          <div class="file-wrapper">
+            <i class="fa fa-file"></i>&nbsp;&nbsp;<b>{[ oldFile.filename ]}</b>
+            <a class="file-removal" ng-click="removeFile(oldFile)">
+              <i class="fa fa-lg fa-close"></i>
+            </a>
+          </div>
+        </div>
+
+        <br><br>
+
+        <div class="spacer"></div>
+
+        <button ng-click="nextStep()" class="next-button" ng-class="{active: validated}">Continue</button>
+
+        <div ng-show="error" class="error-message">{[error]}</div>
+      </div>
+
+
+      <!-- =========== -->
+      <!--   Step 2    -->
+      <!-- =========== -->
+
+
+      <div class="main-container-inner" ng-class="{active: step === 2}">
+        {% if practice_id %}
+        <h1><span class="light-text">Step 2: </span>Edit Tagging</h1>
+        {% else %}
+        <h1><span class="light-text">Step 2: </span>Add Tagging</h1>
+        {% endif %}
+
+        <p>This information will make it easier for others to find your resource.</p>
+        <br>
+
+        <!-- Tag multi-selectors -->
+
+        <h4>Select mindset tag(s)</h4>
+        <div class="tags-wrapper"><div class="click-tag" ng-repeat="tag in mindsetTags" ng-click="tag.active = !tag.active" ng-class="{active: tag.active}">{[ tag.name ]}</div></div>
+
+        <h4>Select resource tag(s)</h4>
+        <div class="tags-wrapper">
+          <div class="click-tag" ng-repeat="tag in practiceTags" ng-click="tag.active = !tag.active" ng-class="{active: tag.active}">{[ tag.name ]}</div>
+        </div>
+
+        <h4>Select grade level(s)</h4>
+        <div class="tags-wrapper--5">
+
+          <div ui-slider="{range: true}"
+               min="0"
+               max="13"
+               ng-model="gradeSlider"></div>
+          <div class="grade-range" ng-hide="(gradeSlider[0] === 0 && gradeSlider[1] === 13) || gradeSlider[0] === gradeSlider[1]">
+            {[gradeLevels[gradeSlider[0]]]} through {[gradeLevels[gradeSlider[1]]]}
+          </div>
+          <div class="grade-range" ng-show="gradeSlider[0] === 0 && gradeSlider[1] === 13">
+            All grade levels
+          </div>
+          <div class="grade-range" ng-show="gradeSlider[0] === gradeSlider[1]">
+            {[ gradeLevels[gradeSlider[0]] ]} only
+          </div>
+
+        </div>
+
+        <h4>Select subject (optional)</h4>
+        <div class="tags-wrapper--5">
+          <div class="click-tag" ng-repeat="subject in schoolSubjects" ng-click="subject.active = !subject.active" ng-class="{active: subject.active}">{[ subject.name ]}</div>
+        </div>
+
+        <!-- Dropdown selectors -->
+
+        <h4>When in the school year? (optional)</h4>
+        <div class="tags-wrapper--select">
+          <div class="dropdown-tag" ng-click="yearDrop = !yearDrop">{[ yearTime ]}</div>
+          <ul class="dropdown-tag_options" ng-class="{active: yearDrop}">
+            <li ng-repeat="option in yearTimes" ng-click="setYearDrop(option)">{[ option ]}</li>
+          </ul>
+        </div>
+
+        <h4>When during the class period? (optional)</h4>
+        <div class="tags-wrapper--select">
+          <div class="dropdown-tag" ng-click="classDrop = !classDrop">{[ classPeriod ]}</div>
+          <ul class="dropdown-tag_options" ng-class="{active: classDrop}">
+            <li ng-repeat="option in classPeriods" ng-click="setClassDrop(option)">{[ option ]}</li>
+          </ul>
+        </div>
+
+        <div class="spacer"></div>
+
+        <button ng-click="createPractice()" class="next-button" ng-class="{active: validated}" ng-hide="creating">
+          {% if practice_id %}
+          Update!
+          {% else %}
+          Finish!
+          {% endif %}
+        </button>
+        <button ng-click="previousStep()" class="back-button" ng-hide="creating">Go back</button>
+
+        <div class="creating-indicator" ng-show="creating">
+          <i class="fa fa-spinner fa-spin fa-2x"></i>
+        </div>
+
+        <div ng-show="error" class="error-message">{[error]}</div>
+
+      </div>
+
+      <!-- Step 3 -->
+
+      <div class="main-container-inner" ng-class="{active: step === 3}">
+        <h1>Success!</h1>
+
+        {% if practice_id %}
+        <p>
+          Your resource has been successfully updated. All changes should be immediately viewable by our users. Make sure to approve this resource before it'll show up.
+        </p>
+        {% else %}
+        <p>
+          Your resource has been successfully uploaded. You can share it with friends and colleagues, but it won't show up in search results quite yet. <i>Why's that?</i> We just need to do a quick check to make sure all resources have appropriate content.
+        </p>
+        {% endif %}
+
+        <br>
+
+        <h4>Want to share your resource?</h4>
+
+        <div class="sharing-options">
+
+          <a share-button="" share-type="facebook" share-url="{[shareUrl]}" class="sharing-option"><i class="fa fa-facebook fa-lg"></i></a>
+          <a share-button="" share-type="twitter" share-url="{[shareUrl]}" share-text="{[shareText]}" class="sharing-option"><i class="fa fa-twitter fa-lg"></i></a>
+          <a share-button="" share-type="google" share-url="{[shareUrl]}" class="sharing-option"><i class="fa fa-google fa-lg"></i></a>
+          <a share-button="" share-type="email" share-url="{[shareUrl]}" share-text="{[shareText]}" class="sharing-option"><i class="fa fa-envelope fa-lg"></i></a>
+          <br>
+          <label>Or copy this link</label><br>
+          <input readonly value="{[shareUrl]}"></input>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="spacer"></div>
+
+        <button class="next-button active" ng-click="viewPractice()">View resource</button>
+        <button class="back-button" ng-click="resetPage()">Add another</button>
+      </div>
+
+    </div><!-- /.main-container -->
+
+  </div><!-- /#panels -->
+
+</div>
+
+<!-- Vertical Navigation Bar -->
+
+{% include 'components/vertical-nav.html' %}
+
+{% endblock %}
+
+<!-- Overrides user modals since not used -->
+
+{% block modals %}
+
+{{ super() }}
+
+<!-- Modal for adding youtube videos -->
+
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="video-upload-modal">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <h3>Upload a video</h3>
+        <p>
+          It's easy to embed a video in your resource. Just copy &amp; paste a link from YouTube. If you only have a file, try uploading first. (<a href="https://support.google.com/youtube/answer/57407?hl=en" target="_blank">You can follow this quick guide.</a>)
+        </p>
+
+        <br>
+
+        <!-- Youtube video -->
+
+        <div class="input-wrapper">
+          <input placeholder="Enter a YouTube URL" ng-model="youtubeSource" ng-change="getYoutubeId()"></input>
+          <div class="valid-indicator" ng-show="youtubeValid">
+            <i class="fa fa-check fa-lg"></i>&nbsp;Valid
+          </div>
+          <div class="valid-indicator invalid" ng-show="youtubeInvalid">
+            <i class="fa fa-close fa-lg"></i>&nbsp;Invalid
+          </div>
+        </div>
+
+        <div class="youtube-image-holder" ng-show="youtubeId">
+          <img src="//img.youtube.com/vi/{[ youtubeId ]}/0.jpg" height="100px">
+        </div>
+
+        <div class="modal-footer">
+          <button class="" data-dismiss="modal" ng-click="removeVideo()">Cancel</button>
+          &nbsp;
+          <button data-dismiss="modal" ng-show="youtubeValid">Save</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal for adding embedded iFrames -->
+
+<div class="modal fade" id="iframeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="video-upload-modal">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <h3>Embed a video</h3>
+        <p>
+          Websites like Vimeo.com and TeacherTuber.com offer ways to share videos via embedded code. Paste the code they provide below to add a video to this practice.
+        </p>
+
+        <br>
+
+        <!-- Iframe embed -->
+
+        <div class="input-wrapper">
+          <textarea placeholder="Example: <iframe src='https://player.vimeo.com/video/185823131' width='640' height='360' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"
+                    ng-model="embedCode" ng-change="getIframeSrc()"></textarea>
+        </div>
+
+        <div class="input-wrapper">
+          <input ng-model="iframeSource" readonly></input>
+          <div class="valid-indicator" ng-show="iframeSrcValid">
+            <i class="fa fa-check fa-lg"></i>&nbsp;Valid
+          </div>
+          <div class="valid-indicator invalid" ng-show="iframeSrcInvalid">
+            <i class="fa fa-close fa-lg"></i>&nbsp;Invalid
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="" data-dismiss="modal" ng-click="removeIframe()">Cancel</button>
+          &nbsp;
+          <button data-dismiss="modal" ng-show="iframeSrcValid">Save</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

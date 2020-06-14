@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% set controller = "PageCtrl" %}
+
+{% import 'jinja_macros.html' as macros %}
+
+{% block content %}
+<div class="new-page">
+  <div class="ctainer">
+    <div class="masthead-container">
+      <div class="container masthead-container">
+        <div class="masthead-text-wrapper">
+        <div class="masthead-text col-md-9 col-md-offset-1">
+          {% if breadcrumb_title %}
+          <a class="breadcrumb-title" href="/books/{{book.uid}}/{{chapter.uid}}" target="_self">{{ breadcrumb_title }}</a>
+          {% endif %}
+          <div class="title">{{ page.title }}</div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row content">
+        <div class="col-md-8 col-md-offset-1 section-container">
+          <section>
+            <div class="short-description">
+              <div class="description-text">{{ page.short_description | safe }}</div>
+            </div>
+
+            <div class="body">
+              <h1>Description</h1>
+              {#
+                #84: this used to be hidden if no one was signed in, and will be
+                hidden again at some point after we integrate with PERTS auth.
+                
+                <div class="body-text" ng-class="{truncate: !user}">{{ page.body | safe }}</div>
+              #}
+              <div class="body-text">{{ page.body | safe }}</div>
+            </div>
+
+            {#
+              #84: this used to be hidden if no one was signed in, and will be
+              hidden again at some point after we integrate with PERTS auth.
+
+              {% if user %}
+            #}
+
+              {#
+                @todo(chris): b/c we're not using first and second sections
+                anymore, we can probably tear out a bunch of code in the view
+                handlers.
+              #}
+              {% for content_property in first_section_props %}
+                {{ macros.render_page_field(content_property) }}
+              {% endfor %}
+              {% for content_property in second_section_props %}
+                {{ macros.render_page_field(content_property) }}
+              {% endfor %}
+              {% if related_pages | length > 0 %}
+                <div class="content-section">
+                  <div class="controls" ng-click="setExpanded('relatedPages')">
+                    <h2>Related Pages</h2>
+                    <i ng-class="{ hidden: !expanded['relatedPages'] }" class="fa fa-angle-up"></i>
+                    <i ng-class="{ hidden: expanded['relatedPages'] }" class="fa fa-angle-down"></i>
+                  </div>
+                  <div class="related-pages-list" ng-class="{ hidden: !expanded['relatedPages'] }">
+                    {% for related_page in related_pages %}
+                    <div class="related-page">
+                      <div class="related-page-icon" style="background-image: url('{{ related_page.iconPath }}');"></div>
+                      <a href="/pages/{{related_page.short_uid}}" target="_blank" class="related-page-title">{{ related_page.title }}</a>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+              {% if page.json_properties.files | length > 0 %}
+                <div class="content-section">
+                  <div class="controls" ng-click="setExpanded('jsonProperties')">
+                    <h2>Attachments</h2>
+                    <i
+                      ng-class="{ hidden: !expanded['jsonProperties'] }"
+                      class="fa fa-angle-up"
+                    ></i>
+                    <i
+                      ng-class="{ hidden: expanded['jsonProperties'] }"
+                      class="fa fa-angle-down"
+                    ></i>
+                  </div>
+                  <div class="file-list" ng-class="{ hidden: !expanded['jsonProperties'] }">
+                    {% for file in page.json_properties.files %}
+
+                    <a href="{{file.link}}" target="_blank" class="attachment" download>
+                      <div class="attachment_image">
+                        {% if file.content_type | filetype == 'image file' %}
+                        <i class="fa fa-2x fa-file-image-o"></i>
+                        {% elif file.content_type | filetype == 'audio' %}
+                        <i class="fa fa-2x fa-file-sound-o"></i>
+                        {% elif file.content_type | filetype == 'word document' %}
+                        <i class="fa fa-2x fa-file-word-o"></i>
+                        {% elif file.content_type | filetype == 'pdf file' %}
+                        <i class="fa fa-2x fa-file-pdf-o"></i>
+                        {% elif file.content_type | filetype == 'presentation' %}
+                        <i class="fa fa-2x fa-file-powerpoint-o"></i>
+                        {% else %}
+                        <i class="fa fa-2x fa-file"></i>
+                        {% endif %}
+                      </div>
+                      <div class="attachment_text">
+                        {{file.filename}}
+                      </div>
+                    </a>
+
+                    <br>
+
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+
+            {#
+              #84: this used to be hidden if no one was signed in, and will be
+              hidden again at some point after we integrate with PERTS auth.
+              
+              {% endif %}
+            #}
+
+            {#
+              #84: this used to be hidden if no one was signed in, and will be
+              hidden again at some point after we integrate with PERTS auth.
+              
+              {% if user %}
+            #}
+
+              <div class="button-container">
+                <div>
+                  {#
+                    This must always be limited to signed-in users, otherwise we
+                    can't attribute the like/vote to anyone.
+                  #}
+                  {% if user %}
+                  <button class="btn btn-secondary btn-lg btn-secondary-override" ng-hide="user" ng-cloak data-toggle="modal" data-target="#signupModal">
+                    <i class="fa fa-heart"></i>
+                    &nbsp;Like this
+                  </button>
+                  {% endif %}
+                  <button class="btn btn-secondary btn-lg btn-secondary-override" ng-click="print()">
+                    <i class="fa fa-print"></i>
+                    print this page
+                  </button>
+                </div>
+                {% if next_page %}
+                <div>
+                  <a class="btn btn-primary btn-lg" href="{{next_page_url}}" target="_self">
+                    next page
+                  </a>
+                </div>
+                {% elif next_chapter %}
+                <div>
+                  <a class="btn btn-primary btn-lg" href="{{next_chapter_url}}" target="_self">
+                    next chapter
+                  </a>
+                </div>
+                {% elif book %}
+                <div>
+                  <a class="btn btn-primary btn-lg" href="/books/{{book.short_uid}}" target="_self">
+                    finish book
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Discussion Angular Directive -->
+              <discussion parent="'{{ page.uid }}'" type="page"></discussion>
+
+            {#
+              #84: this used to be hidden if no one was signed in, and will be
+              hidden again at some point after we integrate with PERTS auth.
+              
+              {% else %}
+                {{ render_anon_cta() }}
+              {% endif %}
+            #}
+          </section>
+        </div>
+        {% set editButtonCopy = "Edit" %}
+        {% set editPath = "/pages/edit/" + page.short_uid %}
+        {% include 'components/metadata-panel.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% macro render_anon_cta() %}
+<div class="anon-cta">
+  <h3>Want to read more?</h3>
+  <p>
+    Join the Building Equitable Learning Environments (BELE) Library to find
+    resources and recommendations for creating more equitable and empowering
+    learning environments.
+  </p>
+  <div class="button-container">
+    <button class="btn btn-primary__inverted btn-lg" ng-click="showLogin()">Log in</button>
+    <button class="btn btn-primary btn-lg" ng-click="showSignup()">Sign up</button>
+  </div>
+</div>
+{% endmacro %}

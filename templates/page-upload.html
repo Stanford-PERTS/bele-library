@@ -1,0 +1,481 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "Create a new Page" %}
+{% set desc = "Students who have a growth mindset do better in school. Learn more about a growth mindset, the evidence showing its power, and the pages that promote it." %}
+
+{% set controller = "PageCreateCtrl" %}
+{% set init = "init(" + page_json + ", '" + chapter_id + "', '" + book_id + "')" %}
+
+{% block content %}
+
+<div class="full-container">
+  <div class="masthead masthead__collapsed">
+  </div>
+  <div class="container edit-page">
+    <div class="row">
+      <div class="col-sm-7 col-md-6 col-sm-offset-1">
+        <div class="step-list">
+          <div class="step-item" ng-class="{active: step === 1}">
+            <h3>Step 1:<br />Page Content</h3>
+          </div>
+          <div class="step-indicator" ng-class="{active: step === 1}">
+            <i class="fa fa-lg fa-chevron-right"></i>
+          </div>
+          <div class="step-item" ng-class="{active: step === 2}">
+            <h3>Step 2:<br />References</h3>
+          </div>
+          <div class="step-indicator" ng-class="{active: step === 2}">
+            <i class="fa fa-lg fa-chevron-right"></i>
+          </div>
+          <div class="step-item" ng-class="{active: step === 3}">
+            <h3>Step 3:<br />Tagging</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-7 col-md-6 col-sm-offset-1">
+        <p>
+          If a particular field does not apply to the resource or practice
+          you’re describing, leave it blank, and it will not appear on the
+          page.
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-1">
+      <!-- Step 1 -->
+
+      <div class="step-section" ng-class="{active: step === 1}">
+        <!-- Name and summary text inputs -->
+
+        <h4>Page Title*</h4>
+        <label>Required. Be as concise as possible</label>
+        <div class="input-wrapper" ng-class="{ error: models.pageName.displayError }">
+          <input class="my-input"   placeholder="Give your page a title"
+                                    ng-model="models.pageName.value"
+                                    ng-focus="handleFocus('pageName')"
+                                    ng-change="handleChange('pageName')"
+                                    ng-blur="handleBlur('pageName')"></input>
+          <p class="my-error" ng-show="models.pageName.displayError">Page Title</p>
+          <p class="my-error-message" ng-show="models.pageName.displayError">{[ models.pageName.errorMessage ]}</p>
+        </div>
+
+        <div class="icon-upload book-info" ngf-select ng-model="pageIcon" ngf-multiple="false" ngf-change="setPageIconPath()">
+          <div class="image-container" style="margin-bottom: 40px;background-image: url('{[ models.pageIconPath.value ]}'); background-size: cover; background-position: center;">
+            <i class="fa fa-image"></i>
+          </div>
+          <div class="content-wrapper">
+            <div class="header">
+              <span>
+                Page icon
+              </span>
+            </div>
+            <p>
+              Optional. Icon sized image that shows<br />up next to the book in search results.
+            </p>
+          </div>
+        </div>
+
+        <h4>Summary*</h4>
+        <label>
+          Required. A tweet-sized description of the knowledge product. This
+          will appear in search results.
+        </label>
+        <div class="input-wrapper" ng-class="{ error: models.pageSummary.displayError }">
+          <div class="textarea-wrapper" ng-class="{ focus: models.pageSummary.isFocused }">
+            <textarea   placeholder="Enter a summary"
+                        ng-model="models.pageSummary.value"
+                        ng-focus="handleFocus('pageSummary')"
+                        ng-change="handleChange('pageSummary')"
+                        ng-blur="handleBlur('pageSummary')"></textarea>
+          </div>
+          <p class="my-error" ng-show="models.pageSummary.displayError">Page Summary</p>
+          <p class="my-error-message" ng-show="models.pageSummary.displayError">{[ models.pageSummary.errorMessage ]}</p>
+        </div>
+
+        <!-- Page body textarea -->
+
+        <h4>Description*</h4>
+        <label>
+          Required. Describe this resource and how to use it.
+        </label>
+        <div class="input-wrapper tiny" ng-class="{ error: models.pageBody.displayError }">
+          <textarea ng-model="models.pageBody.value"
+                    ui-tinymce="tinymceOptions"
+                    placeholder="This is a text editor.  Add and edit as you wish.">
+          </textarea>
+          <p class="my-error" ng-show="models.pageBody.displayError">Page Body</p>
+          <p class="my-error-message" ng-show="models.pageBody.displayError">{[ models.pageBody.errorMessage ]}</p>
+        </div>
+
+        <div ng-show="step !== 1 && error" class="error-message">{[error]}</div>
+
+        <br />
+
+        <div class="text-right">
+            <a href="/profile" target="_self" class="btn btn-lg btn-secondary btn-secondary__inverted">CANCEL</a>
+          <button ng-click="nextStep()" class="btn btn-lg btn-primary" ng-class="{active: validated}">NEXT</button>
+        </div>
+
+      </div>
+
+      <!-- =========== -->
+      <!--   Step 2    -->
+      <!-- =========== -->
+
+      <div class="step-section" ng-class="{active: step === 2}">
+        <h4>Time required</h4>
+        <label>
+          How long does the knowledge product take including prep and debrief?
+        </label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            placeholder="time required"
+            ng-model="models.pageTime.value"
+            ng-style="{ width: '180px' }"
+          >
+          </input>
+        </div>
+
+        <h4>Required materials</h4>
+        <label>
+          What materials are needed to use this resource?
+        </label>
+        <div class="input-wrapper">
+          <textarea placeholder="This is a text editor. Add and edit as you wish."
+                    ng-model="models.pageMaterials.value"
+                    ui-tinymce="tinymceOptions">
+          </textarea>
+        </div>
+
+        <h4>Attachments</h4>
+        <label>Upload related documents.</label>
+
+        <br />
+
+        <div class="attachments">
+
+          <div class="attachment-option"  ngf-select ng-model="freshFiles" ngf-multiple="true" ngf-change="handleFiles()">
+            <div class="attachment-icon">
+              <i class="fa fa-file-text-o" style="position: relative; left: 2px;"></i>
+            </div>
+            <div class="attachment-title">
+              Upload a File
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Show uploaded files -->
+
+        <div ng-repeat="file in files">
+          <div class="file-wrapper">
+            <i class="fa fa-file"></i>&nbsp;&nbsp;<b>{[ file.name ]}</b>
+            <a class="file-removal" ng-click="removeFile(file)">
+              <i class="fa fa-lg fa-close"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="file-wrapper video-wrapper" ng-show="youtubeId">
+          <i class="fa fa-youtube"></i>&nbsp;&nbsp;<b>{[ youtubeId ]}</b>
+          <a class="file-removal" ng-click="removeVideo()">
+            <i class="fa fa-lg fa-close"></i>
+          </a>
+        </div>
+
+        <div class="file-wrapper video-wrapper" ng-show="iframeSource">
+          <i class="fa fa-code"></i>&nbsp;&nbsp;<b>{[ iframeSource ]}</b>
+          <a class="file-removal" ng-click="removeIframe()">
+            <i class="fa fa-lg fa-close"></i>
+          </a>
+        </div>
+
+        <h4 ng-show="oldFiles.length > 0">Existing files</h4>
+
+        <!-- Show files from uploaded page -->
+        <div ng-repeat="oldFile in oldFiles">
+          <div class="file-wrapper">
+            <i class="fa fa-file"></i>&nbsp;&nbsp;<b>{[ oldFile.filename ]}</b>
+            <a class="file-removal" ng-click="removeFile(oldFile)">
+              <i class="fa fa-lg fa-close"></i>
+            </a>
+          </div>
+        </div>
+
+        <br><br>
+
+        <h4>Related BELE Library Pages</h4>
+        <label>Associate with up to 10 related BELE Library pages.</label>
+        <div class="input-wrapper">
+          <input class="my-input"   placeholder="Paste url of page"
+                                    ng-model="newRelatedPage"></input>
+          <button style="margin: 4px 0;" class="btn btn-primary" ng-click="addRelatedPage()">ADD</button>
+
+          <div class="related-pages-list" ng-show="relatedPages.length > 0">
+            <div class="related-page" ng-repeat="page in relatedPages">
+              <div class="related-page-icon" style="background-image: url('{[ page.iconPath || '/' ]}');"></div>
+              <a href="/pages/{[ page.short_uid ]}" target="_blank" class="related-page-title">{[ page.title ]}</a>
+              <div class="flex-grow-1"></div>
+              <div class="related-page-remove" ng-click="removeRelatedPage(page.uid)">
+                <i class="fa fa-times-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <h4>Evidence of effectiveness</h4>
+        <label>
+          What evidence do you have that this resource is effective?
+        </label>
+        <div class="input-wrapper">
+          <textarea placeholder="This is a text editor. Add and edit as you wish."
+                    ng-model="models.pageEvidence.value"
+                    ui-tinymce="tinymceOptions">
+          </textarea>
+        </div>
+
+        <h4>Challenges &amp; Preconditions</h4>
+        <label>
+          This section should briefly describe organizational conditions or
+          prerequisite activities needed to maximize the effectiveness of
+          and/or fidelity to the knowledge product as well as detail common
+          pitfalls and challenges. If you feel users of this knowledge product
+          should contact you before using or implementing this knowledge
+          product, please note that in this section.
+        </label>
+        <div class="input-wrapper">
+          <textarea placeholder="This is a text editor. Add and edit as you wish."
+                    ng-model="models.pagePreconditions.value"
+                    ui-tinymce="tinymceOptions">
+          </textarea>
+        </div>
+
+        <h4>Connection to Equity</h4>
+        <label>
+          Explain how this contributes to an Equitable Learning Environment.
+        </label>
+        <div class="input-wrapper">
+          <textarea placeholder="This is a text editor. Add and edit as you wish."
+                    ng-model="models.pageEquity.value"
+                    ui-tinymce="tinymceOptions">
+          </textarea>
+        </div>
+
+        <h4>Associated measures</h4>
+        <label>
+          What measures can be used to tell whether this practice is needed or
+          working as intended?
+        </label>
+        <div class="input-wrapper">
+          <textarea placeholder="This is a text editor. Add and edit as you wish."
+                    ng-model="models.pageMeasures.value"
+                    ui-tinymce="tinymceOptions">
+          </textarea>
+        </div>
+
+        <div style="margin-bottom: 96px;">
+          <button ng-click="previousStep()" class="btn btn-lg btn-primary pull-left" ng-hide="creating">Go back</button>
+          <button ng-click="nextStep()" class="btn btn-lg btn-primary pull-right" ng-class="{active: validated}">NEXT</button>
+          <a href="/profile" target="_self" class="btn btn-lg btn-secondary btn-secondary__inverted pull-right">CANCEL</a>
+          <div class="clearfix"></div>
+        </div>
+
+        <div ng-show="error" class="error-message">{[error]}</div>
+      </div>
+
+      <!-- =========== -->
+      <!--   Step 3    -->
+      <!-- =========== -->
+
+      <div class="step-section" ng-class="{active: step === 3}">
+
+        <h4>Tags</h4>
+        <label>One or more of the following</label>
+        <div class="tags-wrapper"><div class="click-tag" ng-repeat="tag in tags" ng-click="tag.active = !tag.active" ng-class="{active: tag.active}">{[ tag.name ]}</div></div>
+
+        <h5>Additional tags, separated by commas</h5>
+        <div class="input-wrapper">
+          <input type="text" ng-model="models.pageAdditionalTags.value" />
+        </div>
+
+        <h4>Optional Contact Information</h4>
+        <label>
+          This could include a link to your organization’s website or other
+          contact information like email addresses.
+        </label>
+        <div class="input-wrapper">
+          <textarea placeholder="https://www.example.com"
+                    ng-model="models.pageAcknowledgements.value"
+                    ui-tinymce="tinymceOptions">
+          </textarea>
+        </div>
+
+        <h4>Preferred Citation</h4>
+        <label>
+          How should others acknowledge this work if they use it? For example:
+          &ldquo;(Activity) developed by (Author).&rdquo;
+        </label>
+        <div class="input-wrapper">
+          <textarea
+            placeholder="example citation"
+            ng-model="models.pageCitations.value"
+            maxlength="1000"
+          ></textarea>
+        </div>
+
+        <div style="border: 1px dotted #ff6677; padding: 20px; font-weight: bold;">
+          Content on this site is licensed under a
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">
+          Creative Commons Attribution 4.0 International License</a>. By
+          uploading to this site, you agree to apply that license to the content
+          you contribute (but not to content you link to). Content will be
+          attributed to the Equitable Learning Environment Library unless you
+          specify a &ldquo;preferred citation&rdquo; above.
+        </div>
+
+          <br><br>
+
+        <div style="margin-bottom: 96px;">
+          <button ng-click="createPage()" class="btn btn-lg btn-primary pull-right" ng-class="{active: validated}" ng-hide="creating">
+            Publish
+          </button>
+          <button class="btn btn-lg pull-right" disabled ng-show="creating">
+            Publish
+            <i class="fa fa-spin fa-spinner"></i>
+          </button>
+          <button ng-click="previousStep()" class="btn btn-lg btn-secondary btn-secondary__inverted pull-right">Back</button>
+          <div class="clearfix"></div>
+        </div>
+
+        <div ng-show="error" class="error-message">{[error]}</div>
+      </div>
+
+      <!-- Step 4 -->
+
+      <div class="step-section" ng-class="{active: step === 4}">
+        <h1>Success!</h1>
+
+        {% if page_id %}
+        <p>
+          Your resource has been successfully updated. All changes should be immediately viewable by our users. Make sure to approve this resource before it'll show up.
+        </p>
+        {% else %}
+        <p>
+          Your resource has been successfully uploaded. You can share it with friends and colleagues, but it won't show up in search results quite yet. <i>Why's that?</i> We just need to do a quick check to make sure all resources have appropriate content.
+        </p>
+        {% endif %}
+
+        <div style="padding-top: 40px">
+          <button class="btn btn-lg btn-primary" ng-click="viewPage()">View resource</button>
+          <button class="btn btn-lg btn-secondary btn-secondary__inverted" ng-click="resetPage()">Add another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+<!-- Overrides user modals since not used -->
+
+{% block modals %}
+
+{{ super() }}
+
+<!-- Modal for adding youtube videos -->
+
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="video-upload-modal">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <h3>Upload a video</h3>
+        <p>
+          It's easy to embed a video in your resource. Just copy &amp; paste a link from YouTube. If you only have a file, try uploading first. (<a href="https://support.google.com/youtube/answer/57407?hl=en" target="_blank">You can follow this quick guide.</a>)
+        </p>
+
+        <br>
+
+        <!-- Youtube video -->
+
+        <div class="input-wrapper">
+          <input placeholder="Enter a YouTube URL" ng-model="youtubeSource" ng-change="getYoutubeId()"></input>
+          <div class="valid-indicator" ng-show="youtubeValid">
+            <i class="fa fa-check fa-lg"></i>&nbsp;Valid
+          </div>
+          <div class="valid-indicator invalid" ng-show="youtubeInvalid">
+            <i class="fa fa-close fa-lg"></i>&nbsp;Invalid
+          </div>
+        </div>
+
+        <div class="youtube-image-holder" ng-show="youtubeId">
+          <img src="//img.youtube.com/vi/{[ youtubeId ]}/0.jpg" height="100px">
+        </div>
+
+        <div class="modal-footer">
+          <button class="" data-dismiss="modal" ng-click="removeVideo()">Cancel</button>
+          &nbsp;
+          <button data-dismiss="modal" ng-show="youtubeValid">Save</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal for adding embedded iFrames -->
+
+<div class="modal fade" id="iframeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="video-upload-modal">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <h3>Embed a video</h3>
+        <p>
+          Websites like Vimeo.com and TeacherTuber.com offer ways to share videos via embedded code. Paste the code they provide below to add a video to this page.
+        </p>
+
+        <br>
+
+        <!-- Iframe embed -->
+
+        <div class="input-wrapper">
+          <textarea placeholder="Example: <iframe src='https://player.vimeo.com/video/185823131' width='640' height='360' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"
+                    ng-model="embedCode" ng-change="getIframeSrc()"></textarea>
+        </div>
+
+        <div class="input-wrapper">
+          <input ng-model="iframeSource" readonly></input>
+          <div class="valid-indicator" ng-show="iframeSrcValid">
+            <i class="fa fa-check fa-lg"></i>&nbsp;Valid
+          </div>
+          <div class="valid-indicator invalid" ng-show="iframeSrcInvalid">
+            <i class="fa fa-close fa-lg"></i>&nbsp;Invalid
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="" data-dismiss="modal" ng-click="removeIframe()">Cancel</button>
+          &nbsp;
+          <button data-dismiss="modal" ng-show="iframeSrcValid">Save</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

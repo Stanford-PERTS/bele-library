@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "Search materials and resources" %}
+{% set desc = "Discover and discuss new ways to foster learning mindsets in the classroom and at home by exploring curated content and resources from our community." %}
+
+{% set controller = "SearchCtrl" %}
+
+{% block content %}
+
+<!-- Main scrolling container with scroll ng directive -->
+
+<div scroll="" class="full-container clean-style search-page">
+
+  <!-- Search header with input and filters -->
+
+  <div class="page-header--search">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="search-input">
+            <form ng-submit="updateSearch()">
+              <input ng-model="queryString"
+                     placeholder="Search resources"
+                     ng-change="getSuggestions()"/>
+            </form>
+            <a class="search-input_icon" ng-click="updateSearch()">
+              <i class="fa fa-search"></i>
+            </a>
+
+            <div class="search-input_dropdown" ng-cloak ng-class="{active: suggestions}">
+              <ul>
+                <li ng-repeat="suggestion in suggestions"
+                    ng-click="useSuggestion(suggestion)">
+                  {[suggestion.name]}
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="selected-tags">
+            <ul ng-show="selectedTags.length > 0" ng-cloak>
+              <li ng-repeat="tag in selectedTags"
+                  ng-click="toggleFilter(tag)">
+                {[ tag.name ]}
+                <i class="fa fa-close"></i>
+              </li>
+            </ul>
+          </div>
+
+          <a class="filters-toggle" ng-click="showingFilters = !showingFilters" ng-cloak ng-show="!showingFilters">
+            <i class="fa fa-caret-right"></i>
+            &nbsp;Show Filters
+          </a>
+          <a class="filters-toggle" ng-click="showingFilters = !showingFilters" ng-cloak ng-hide="!showingFilters">
+            <i class="fa fa-caret-down"></i>
+            &nbsp;Hide Filters
+          </a>
+
+          <div class="filter-options" ng-cloak ng-hide="!showingFilters">
+
+            <div class="row">
+
+              <div class="col-sm-6">
+                <div class="school-subjects">
+                  Mindsets:
+                  <ul>
+                    <li ng-repeat="tag in mindsetTags"
+                        ng-class="{active: tag.active}"
+                        ng-click="toggleSubject(tag)">
+                      {[ tag.name ]}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-sm-5">
+
+                <div class="school-subjects">
+                  School Subjects:
+                  <ul>
+                    <li ng-repeat="subject in schoolSubjects"
+                        ng-class="{active: subject.active}"
+                        ng-click="toggleSubject(subject)">
+                      {[ subject.name ]}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-sm-5">
+
+                <!-- Slider for grade levels -->
+                <div class="grade-slider">
+                  <div class="grade-range" ng-show="gradeSlider[0] === 0 && gradeSlider[1] === 13">
+                    Grades: <b>All grade levels</b>
+                  </div>
+                  <div class="grade-range" ng-show="gradeSlider[0] === gradeSlider[1]">
+                    Grades: <b>{[ gradeLevels[gradeSlider[0]] ]} only</b>
+                  </div>
+                  <div class="grade-range" ng-hide="(gradeSlider[0] === 0 && gradeSlider[1] === 13) || gradeSlider[0] === gradeSlider[1]">
+                    Grades: <b>{[gradeLevels[gradeSlider[0]]]}</b> through <b>{[gradeLevels[gradeSlider[1]]]}</b>
+                  </div>
+                  <div ui-slider="gradeSliderOptions"
+                     min="0"
+                     max="13"
+                     ng-model="gradeSlider"></div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+  </div>
+
+  <!-- Main content -->
+
+  <div class="page-content--search">
+    <div class="container">
+      <div class="row">
+
+        <!-- Search results -->
+
+        <div class="col-sm-7">
+
+          <div class="result-filters">
+            <a ng-class="{active: contentType === ''}" ng-click="setContentType()" class="result-filter">All results</a>
+            <a ng-class="{active: contentType === 'video'}" ng-click="setContentType('video')" class="result-filter">Videos</a>
+            <a ng-class="{active: contentType === 'files'}" ng-click="setContentType('files')" class="result-filter">Downloadables</a>
+          </div>
+
+          <div class="search-results">
+            <search-result ng-repeat="r in results" result="r"></search-result>
+            <h4 ng-cloak ng-show="loading"><i class="fa fa-spin fa-spinner fa-lg"></i></h4>
+            <div ng-cloak ng-hide="loading || results">
+              <h4>No results found</h4>
+              <p>
+                Try another search, like <a ng-href="/search?q=Mindset">Mindset</a>
+              </p>
+            </div>
+            <button class="paginate-button" ng-class="{active: shouldPaginate}" ng-click="loadMore()">
+              <div class="button-overlay">
+                <i class="fa fa-chevron-down fa-inverse fa-lg"></i>
+              </div>
+              Load more
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Aside -->
+
+        <div class="col-sm-3 col-sm-offset-2">
+
+          <h3>Popular Tags</h3>
+          <div class="tags-wrapper">
+            <a class="tag-toggler"
+               ng-repeat="tag in popularTags"
+               ng-click="toggleFilter(tag)"
+               ng-class="{active: tag.active}"
+               ng-cloak>
+              {[ tag.name ]}
+            </a>
+          </div>
+
+          <h3>Add Resources</h3>
+          <a ng-click="uploadPractice()" class="upload-button rounded-button">Upload a Resource</a>
+
+        </div>
+
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+  </div>
+
+</div>
+
+{% endblock %}

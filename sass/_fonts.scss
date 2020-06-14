@@ -1,0 +1,24 @@
+// _fonts.scss
+
+// Contains universal font styles for application
+
+$sans-serif-font: "Open Sans", sans-serif;
+$archivo-font: "Archivo", sans-serif;
+$oswald-font: "Oswald", sans-serif;
+
+
+$font-weight-bold: 700;
+$font-weight-normal: 400;
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content}
+  &:-moz-placeholder           {@content}
+  &::-moz-placeholder          {@content}
+  &:-ms-input-placeholder      {@content}
+}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = theme.name + " Course" %}
+{% set desc = theme.summary %}
+{% set share_image = 'themes/share-images/' + theme['short_uid'] + '.png' %}
+
+{% block head %}
+  {{ super() }}
+
+  <!-- Set color based on topic color -->
+  <style type="text/css">
+    .theme-page_body h2 { color: {{ theme.color }}; }
+    .theme-page_stats { background-color: {{ theme.color }}; }
+    a.lesson-wrapper .image-holder { background-color: {{ theme.color }}; }
+    a.mindset-stamp:hover { color: {{ theme.color }}; }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="full-container theme-page--new">
+
+  <div class="theme-page_masthead">
+    <div class="masthead_background"
+         image-loader
+         image="/static/images/themes/masthead-theme-{{theme.short_uid}}.jpg"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+          <div class="masthead-inner">
+            {% if theme.short_uid == 'growth-mindset-parents' %}
+            <a href="/mentalidad-de-crecimiento-padres" class="mindset-stamp">
+              Disponible en español
+            </a>
+            {% elif theme.short_uid == 'mentalidad-de-crecimiento-padres' %}
+            <a href="/growth-mindset-parents" class="mindset-stamp">
+              Available in English
+            </a>
+            {% endif %}
+            <h1 class="masthead_title">
+              {{ theme.name }}
+            </h1>
+            <div class="masthead_spacer" style="background-color: {{ theme.color }}"></div>
+            <p class="masthead_text">
+              {{ theme.summary }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-page_stats">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+          <div class="row">
+            <div class="col-sm-4 stat">
+              {{ translation.NUMBER_OF_LESSONS }}
+              <b class="stats_value">{{ theme.lesson_count }}</b>
+            </div>
+            <div class="col-sm-4 stat">
+              {{ translation.DESIGNED_FOR }}
+              <b class="stats_value">{{ theme.target_audience }}</b>
+            </div>
+            <div class="col-sm-4 stat">
+              {{ translation.TIME_TO_COMPLETE }}
+              <b class="stats_value">{{ theme.estimated_duration }} min</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-page_body">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+
+          {% for topic in topics %}
+          {% if topic.listed %}
+
+          <h2 id="{{topic.short_uid}}">{{ translation.TOPIC }} {{ loop.index }}: {{ topic.name }}</h2>
+          <p class="topic-summary">
+            {{ topic.summary }}
+          </p>
+
+          {% for lesson in topic.lessons_list %}
+          {% if lesson.listed %}
+
+          <a href="/{{ theme.short_uid }}/{{ topic.short_uid }}/{{ lesson.short_uid }}" class="lesson-wrapper">
+            <div class="image-holder">
+              {% if lesson.type == 'video' %}
+                {% if lesson.youtube_id %}
+                <div class="lesson_image" style="background-image: url('//img.youtube.com/vi/{{ lesson.youtube_id }}/0.jpg')"></div>
+                <div class="image-holder_overlay"></div>
+                {% else %}
+                <div class="lesson_image"></div>
+                <div class="image-holder_overlay"></div>
+                {% endif %}
+              {% else %}
+              <i class="fa fa-file-text-o fa-3x"></i>
+              {% endif %}
+            </div>
+            <div class="lesson_info">
+              <h3>{{ lesson.name }}</h3>
+              <p>
+                {{ lesson.summary }}
+              </P>
+            </div>
+          </a>
+
+          {% endif %}
+          {% endfor %}
+
+          {% endif %}
+          {% endfor %}
+
+        </div>
+      </div>
+
+      {% if theme.short_uid in ['growth-mindset-parents', 'growth-mindset-mentors', 'belonging'] %}
+      <div id="funding" class="content-section partner-section">
+        {% if theme.short_uid == 'growth-mindset-parents' %}
+          <a href="https://bealearninghero.org/" target="_blank">
+            <image src="/static/images/partners/raise-the-bar.png"></image>
+          </a>
+          <h4>{{ translation.DEVELOPED_WITH_RAISE_THE_BAR }}</h4>
+        {% elif theme.short_uid == 'growth-mindset-mentors' %}
+          <a href="https://www.mentoring.org/" target="_blank">
+            <image src="/static/images/partners/mentor.png"></image>
+          </a>
+          <h4>Developed in collaboration with MENTOR</h4>
+          <br>
+          <span>
+            <image src="/static/images/partners/city-year.png"></image>
+          </span>
+          <h4>Piloted by City Year</h4>
+        {% elif theme.short_uid == 'belonging' %}
+          <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+              <p>This course was developed in collaboration with Lisel Murdock-Perriera, a doctoral student in Language, Literacy, and English Education at Stanford University.</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <div class="topic-page_practices">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-sm-8 col-sm-offset-2">
+          <h2>{{ translation.GROW_YOUR_BRAIN }}</h2>
+          <p>
+            {{ translation.VIEW_RELATED_MATERIALS_FROM_RESOURCE_LIBRARY }}
+          </p>
+
+          {% if related_practices %}
+          <div class="row">
+            {% for practice in related_practices %}
+            <div class="col-sm-6">
+              <a class="content_practice-wrapper" href="/practices/{{ practice.short_uid }}">
+                <div class="practice_title">
+                  {{ practice.name }}
+                </div>
+                <div class="practice_info">
+                  {{ practice.summary }}
+                </div>
+                <div class="practice_icon"></div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <a class="practices_search-button" href="/search">
+            {{ translation.VIEW_RELATED_RESOURCES }}
+          </a>
+          {% endif %}
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% include 'components/footer.html' %}
+
+</div>
+
+{% endblock %}

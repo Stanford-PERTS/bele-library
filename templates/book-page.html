@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% set title = book.title %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% set controller = "BookPageCtrl" %}
+{% set init = "init('" + book.short_uid + "')" %}
+
+{% macro render_book_chapter(book, chapter) %}
+{% if chapter.pages|length > 0 %}
+<div class="chapter">
+  <div class="anchor" id="{{chapter.short_uid}}"></div>
+  <h2>{{ chapter.title }}</h2>
+  <p>{{ chapter.short_description }}</p>
+  <ul class="pages">
+    {% for page in chapter.pages %}
+    {{ render_page(book, chapter, page) }}
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro render_page(book, chapter, page) %}
+<div class="book-info">
+  <div class="image-container">
+     <img src="{{ page.icon or '/' }}">
+  </div>
+  <div class="content-wrapper">
+    <div class="header">
+      <a href="/books/{{book.short_uid}}/{{chapter.short_uid}}/{{page.short_uid}}">{{ page.title }}</a>
+      <span class="user-engagement">
+        {% if page.votes_for >= 0 %}
+        <span>
+          <i class="fa fa-heart"></i>
+          <span>{{ page.votes_for }}</span>
+        </span>
+        {% endif %}
+        {% if page.num_comments >= 0 %}
+        <span>
+          <i class="fa fa-comment"></i>
+          <span>{{ page.num_comments }}</span>
+        </span>
+        {% endif %}
+      </span>
+    </div>
+    <p>
+      {{ page.short_description }}
+    </p>
+    <div class="tags">
+      <ul>
+      {% for tag in page.tags %}
+        <li>
+          <a
+            href="/discover?tags={{ tag | replace(' ', '%20') }}"
+            target="_self"
+            class="tag"
+          >
+            {{ tag }}
+          </a>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+<div class="new-book">
+  <div class="ctainer">
+    <div class="masthead-container">
+      {% if book.book_image %}
+      <img class="masthead darken" src="{{ book.book_image }}" />
+      {% else %}
+      <img class="masthead no-image" />
+      {% endif %}
+      <div class="masthead-text">
+        {% if breadcrumb_title %}
+        <div class="breadcrumb-title">{{ breadcrumb_title }}</div>
+        {% endif %}
+        <div class="title">{{ book.title }}</div>
+      </div>
+    </div>
+    <div class="row content">
+      <div class="col-md-8 col-md-offset-1 section-container">
+        <section>
+          <p class="description-text">
+            {{ book.short_description }}
+          </p>
+        </section>
+      </div>
+    </div>
+    <div class="row content">
+      <div class="col-md-8 col-md-offset-1 section-container">
+        <section>
+          {% for chapter in chapter_page_data %}
+            {{ render_book_chapter(book, chapter) }}
+          {% endfor %}
+        </section>
+      </div>
+      {% set editButtonCopy = "Manage Book" %}
+      {% set editPath = "/books/manage/" + book.short_uid %}
+      {% include 'components/metadata-panel.html' %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

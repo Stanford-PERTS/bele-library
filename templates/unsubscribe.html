@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="full-container subscription-page">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <h1>
+          <a href="/">MINDSET<i style="font-weight: 300;">KIT</i></a>
+        </h1>
+        <div class="success-box">
+          <img src="/static/images/email/accepted-icon.png" height="70px">
+          <p>
+            You have been successfully unsubscribed.
+          </p>
+        </div>
+        <p class="subtext">
+          Unsubscribed by accident?
+          <a href="/resubscribe?md_id={{ md_id }}&amp;md_email={{ md_email }}">
+            Resubscribe
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block feedback %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

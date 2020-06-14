@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "About the Equitable Learning Library" %}
+{% set desc = "Learn more about who created the Library and how to use it." %}
+{% set controller = "AboutCtrl" %}
+{% block content %}
+<div class="full-container about-page">
+  <div class="masthead--about">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+          <h1>About the Equitable Learning Library</h1>
+          <div class="circle-holder">
+            <a
+              href="/"
+              class="circle-button"
+              data-toggle="tooltip"
+              title="Home Page"
+              data-placement="top"
+            >
+              &nbsp;<i class="fa fa-chevron-right fa-lg"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-page_body">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+          <p>
+            The Equitable Learning Library is a product of the Building
+            Equitable Learning Environments (BELE) Network, a diverse group of
+            nonprofit organizations working to advance equity in education by
+            creating equitable learning environments. The BELE Network created
+            the Equitable Learning Library to act as an evolving repository for
+            resources and recommendations can empower educators, parents, and
+            policy makers to create more equitable and empowering learning
+            opportunities for all students.
+          </p>
+
+          <div class="perts-logo-wrapper">
+            <a href="https://www.perts.net">
+              <img src="/" width="100" />
+            </a>
+          </div>
+
+          <h3>BELE Network Mission</h3>
+          <p>
+            In the United States, our educational systems were designed to
+            ensure access for some and deny access for others. As a result, race
+            and class remain the most reliable predictors of students&rsquo;
+            academic achievement. The BELE Network is working to dismantle
+            structural inequality in schools and create equitable learning
+            environments where all students &mdash; regardless of race or class
+            &mdash; have the agency, opportunities and tools they need to
+            thrive.
+          </p>
+
+          <p>
+            The BELE Network is working to expand high-quality learning
+            opportunities for students who have been historically underserved.
+            Recognizing the complexity of creating learning practices that are
+            responsive to all cultures, our diverse members are taking a range
+            of approaches to create learning environments that meet all
+            students&rsquo; needs.
+          </p>
+
+          <h3>How to Browse the Equitable Learning Library</h3>
+          <p>
+            The Equitable Learning Library is organized into &ldquo;pages&rdquo;
+            and &ldquo;books.&rdquo; Each &ldquo;page&rdquo; in the library is a
+            unique web page that presents one or more resources that can be used
+            to create a more equitable and empowering learning environment. For
+            example, some pages provides instructions for classroom activities
+            that a teacher could do with students (see the
+            <a href="/discover?q=&tags=Student%20Activity">student activity</a>
+            tag); others describe programs and service providers with proven
+            records for improving educational equity (see the
+            <a href="/discover?q=&tags=External%20Service">external service</a>
+            tag). Whereas &ldquo;pages&rdquo; describe a single resource,
+            &ldquo;books&rdquo; are sequenced playlists of pages that focus on
+            a specific topic, e.g. 
+            <a href="/books/fxysrWu3">Starting Your School&rsquo;s Equity
+            Journey</a>.
+          </p>
+
+          <h3>Get Engaged!</h3>
+          <p>
+            We welcome everyone&rsquo;s contributions and engagement with the
+            Equitable Learning Library. Anyone can add a page or book using the
+            buttons on the home page, and you can also discuss a page using the
+            comments section at the bottom. Last but not least,
+            &ldquo;like&rdquo; a page in order to save it to your account for
+            easy access later.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="funding" class="content-section funding-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <a href="https://raikesfoundation.org/" target="_blank">
+            <image src="/static/images/raikes_logo.png"></image>
+          </a>
+          <h4>Funded by the Raikes Foundation</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,310 @@
+/* Styles for Practice Library home and search page */
+
+@import '_colors';
+@import '_fonts';
+@import '_animations';
+@import '_responsive';
+@import 'compass';
+
+@include keyframes(fade-left) {
+  0%,25% { @include opacity(0.0); margin-left: 30px; }
+  100% { @include opacity(1.0); margin-left: 0px; }
+}
+
+$subheader-font-size: 17px;
+$subheader-padding: 12px;
+
+.search-page {
+
+  .page-header {
+    padding: 60px 0px;
+  }
+
+  .page-content {
+    padding: 10px 0px 60px 0px;
+    min-height: calc(100vh - 116px - 94px);
+  }
+
+  .aside {
+    margin-bottom: 30px;
+    min-width: 190px;
+  }
+
+  // Search page specific styles
+
+  .search-input {
+    position: relative;
+    padding-bottom: 10px;
+
+    &-wrapper {
+      background-color: #F7F8F9;
+      padding: 27px 24px;
+      margin-bottom: 38px;
+    }
+
+    form {
+      background-color: white;
+      border: 1px solid #79808A;
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+    }
+
+    input {
+      color: #79808A;
+      font-family: $archivo-font;
+      width: 100%;
+      background-color: rgba(255,255,255,0);
+      border: none;
+      outline: none;
+      font-size: 16px;
+      padding-left: 12px;
+      line-height: normal;
+      margin-top: 3px;
+
+      @include placeholder {
+        opacity: .5;
+      }
+    }
+
+    .search-input_icon {
+      font-size: 20px;
+      font-weight: normal;
+      color: #79808A;
+    }
+  }
+
+  .filters-toggle {
+    color: #79808A;
+    font-family: $archivo-font;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 17px;
+
+    &:hover {
+      text-decoration: none;
+    }
+}
+
+
+
+  .search-input_dropdown {
+    display: none;
+    padding-left: 40px;
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    z-index: 50;
+
+    &.active {
+      display: block;
+      @include animation(fade-left 0.8s ease-out);
+    }
+
+    ul {
+      margin: 0px;
+      padding: 0px;
+      background-color: white;
+      @include box-shadow(0px 1px 2px rgba(0,0,0,0.3));
+      @include border-radius(5px);
+      overflow: hidden;
+    }
+
+    li {
+      padding: 8px 15px;
+      list-style: none;
+      width: 300px;
+      position: relative;
+
+      &:hover {
+        background-color: $search-accent-color;
+        color: white;
+      }
+
+      &:after {
+        content: "\f012";
+        font-family: 'FontAwesome';
+        display: block;
+        position: absolute;
+        top: 8px;
+        right: 15px;
+      }
+
+      &:first-child:after {
+        content: "\f002";
+      }
+    }
+
+    .selected-tags {
+      ul {
+        margin: 0px;
+        padding: 0px;
+
+        li {
+          padding: 4px 10px;
+          list-style: none;
+          position: relative;
+          display: inline-block;
+          @include border-radius(5px);
+          margin-right: 10px;
+          margin-bottom: 10px;
+          background-color: lighten($search-accent-color, 10);
+          color: white;
+        }
+      }
+    }
+  }
+
+  .grade-slider {
+    margin: 15px 0px;
+    /* UI Slider styling */
+
+    .ui-slider {
+      background-color: white;
+      margin-top: 20px;
+      margin-bottom: 15px;
+    }
+
+    .ui-slider-range {
+      background-color: $search-accent-color;
+    }
+
+    a.ui-slider-handle {
+
+      &:after {}
+
+      &.ui-state-hover:after {
+        border-color: darken($search-accent-color, 10);
+      }
+
+      &.ui-state-active:after {
+        background-color: lighten($search-accent-color, 10);
+        border-color: darken($search-accent-color, 10);
+      }
+    }
+  }
+
+  .tags-list {
+    margin: 15px 0px;
+
+    ul {
+      display: block;
+      margin: 10px 0px;
+      padding: 0px;
+
+      li {
+        display: inline-block;
+        padding: 8px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        @include border-radius(2px);
+        background-color: none;
+        border: 1px solid #79808A;
+        font-size: 13px;
+        color: #79808A;
+
+        &.active {
+          background-color: $primary;
+          border-color: $primary;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .page-content--search {
+    @extend .page-content;
+      padding: 50px 0 96px 0;
+
+    .result-filters {
+      margin: 15px 0px 45px 0px;
+
+      a.result-filter {
+        display: inline-block;
+        margin-right: 20px;
+        padding-bottom: $subheader-padding;
+        font-weight: $font-weight-bold;
+        font-size: $subheader-font-size;
+        color: $light-font-color;
+        text-decoration: none;
+        position: relative;
+
+        &:hover {
+          color: $font-color;
+        }
+
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 0px;
+          height: 3px;
+          background-color: $font-color;
+          left: 50%;
+          bottom: 0px;
+          @include transition(0.12s ease-in-out);
+        }
+
+        &.active {
+          color: $font-color;
+
+          &:after {
+            left: 0px;
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .search-results {
+      padding-bottom: 60px;
+
+      button.paginate-button {
+        background-color: lighten($search-accent-color, 10);
+
+        .button-overlay {
+          background-color: lighten($primary, 10);
+        }
+
+        &.active {
+          background-color: #f0f1f2;
+        }
+      }
+    }
+
+    .tags-wrapper {
+      margin: 30px 0px 30px 0px;
+
+      a.tag-toggler {
+        display: inline-block;
+        margin-right: 6px;
+        margin-bottom: 6px;
+        padding: 5px 15px;
+        border: 2px solid $light-font-color;;
+        text-decoration: none;
+        color: $light-font-color;
+        @include border-radius(5px);
+
+        &:hover {
+          border-color: $font-color;
+          color: $font-color;
+        }
+
+        &.active {
+          border-color: $search-accent-color;
+          color: $search-accent-color;
+
+          &:hover {
+            color: $search-accent-color;
+          }
+        }
+      }
+    }
+
+    a.upload-button {
+      background-color: $search-accent-color;
+      color: white;
+    }
+
+  }
+}

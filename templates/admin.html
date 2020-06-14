@@ -1,0 +1,840 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "Admin" %}
+{% set controller = "AdminController" %}
+
+{% block content %}
+
+<div class="full-container">
+
+<div class="admin-page">
+
+<div class="sub-nav">
+  <div class="container">
+    <a href="/logout">Sign out</a>
+    <!-- <a href="/admin/test">Unit Testing</a> -->
+    <a ng-click="setPage('pages')">Pages</a>
+    <a ng-click="setPage('books')">Books</a>
+    <a ng-click="setPage('main')">Main</a>
+  </div>
+</div>
+
+<!-- Page displaying basic admin option -->
+
+<div class="container" ng-show="page === 'main'">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>Admin Tools</h1>
+
+      <h2>Repopulate</h2>
+
+      <div>
+        <p>
+          Delete all entites in the datastore and then create a standard set.
+          Only works on localhost.
+        </p>
+        <button ng-click="repopulate()" class="btn btn-primary">
+          Repopulate
+        </button>
+      </div>
+
+    </div>
+  </div>
+  <div class="row" ng-controller="EmailController">
+    <div class="col-sm-12">
+
+      <h2>Send Email</h2>
+
+      <p>
+        Write your email body in markdown. Composition and preview tools are
+        available <a href="https://markdownlivepreview.com/" target="_blank">here</a>.
+      </p>
+
+      <div class="alert-{[emailAlert.type]}" ng-show="emailAlert">
+        {[emailAlert.message]}
+      </div>
+
+      <form role="form" name="emailForm" novalidate onsubmit="return false">
+
+        <div class="form-group">
+          <label for="from">From Address</label>
+            <select id="from" class="form-control"
+                    required ng-model="email.from_address"
+                    width="'100%'"
+                    chosen-select select-options="fromAddresses"
+                    placeholder-text-single="'choose from address'"
+                    ng-options="email for email in fromAddresses">
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="to">To Addresses</label>
+            <input id="to" type="email" class="form-control"
+                   ng-model="email.to_address" required ng-blur
+                   placeholder="to">
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input id="subject" type="text" class="form-control"
+                   ng-model="email.subject" required ng-blur
+                   placeholder="subject">
+        </div>
+
+        <div class="form-group">
+            <label for="body">Body</label>
+            <textarea id="body" rows="8" class="form-control"
+                   ng-model="email.body" required ng-blur
+                   placeholder="body"></textarea>
+        </div>
+
+        <button type="button" ng-click="send()">Send</button>
+
+    </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Page displaying Mindset Kits -->
+
+<div class="container" ng-show="page === 'kits' && !object">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>Mindset Kits</h1>
+
+    </div>
+
+    <!-- Options for primary models -->
+
+    <div class="col-sm-3 side-options">
+
+      <h4>Select a Model</h4>
+
+      <div class="primary-option" ng-click="setModel('theme')" ng-class="{active: model === 'theme'}">Themes</div>
+      <div class="primary-option" ng-click="setModel('topic')" ng-class="{active: model === 'topic'}">Topics</div>
+      <div class="primary-option" ng-click="setModel('lesson')" ng-class="{active: model === 'lesson'}">Lessons</div>
+      <div class="primary-option" ng-click="setModel('book')" ng-class="{active: model === 'book'}">Books</div>
+      <div class="primary-option" ng-click="setModel('chapter')" ng-class="{active: model === 'chapter'}">Chapters</div>
+
+      <div class="spacer"></div>
+
+      <h4>Filters & Options</h4>
+
+      <a class="button" data-toggle="modal" data-target="#adminModal">Create a new {[model]}</a>
+
+    </div>
+
+    <!-- Results for selected model -->
+
+    <div class="col-sm-9">
+
+      <h4>{[ model | capitalize ]}s</h4>
+
+      <div class="object-wrapper" ng-repeat="object in objects">
+        <div class="object_info">
+          <h3>{[object.name || object.title]}</h3>
+          <p>{[object.summary || object.short_description]}</p>
+        </div><div class="object_relations">
+          <!-- <b>Topics</b> -->
+        </div><div class="object_actions">
+          <button ng-click="viewObject(object)">Edit</button>
+          <button ng-click="deleteObject(object)">Delete</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Display parent object... -->
+
+<div class="container" ng-show="page === 'kits' && object">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1><a ng-click="setPage('kits')">Kits</a> // {[object.name]}</h1>
+
+    </div>
+
+    <!-- Options for primary models -->
+
+    <div class="col-sm-3 side-options">
+
+      <h4>{[model | capitalize]} Information</h4>
+
+      <div class="edit-panel">
+        <div class="input-wrapper">
+          <label>Name</label>
+          <input ng-model="object.name" ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper">
+          <label>Url String</label>
+          <input ng-model="object.short_uid" readonly></input>
+        </div>
+        <div class="input-wrapper" ng-hide="model === 'lesson'" >
+          <label>Color</label>
+          <input ng-model="object.color" ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'lesson'" >
+          <label>Type</label>
+          <input ng-model="object.type" ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'lesson'" >
+          <label>YouTube ID</label>
+          <input ng-model="object.youtube_id"
+                 ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'lesson'" >
+          <label>Wistia ID</label>
+          <input ng-model="object.wistia_id"
+                 ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'theme'" >
+          <label>Lesson Count</label>
+          <input ng-model="object.lesson_count"
+                 ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'theme'" >
+          <label>Estimated Duration</label>
+          <input ng-model="object.estimated_duration"
+                 ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'theme'" >
+          <label>Target Audience</label>
+          <input ng-model="object.target_audience"
+                 ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'theme'" >
+          <label>Locale</label>
+          <input ng-model="object.locale" ng-change="updated = false"></input>
+        </div>
+        <div class="input-wrapper">
+          <label>Summary</label>
+          <textarea ng-model="object.summary"
+                    ng-change="updated = false"></textarea>
+        </div>
+        <div class="input-wrapper">
+          <input type="checkbox" ng-model="object.listed">Listed?</input>
+        </div>
+        <div class="input-wrapper" ng-show="model === 'lesson'">
+          <input type="checkbox"
+                 ng-model="object.promoted">Promoted?</input>
+        </div>
+        <a ng-show="model === 'lesson'" data-toggle="modal" data-target="#taggingModal">Set tags</a>
+        <div class="spacer"></div>
+        <button ng-hide="updated" ng-click="updateObject(object)"
+                class="bordered-button">Update</button>
+        <button ng-show="updated" class="bordered-button success-button">Updated!</button>
+      </div>
+
+    </div>
+
+    <!-- Results for selected model -->
+
+    <div class="col-sm-9">
+
+      <h4 ng-show="childModel">
+        {[ childModel | capitalize ]}s&nbsp;|&nbsp;
+        <a data-toggle="modal" data-target="#childModal">Add a {[ childModel | capitalize ]}</a>
+      </h4>
+
+      <div class="object-wrapper child-object" ng-repeat="child in children">
+        <div class="object-position">
+          {[$index + 1]}
+          <div ng-click="reorderChild(child, true)"
+               class="edit-position move-up">
+            <i class="fa fa-arrow-up"></i>
+          </div>
+          <div ng-click="reorderChild(child, false)"
+               class="edit-position move-down">
+            <i class="fa fa-arrow-down"></i>
+          </div>
+        </div>
+        <div class="object_info">
+          <h3>{[child.name]}</h3>
+          <p>{[child.summary]}</p>
+          </div><div class="object_relations">
+          <!-- <b>Topics</b> -->
+        </div><div class="object_actions">
+          <button ng-click="viewObject(child)">Edit</button>
+          <button ng-click="removeChild(child)">Remove</button>
+        </div>
+      </div>
+
+      <!-- Popular lessons (only show for theme models) -->
+
+      <br>
+      <h4 ng-show="model === 'theme'">
+        Popular lessons&nbsp;|&nbsp;
+        <a data-toggle="modal" data-target="#popularModal">Add a Lesson</a>
+      </h4>
+
+      <div class="object-wrapper child-object"
+           ng-show="model === 'theme'" ng-repeat="lesson in popularLessons">
+        <div class="object-position">
+          {[$index + 1]}
+          <div ng-click="reorderPopular(lesson, true)"
+               class="edit-position move-up">
+            <i class="fa fa-arrow-up"></i>
+          </div>
+          <div ng-click="reorderPopular(lesson, false)"
+               class="edit-position move-down">
+            <i class="fa fa-arrow-down"></i>
+          </div>
+        </div>
+        <div class="object_info">
+          <h3>{[lesson.name]}</h3>
+          <p>{[lesson.summary]}</p>
+          </div><div class="object_relations">
+        </div><div class="object_actions">
+          <button ng-click="viewObject(lesson)">Edit</button>
+          <button ng-click="removePopularLesson(lesson)">Remove</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Page displaying Feedback from users -->
+
+<div class="container" ng-show="page === 'practices'">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>Practice Approval</h1>
+
+    </div>
+
+    <!-- Options for practice statuses -->
+
+    <div class="col-sm-3">
+
+      <h4>Status options</h4>
+
+      <div class="primary-option" ng-click="setStatus('pending')" ng-class="{active: status === 'pending'}">
+        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;Pending
+      </div>
+      <div class="primary-option promoted"
+           ng-click="setStatus('promoted')"
+           ng-class="{active: status === 'promoted'}">
+        <i class="fa fa-star"></i>&nbsp;&nbsp;Promoted
+      </div>
+      <div class="primary-option approved" ng-click="setStatus('approved')"
+           ng-class="{active: status === 'approved'}">
+        <i class="fa fa-check-circle-o"></i>&nbsp;&nbsp;Approved
+      </div>
+      <div class="primary-option rejected" ng-click="setStatus('rejected')"
+           ng-class="{active: status === 'rejected'}">
+        <i class="fa fa-times-circle-o"></i>&nbsp;&nbsp;Rejected
+      </div>
+
+    </div>
+
+    <!-- Results for selected status -->
+
+    <div class="col-sm-9">
+
+      <h4>Practices</h4>
+
+      <div class="practice-wrapper" ng-repeat="practice in practices">
+        <div class="practice_info">
+          <h3><a href="/practices/{[practice.short_uid]}" target="_blank"><i class="fa fa-file-text-o" ng-show="practice.type === 'files'">&nbsp;&nbsp;</i>{[practice.name]}&nbsp;&nbsp;<i class="fa fa-external-link"></i></a>
+          </h3>
+          <p>{[practice.summary]}</p>
+          <a ng-click="initAssociation(practice)" ng-hide="practice.associated_content">Associate with content!</a>
+          <a ng-click="initAssociation(practice)" ng-show="practice.associated_content">Associated with: "{[ practice.associated_content ]}"</a>
+          |
+          <a ng-click="editPractice(practice)">
+            Edit Practice
+          </a>
+        </div>
+        <button ng-click="destroyPractice(practice)"
+                tooltip="Destroy">
+          <i class="fa fa-trash fa-3x"></i>
+        </button>
+        <button ng-class="{rejected: !practice.listed && !practice.pending}"
+                ng-click="approvePractice(practice, false)"
+                tooltip="Reject">
+          <i class="fa fa-times fa-3x"></i>
+        </button>
+        <button ng-class="{approved: practice.listed}"
+                ng-click="approvePractice(practice, true)"
+                tooltip="Approve">
+          <i class="fa fa-check fa-3x"></i>
+        </button>
+        <button ng-class="{promoted: practice.promoted}"
+                ng-click="promotePractice(practice)"
+                tooltip="Promote">
+          <i class="fa fa-star fa-3x"></i>
+        </button>
+      </div>
+
+      <h4 ng-show="!practices.length && !loading">
+        <i>No results found</i>
+      </h4>
+
+      <i ng-show="loading" class="fa fa-spinner fa-spin fa-2x"></i>
+
+      <button class="paginate-button" ng-class="{active: shouldPaginate}" ng-click="loadMorePractices()">
+        <div class="button-overlay">
+          <i class="fa fa-chevron-down fa-inverse fa-lg"></i>
+        </div>
+        Load more
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Page displaying Feedback from users -->
+
+<div class="container" ng-show="page === 'books'">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>Book Approval</h1>
+
+    </div>
+
+    <!-- Options for book statuses -->
+
+    <div class="col-sm-3">
+
+      <h4>Status options</h4>
+
+      <div class="primary-option" ng-click="setStatus('pending', 'book')" ng-class="{active: status === 'pending'}">
+        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;Pending
+      </div>
+      <div class="primary-option approved" ng-click="setStatus('approved', 'book')"
+           ng-class="{active: status === 'approved'}">
+        <i class="fa fa-check-circle-o"></i>&nbsp;&nbsp;Approved
+      </div>
+      <div class="primary-option rejected" ng-click="setStatus('rejected', 'book')"
+           ng-class="{active: status === 'rejected'}">
+        <i class="fa fa-times-circle-o"></i>&nbsp;&nbsp;Rejected
+      </div>
+
+    </div>
+
+    <!-- Results for selected status -->
+
+    <div class="col-sm-9">
+
+      <h4>Books</h4>
+
+      <div class="book-wrapper" ng-repeat="book in books">
+        <div class="book_info">
+          <h3><a href="/books/{[book.short_uid]}" target="_blank"><i class="fa fa-file-text-o" ng-show="book.type === 'files'">&nbsp;&nbsp;</i>{[book.title]}&nbsp;&nbsp;<i class="fa fa-external-link"></i></a>
+          </h3>
+          <p>{[book.short_description]}</p>
+          <p>
+            <span class="author-link" ng-repeat="author in book.authors">
+              <a ng-href="mailto:{[::author.email]}" target="_blank">{[::author.email]}</a>
+            </span>
+          </p>
+          <p>
+            <a ng-click="editBook(book)">
+              Manage Book
+            </a>
+          </p>
+        </div>
+        <div class="flex-grow-1"></div>
+        <form class="display-order">
+          <button ng-class="{promoted: book.promoted}"
+                  ng-click="setDisplayOrder(book, book.display_order + 1)"
+                  tooltip="Promote">
+            <i class="fa fa-caret-up"></i>
+          </button>
+          <input type="number"
+                  ng-model="book.display_order"
+                  ng-change="setDisplayOrder(book, book.display_order)">
+          <button ng-class="{promoted: book.promoted}"
+                  ng-click="setDisplayOrder(book, book.display_order - 1)"
+                  tooltip="Demote">
+            <i class="fa fa-caret-down"></i>
+          </button>
+        </form>
+        <button ng-class="{approved: book.status === 'approved'}"
+                ng-click="approveBook(book, true)"
+                tooltip="Approve">
+          <i class="fa fa-check fa-3x"></i>
+        </button>
+        <button ng-class="{rejected: book.status === 'rejected' }"
+                ng-click="approveBook(book, false)"
+                tooltip="Reject">
+          <i class="fa fa-times fa-3x"></i>
+        </button>
+        <button ng-click="destroyBook(book)"
+                tooltip="Destroy">
+          <i class="fa fa-trash fa-3x"></i>
+        </button>
+      </div>
+
+      <h4 ng-show="!books.length && !loading">
+        <i>No results found</i>
+      </h4>
+
+      <i ng-show="loading" class="fa fa-spinner fa-spin fa-2x"></i>
+
+      <button class="paginate-button" ng-class="{active: shouldPaginate}" ng-click="loadMoreBooks()">
+        <div class="button-overlay">
+          <i class="fa fa-chevron-down fa-inverse fa-lg"></i>
+        </div>
+        Load more
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Page displaying Feedback from users -->
+
+<div class="container" ng-show="page === 'pages'">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>Page Approval</h1>
+
+    </div>
+
+    <!-- Options for page statuses -->
+
+    <div class="col-sm-3">
+
+      <h4>Status options</h4>
+
+      <div class="primary-option" ng-click="setStatus('pending', 'page')" ng-class="{active: status === 'pending'}">
+        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;Pending
+      </div>
+      <div class="primary-option approved" ng-click="setStatus('approved', 'page')"
+           ng-class="{active: status === 'approved'}">
+        <i class="fa fa-check-circle-o"></i>&nbsp;&nbsp;Approved
+      </div>
+      <div class="primary-option rejected" ng-click="setStatus('rejected', 'page')"
+           ng-class="{active: status === 'rejected'}">
+        <i class="fa fa-times-circle-o"></i>&nbsp;&nbsp;Rejected
+      </div>
+
+    </div>
+
+    <!-- Results for selected status -->
+
+    <div class="col-sm-9">
+
+      <h4>Pages</h4>
+
+      <div class="page-wrapper" ng-repeat="page in pages">
+        <div class="page_info">
+          <h3><a href="/pages/{[page.short_uid]}" target="_blank"><i class="fa fa-file-text-o" ng-show="page.type === 'files'">&nbsp;&nbsp;</i>{[page.title]}&nbsp;&nbsp;<i class="fa fa-external-link"></i></a>
+          </h3>
+          <p>{[page.short_description]}</p>
+          <p>
+            <span class="author-link" ng-repeat="author in page.authors">
+              <a ng-href="mailto:{[::author.email]}" target="_blank">{[::author.email]}</a>
+            </span>
+          </p>
+          <p>
+            <a ng-click="editPage(page)">
+              Edit Page
+            </a>
+          </p>
+        </div>
+        <div class="flex-grow-1"></div>
+        <form class="display-order">
+          <button ng-class="{promoted: page.promoted}"
+                  ng-click="setDisplayOrder(page, page.display_order + 1)"
+                  tooltip="Promote">
+            <i class="fa fa-caret-up"></i>
+          </button>
+          <input type="number"
+                  ng-model="page.display_order"
+                  ng-change="setDisplayOrder(page, page.display_order)">
+          <button ng-class="{promoted: page.promoted}"
+                  ng-click="setDisplayOrder(page, page.display_order - 1)"
+                  tooltip="Demote">
+            <i class="fa fa-caret-down"></i>
+          </button>
+        </form>
+        <button ng-class="{approved: page.status === 'approved'}"
+                ng-click="approvePage(page, true)"
+                tooltip="Approve">
+          <i class="fa fa-check fa-3x"></i>
+        </button>
+        <button ng-class="{rejected: page.status === 'rejected'}"
+                ng-click="approvePage(page, false)"
+                tooltip="Reject">
+          <i class="fa fa-times fa-3x"></i>
+        </button>
+        <button ng-click="destroyPage(page)"
+                tooltip="Destroy">
+          <i class="fa fa-trash fa-3x"></i>
+        </button>
+        <span class="error-text">{[page.error]}</span>
+      </div>
+
+      <h4 ng-show="!pages.length && !loading">
+        <i>No results found</i>
+      </h4>
+
+      <i ng-show="loading" class="fa fa-spinner fa-spin fa-2x"></i>
+
+      <button class="paginate-button" ng-class="{active: shouldPaginate}" ng-click="loadMorePages()">
+        <div class="button-overlay">
+          <i class="fa fa-chevron-down fa-inverse fa-lg"></i>
+        </div>
+        Load more
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Page displaying Feedback from users -->
+
+<div class="container" ng-show="page === 'feedback'">
+  <div class="row">
+    <div class="col-sm-12 comment-list">
+
+      <h1>All Feedback</h1>
+
+      <div class="comment-list_comment" ng-repeat="comment in feedback">
+        <small>Posted: {[ comment.created ]}</small>
+        <p>{[ comment.body ]}</p>
+        <span ng-show="comment.email"><b>Email:</b>&nbsp;{[ comment.email ]}</span>
+        <br>
+        <span ng-show="comment.path"><b>Path:</b>&nbsp;{[ comment.path ]}</span>
+      </div>
+
+      <h4 ng-hide="feedback || loading">No feedback found...</h4>
+
+      <i ng-show="loading" class="fa fa-spinner fa-spin fa-2x"></i>
+
+      <button class="paginate-button" ng-class="{active: shouldPaginate}" ng-click="loadMoreFeedback()">
+        <div class="button-overlay">
+          <i class="fa fa-chevron-down fa-inverse fa-lg"></i>
+        </div>
+        Load more
+      </button>
+
+    </div>
+  </div>
+</div>
+
+</div><!-- /.admin-page -->
+
+</div><!-- /.full-container -->
+
+{% endblock %}
+
+<!-- Overrides user modals since not used -->
+
+{% block modals %}
+
+{{ super() }}
+
+<!-- Modal for creating objects -->
+
+<div class="modal fade admin-modal" id="adminModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4>Create a new {[ model ]}</h4>
+        <input ng-model="newObject.name" placeholder="Name"></input>
+        <input ng-model="newObject.id"
+               placeholder="URL (ex. 'name-of-this')"></input>
+        <input ng-hide="model === 'lesson'"
+               ng-model="newObject.color"
+               placeholder="Color (ex. #ffffff)"></input>
+        <input ng-show="model === 'lesson'"
+               ng-model="newObject.type"
+               placeholder="Type ('text' or 'video')"></input>
+        <input ng-show="model === 'lesson'"
+               ng-model="newObject.youtube_id"
+               placeholder="YouTube ID"></input>
+        <input ng-show="model === 'lesson'"
+               ng-model="newObject.wistia_id"
+               placeholder="Wistia ID"></input>
+        <input ng-show="model === 'theme'"
+               ng-model="newObject.locale"
+               placeholder="Locale ('en' or 'es', optional)"></input>
+        <textarea ng-model="newObject.summary"
+                  placeholder="Summary"></textarea>
+
+        <div class="footer-wrapper">
+          <button class="bordered-button" ng-hide="save"
+                  ng-click="createObject(model)">Create!</button>
+          <i ng-show="saving" class="fa fa-spinner fa-spin"></i>
+        <span class="error-text">{[error]}</span>
+        </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Modal for creating children -->
+
+<div class="modal fade admin-modal" id="childModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <h4>Add a child {[ childModel ]}</h4>
+
+        <div ng-show="submodelObjects" class="child-selection">
+          <div class="selected-object" ng-click="showChildrenDropdown = true">
+            {[ existingChild ? existingChild.name : 'Select an existing ' + childModel]}
+          </div>
+          <ul ng-show="showChildrenDropdown">
+            <li ng-click="setExistingChild(object)" ng-repeat="object in submodelObjects" ng-class="{selected: object === existingChild}">
+              {[ object.name ]}
+              <small>{[ object.short_uid ]}</small>
+            </li>
+            <li ng-click="loadMoreChildModel()" ng-show="willLoadMoreChildModel">
+              LOAD MORE
+            </li>
+          </ul>
+        </div>
+
+        <div ng-hide="existingChild">
+          <input ng-model="newChild.name" placeholder="Name"></input>
+          <input ng-model="newChild.id" placeholder="URL (ex. 'name-of-this')"></input>
+          <input ng-hide="childModel === 'lesson'" ng-model="newChild.color" placeholder="Color (ex. #ffffff)"></input>
+          <input ng-show="childModel === 'lesson'" ng-model="newChild.type" placeholder="Type ('text' or 'video')"></input>
+          <input ng-show="childModel === 'lesson'" ng-model="newChild.youtube_id" placeholder="YouTube ID"></input>
+          <input ng-show="childModel === 'lesson'" ng-model="newChild.wistia_id" placeholder="Wistia ID"></input>
+          <textarea ng-model="newChild.summary" placeholder="Summary"></textarea>
+        </div>
+
+        <div class="footer-wrapper">
+
+          <div ng-show="existingChild">
+            <button class="bordered-button" ng-hide="save" ng-click="addExistingChild()">Add Child</button>
+            <button class="bordered-button plain" ng-hide="save" ng-click="existingChild = false">Clear</button>
+          </div>
+
+          <div ng-hide="existingChild">
+            <button class="bordered-button" ng-hide="save" ng-click="addChild()">Create!</button>
+          </div>
+
+          <i ng-show="saving" class="fa fa-spinner fa-spin"></i>
+          <span class="error-text">{[error]}</span>
+
+        </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal for setting popular children -->
+
+<div class="modal fade admin-modal" id="popularModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+      <h4>Add a Popular Lesson</h4>
+
+      <ul ng-show="themeLessons">
+        <li ng-click="addPopularLesson(lesson)" ng-repeat="lesson in themeLessons">
+          {[ lesson.name ]}
+        </li>
+      </ul>
+
+      <div class="footer-wrapper">
+        <!-- <button class="bordered-button" ng-hide="save" ng-click="addExistingChild()">Add Lesson</button> -->
+        <i ng-show="saving" class="fa fa-spinner fa-spin"></i>
+        <span class="error-text">{[error]}</span>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal for tagging objects -->
+
+<div class="modal fade admin-modal" id="taggingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+      <h4>Tag this {[ model ]}</h4>
+
+      <h5>Mindset Tags</h5>
+      <ul class="content-tags">
+        <li class="content-tag" ng-repeat="tag in mindsetTags" ng-click="tag.active = !tag.active" ng-class="{active: tag.active}">{[ tag.name ]}
+        </li>
+      </ul>
+
+      <h5>Practice Tags</h5>
+      <ul class="content-tags">
+        <li class="content-tag" ng-repeat="tag in practiceTags" ng-click="tag.active = !tag.active" ng-class="{active: tag.active}">{[ tag.name ]}
+        </li>
+      </ul>
+
+      <h5>Subjects</h5>
+      <ul class="content-tags">
+        <li class="content-tag" ng-repeat="tag in subjectTags" ng-click="tag.active = !tag.active" ng-class="{active: tag.active}">{[ tag.name ]}
+        </li>
+      </ul>
+
+      <ul ng-show="themeLessons">
+        <li ng-click="addPopularLesson(lesson)" ng-repeat="lesson in themeLessons">
+          {[ lesson.name ]}
+        </li>
+      </ul>
+
+      <div class="footer-wrapper">
+        <button class="bordered-button" ng-hide="save" ng-click="saveTags(object)">Save Tags</button>
+        <i ng-show="saving" class="fa fa-spinner fa-spin"></i>
+        <span class="error-text">{[error]}</span>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal for associating practices with content -->
+
+<div class="modal fade admin-modal" id="associationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+      <h4>Associate with Content</h4>
+
+      <ul>
+        <li ng-click="associateContent(option)" ng-repeat="option in associationOptions">
+          {[ option.name ]}
+        </li>
+      </ul>
+
+      <div class="footer-wrapper">
+        <!-- <button class="bordered-button" ng-hide="save" ng-click="addExistingChild()">Add Lesson</button> -->
+        <i ng-show="saving" class="fa fa-spinner fa-spin"></i>
+        <span class="error-text">{[error]}</span>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% if book.chapters|length > 0 %}
+<div class="manage_page-container" ng-cloak>
+  <ol class="content-manager dropzone chapter-list"
+      dnd-list="models.chapters.items"
+      dnd-allowed-types="['chapter']">
+    <li class="manage_chapter-card"
+        ng-repeat="chapter in models.chapters.items"
+        dnd-draggable="chapter"
+        dnd-effect-allowed="move"
+        dnd-moved="handleChapterReorderChild(event, chapter, book, models.chapters.items, $index)"
+        dnd-type="'chapter'">
+        <dnd-nodrag>
+        <div class="content-preview" ng-class="{ expanded: expanded[chapter.uid] }">
+          <i dnd-handle class="fa fa-grip-vertical"></i>
+          <div>
+            <h6>{[ chapter['title'] || chapter['name'] || 'Untitled Chapter' ]}</h6>
+            <p>{[ chapter['short_description'] || 'Chapter ' + $index ]}</p>
+          </div>
+          <i
+            class="delete-chapter fa fa-close"
+            ng-click="handleDeleteChapter(chapter)"
+          ></i>
+        </div>
+        <div class="no-pages" ng-show="expanded[chapter.uid] && chapter.columns.length == 0">
+          This chapter has no pages yet.<br />
+          Create a new page, add an existing page, or drag a page from another chapter into the space below.
+        </div>
+        <ol class="pages-container dropzone pages-list"
+            ng-show="expanded[chapter.uid]"
+            ng-class="{ expanded: expanded[chapter.uid] }"
+            dnd-list="chapter.columns"
+            dnd-allowed-types="['page']"
+            dnd-inserted="handlePageInsert(chapter, 'move', $index)"
+            dnd-drop="callback({targetChapter: chapter, targetIndex: index})">
+          <li class="manage_page-card"
+              ng-repeat="page in chapter.columns"
+              ng-class="{ expanded: expanded[chapter.uid], selected: models.selected === page }"
+              ng-show="chapter.columns.length > 0"
+              dnd-draggable="page"
+              dnd-effect-allowed="move"
+              dnd-selected="models.selected = page"
+              dnd-type="'page'"
+              dnd-callback="onDrop(chapter, $index, targetChapter, targetIndex)">
+            <dnd-nodrag>
+              <div>
+                <i dnd-handle class="fa fa-grip-vertical"></i>
+                <img src="{[ page.iconPath || '/' ]}">
+                <a href="/books/{{book.uid}}/{[chapter.uid]}/{[page.uid]}"=>{[ page.title || page.name || 'Untitled Page' ]}</a>
+              </div>
+              <div>
+                <i class="fa fa-pencil" ng-click="handleClickEditPage(page, chapter.uid)"></i>
+                <i class="fa fa-times-circle" ng-click="handleClickDeletePage(chapter, page)"></i>
+              </div>
+            </dnd-nodrag>
+          </li>
+        </ol>
+        <div class="drawer-controls">
+          <div class="oval-container">
+            <span class="spacer" ng-class="{ expanded: expanded[chapter.uid] }"></span>
+            <button class="oval" ng-click="toggleDrawerExpand(chapter.uid)">
+              <i class="oval-icon fa fa-angle-up" ng-class="{ hidden: !expanded[chapter.uid], expanded: expanded[chapter.uid] }"></i>
+              <i class="oval-icon fa fa-angle-down" ng-class="{ hidden: expanded[chapter.uid], expanded: expanded[chapter.uid] }"></i>
+            </button>
+          </div>
+          <div class="expanded-controls" ng-show="expanded[chapter.uid]">
+            <span>
+              <button class="btn btn-secondary btn-sm btn-secondary-override" ng-click="handleClickAddChapterModal('edit', chapter)">edit chapter</button>
+              <button class="btn btn-secondary btn-sm btn-secondary-override" ng-click="handleClickAddExistingPage(chapter)">add existing page</button>
+            </span>
+            <a href="/pages/upload?chapter_id={[ chapter.uid.replace('Chapter_', '') ]}" class="btn btn-primary btn-sm">CREATE NEW PAGE</a>
+          </div>
+        </div>
+      </dnd-nodrag>
+    </li>
+  </ol>
+  <div class="add-chapter">
+    <div
+      class="btn btn-primary btn-sm"
+      ng-click="handleClickAddChapterModal('create', chapter)"
+    >
+      ADD CHAPTER
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="manage_page-container empty-state" data-toggle="modal" data-target="#addChapterModal">
+  <div class="add-chapter">
+    <div class="btn btn-primary">
+      ADD CHAPTER
+    </div>
+    <span>You don’t have any chapters, create one to get started!</span>
+  </div>
+</div>
+{% endif %}

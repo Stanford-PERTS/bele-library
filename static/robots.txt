@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /cron/
+Disallow: /static/
+Disallow: /unit_test/
+Disallow: /practices/edit/
+Disallow: /practices/upload
+Disallow: /unsubscribe/
+Disallow: /resubscribe/

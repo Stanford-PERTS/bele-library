@@ -1,0 +1,42 @@
+// _colors.scss
+
+// Contains universal colors for application
+
+$primary: #EF472F;
+$secondary: #79808A;
+$dark-font-color: #0B192B;
+$neutral-color: #F0F1F3;
+$neutral-font-color: #79808A;
+
+$color-practices: #e8895f;
+$color-kits: #4f99b8;
+
+$font-color: #333;
+$light-font-color: #999;
+
+$error-color: #ff6677;
+$success-color: #71cd82;
+
+$dark-blue-color: #306779;
+$light-blue-color: #66a9cf;
+$deep-violet-color: #323037;
+
+$orange-color: #ff7e6b;
+$teal-color: #5EAD78;
+
+$teal-color: #58B09C;
+$purp-color: #4A4152;
+$purple-color: #6f58b0;
+$plum-color: #52414C;
+$yellow-color: #FFD166;
+$cherry-color: #EF476F;
+
+// Page specific coloring
+$footer-color: #0b192b;
+$feedback-color: $deep-violet-color;
+$search-accent-color: $purple-color;  // Purple!
+$about-color: $cherry-color;
+$dropdown-color: $deep-violet-color;
+
+// Used in admin.
+$promoted-color: #646db4;

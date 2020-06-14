@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "404" %}
+
+{% block content %}
+
+<div class="full-container">
+
+  <div class="container four-oh-four">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        {% if message == 'invalid token' %}
+          <h3>Sorry, that link has expired :(</h3>
+        {% else %}
+          <h3>Oops, we couldn&rsquo;t find this page :(</h3>
+        {% endif %}
+        <p>
+          Try <a href="/discover">discovering</a> more great content.
+        </p>
+        <a href="/" class="fake-document">?</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

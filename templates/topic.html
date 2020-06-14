@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = topic['name'] %}
+{% set desc = topic['summary'] %}
+{% set share_image = 'topics/share-images/' + topic['short_uid'] + '.png' %}
+
+{% block head %}
+  {{ super() }}
+
+  <!-- Set color based on topic color -->
+  <style type="text/css">
+    .topic-page_masthead { background-color: {{ color }}; }
+    .topic-page_masthead a.cta-button { color: {{ color }}; }
+    .panels { background-color: {{ color }}; }
+    a.lesson-wrapper .image-holder { background-color: {{ color }}; }
+    a.content_practice-wrapper .practice_icon {
+      border-color: {{ color }};
+    }
+    a.content_practice-wrapper .practice_icon:after {
+      color: {{ color }};
+    }
+    a.content_practice-wrapper:hover .practice_icon {
+      background-color: {{ color }};
+    }
+  }
+  </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="full-container topic-page-new">
+
+  <div class="topic-page_masthead">
+    <div class="masthead_background"
+         image-loader
+         image="/static/images/topics/masthead-{{ topic.short_uid }}.png"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+          <div class="masthead-inner">
+            <span class="mindset-stamp">
+              Growth Mindset
+            </span>
+            <h1 class="masthead_title">
+              {{ topic.name }}
+            </h1>
+            <p class="masthead_text">
+              {{ topic.summary }}
+            </p>
+            {% if lessons %}
+            <a class="cta-button" href="/topics/{{ topic.short_uid }}/{{ lessons[0].short_uid }}">
+              View first lesson&nbsp;<i class="fa fa-caret-right"></i>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic stats -->
+
+  <div class="topic-page_stats">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+          <div class="row">
+            <div class="col-sm-4 stat">
+              Number of Lessons
+              <b class="stats_value">{{lessons|count}}</b>
+            </div>
+            <div class="col-sm-4 stat">
+              Designed For
+              <b class="stats_value">Teachers</b>
+            </div>
+            <div class="col-sm-4 stat">
+              Time to Complete
+              <b class="stats_value">{{lessons|count * 4}} min</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-page_body">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+
+        <!-- Lists all lessons in this topic -->
+
+        {% block lessons %}
+        {% for lesson in lessons %}
+
+          {% if lesson.listed %}
+
+          <a href="/topics/{{ topic.short_uid }}/{{ lesson.short_uid }}" class="lesson-wrapper">
+            <div class="image-holder">
+              <!-- Check type to render as video or not -->
+              {% if lesson.type == 'video' %}
+                {% if lesson.youtube_id %}
+                <div class="lesson_image" style="background-image: url('//img.youtube.com/vi/{{ lesson.youtube_id }}/0.jpg')"></div>
+                <div class="image-holder_overlay"></div>
+                {% else %}
+                <div class="lesson_image"></div>
+                <div class="image-holder_overlay"></div>
+                {% endif %}
+              {% else %}
+              <i class="fa fa-file-text-o fa-3x"></i>
+              {% endif %}
+            </div>
+            <div class="lesson_info">
+              <h3>{{ lesson.name }}</h3>
+              <p>
+                {{ lesson.summary }}
+              </P>
+            </div>
+          </a>
+
+          {% endif %}
+
+        {% endfor %}
+        {% endblock %}
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="topic-page_practices">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+          <h2>Grow your brain.</h2>
+          <p>
+            View related materials from our resource library
+          </p>
+
+          {% if related_practices %}
+          <div class="row">
+            {% for practice in related_practices %}
+            <div class="col-sm-6">
+              <a class="content_practice-wrapper" href="/practices/{{ practice.short_uid }}">
+                <div class="practice_title">
+                  {{ practice.name }}
+                </div>
+                <div class="practice_info">
+                  {{ practice.summary }}
+                </div>
+                <div class="practice_icon {{'icon--video' if practice.youtube_id else ''}} {{'icon--files' if practice.has_files else ''}}"></div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <a class="practices_search-button" href="/search">View Related Practices</a>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% include 'components/footer.html' %}
+
+</div>
+
+{% endblock %}

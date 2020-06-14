@@ -1,0 +1,46 @@
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <h4>{[ modalTitle || 'Confirm Delete' ]}</h4>
+      <p ng-show="entityPendingDelete.title">
+        Are you sure you want to delete
+        <em>{[ entityPendingDelete.title ]}</em>?
+      </p>
+      <p ng-hide="entityPendingDelete.title">
+        Are you sure you want to delete this {[ kind.toLowerCase() ]}?
+      </p>
+      <p ng-show="kind == 'Book'">
+        Pages within this book will <em>not</em> be deleted.
+      </p>
+      <p ng-show="kind == 'Page'">
+        This page will be removed from all books and chapters.
+      </p>
+      <br />
+      <div class="button-container">
+        <button
+          class="btn btn-secondary btn-large btn-secondary-override"
+          data-dismiss="modal"
+          ng-hide="isDeleting"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn btn-primary btn-large"
+          ng-click="handleDelete(entityPendingDelete.uid)"
+          ng-hide="isDeleting"
+        >
+          Delete
+        </button>
+        <button
+          class="btn btn-secondary btn-large btn-secondary-override"
+          ng-show="isDeleting"
+        >
+          <i class="fa fa-spin fa-spinner"></i>
+        </button>
+      </div>
+      <div ng-show="errorMessage">
+        {[ errorMessage ]}
+      </div>
+    </div>
+  </div>
+</div>

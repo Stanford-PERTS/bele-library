@@ -1,0 +1,89 @@
+{% import 'jinja_macros.html' as macros %}
+
+{% set may_remove = (is_author or is_admin) and additional_authors|length > 0 %}
+{% set may_view_email = is_admin %}
+
+<div class="col-md-3 aside-container">
+  <aside>
+    <h4>About this {{ entity_type }}</h4>
+    <div class="authors">
+      <h5>
+        {% if entity_type == 'book' %}
+          Editors
+        {% elif entity_type == 'page' %}
+          Authors
+        {% endif %}
+      </h5>
+      <ul>
+        {% if creator %}
+          {{ macros.render_author(creator, 'Created by', may_remove, may_view_email) }}
+        {% endif %}
+
+        {% if False and last_editor %}
+          {{ macros.render_author(last_editor, 'Last edited by', may_remove, may_view_email) }}
+        {% endif %}
+
+        {#
+          Display a small number of additional authors, if they exist, since
+          the reputation of invited celebrity authors is important, and
+          creator/editors are likely to be less influential.
+        #}
+        {% for author in additional_authors[:2] %}
+          {{ macros.render_author(author, 'Author', may_remove, may_view_email) }}
+        {% endfor %}
+      </ul>
+      <button class="link-button" ng-click="openAuthorsModal()">
+        See all
+          {% if entity_type == 'book' %}
+            editors
+          {% elif entity_type == 'page' %}
+            authors
+          {% endif %}
+        &gt;
+      </button>
+    </div>
+    {% if tags|length > 0 %}
+    <div class="tags">
+      <h5>Tags</h5>
+      <ul>
+      {% for tag in tags %}
+        <li>
+          <a
+            href="/discover?tags={{ tag | replace(' ', '%20') }}"
+            target="_self"
+            class="tag"
+          >
+            {{ tag }}
+          </a>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if license %}
+    <div>
+      <h5>License</h5>
+      {{ license | safe }}
+    </div>
+    {% endif %}
+  </aside>
+  {% if is_author %}
+  <button class="btn btn-secondary btn-lg btn-secondary-override" ng-click="goTo('{{ editPath }}')">
+    <i class="fa fa-edit"></i>
+    {{ editButtonCopy }}
+  </button>
+  {% endif %}
+  <button class="btn btn-secondary btn-lg btn-secondary-override" ng-show="user && voteFound" ng-cloak ng-click="toggleLike()" ng-class="{liked: liked}">
+    <i class="fa fa-heart"></i>
+    {[ liked ? 'liked' : 'like' ]}
+  </button>
+  {% if is_author and entity_type == 'page' %}
+  <button
+    class="btn btn-lg btn-secondary btn-secondary-override"
+    ng-click="openConfirmDeleteModal()"
+  >
+    <i class="fa fa-trash"></i>
+    Delete
+  </button>
+  {% endif %}
+</div>

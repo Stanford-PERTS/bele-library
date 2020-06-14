@@ -1,0 +1,90 @@
+/* Modify Bootstrap classes here */
+
+.btn {
+  border-radius: 2px;
+  font-family: $oswald-font;
+  margin-bottom: 4px;
+}
+
+.btn-primary,
+.btn-primary.active { 
+  background-color: $primary;
+  border-color: $primary;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    background-color: darken($primary, 10%);
+    border-color: darken($primary, 10%);
+  }
+}
+
+.btn-secondary {
+  background-color: $neutral-color;
+  border-color: $neutral-color;
+  color: $neutral-font-color;
+}
+
+.btn-secondary__inverted {
+  background-color: transparent;
+  border: 0;
+  color: $secondary;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    background-color: lighten($secondary, 20%);
+    border-color: lighten($secondary, 20%);
+  }
+}
+
+.btn-primary__inverted {
+  background-color: transparent;
+  border: 0;
+  color: $primary;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    background-color: white;
+    text-decoration: underline;
+  }
+}
+
+.btn-lg {
+  font-size: 20px;
+  line-height: 38px;
+  padding: 10px 30px;
+}
+
+.btn-sm {
+  font-size: 14px;
+  line-height: 18px;
+  padding: 7px 21px;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    background-color: darken($primary, 10%);
+    border-color: darken($primary, 10%);
+  }
+}
+
+.btn-secondary-override {
+  &:hover,
+  &:focus,
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    background-color: darken($neutral-color, 10%);
+    border-color: darken($neutral-color, 10%);
+  }
+}

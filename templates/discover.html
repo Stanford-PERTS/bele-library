@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = "Search for books" %}
+{% set desc = "Discover and discuss new ways to foster learning mindsets in the classroom and at home by exploring curated content and resources from our community." %}
+
+{% set controller = "DiscoverCtrl" %}
+
+{% block content %}
+
+<!-- Main scrolling container with scroll ng directive -->
+
+<div scroll="" class="full-container clean-style search-page">
+
+  <!-- Main content -->
+
+  <div class="page-content--search">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 hidden-md hidden-lg">
+          {% if user %}
+          <div class="aside">
+            <a class="btn btn-lg btn-primary w-100" ng-click="initEditBookModal()">
+              <i style="position:relative; bottom:3px; margin-right: 4px;" class="fa fa-pencil fa-lg"></i>
+               ADD A BOOK
+            </a>
+            <a class="btn btn-lg btn-primary w-100" href="/pages/upload" target="_self">
+              <i style="position:relative; bottom:3px; margin-right: 4px;" class="fa fa-pencil fa-lg"></i>
+               ADD A PAGE
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row">
+
+        <!-- Search results -->
+
+        <div class="col-md-9">
+          <div class="search-input-wrapper">
+            <div class="search-input">
+              <form ng-submit="updateSearch()">
+                <a class="search-input_icon" ng-click="updateSearch()">
+                  <i class="fa fa-search"></i>
+                </a>
+                <input ng-model="queryString"
+                       placeholder="Enter key words like Belonging, Culturally Responsive Pedagogy, or Mindsets."
+                       ng-change="getSuggestions()"/>
+              </form>
+
+            </div>
+
+            <div class="filter-options" ng-cloak>
+
+              <div class="row">
+
+                <div class="col-sm-12">
+                  <div class="tags-list">
+                    Tags
+                    <ul>
+                      <li ng-repeat="tag in mindsetTags"
+                          ng-class="{active: tag.active}"
+                          ng-click="toggleSubject(tag)">
+                        {[ tag.name ]}
+                      </li>
+                    </ul>
+                  </div>
+                  <ul ng-show="selectedTags.length > 0">
+                    <li ng-repeat="tag in selectedTags">
+                      <strong>{[ tag.name ]}</strong>: {[ tag.description ]}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="row" ng-show="extraTags.length > 0">
+                <div class="col-sm-12">
+                  Matching Additional Tags:
+                  <div class="tags-list">
+                    <ul>
+                      <li
+                        ng-repeat="tag in extraTags"
+                        class="active"
+                        ng-click="clearExtraTags()"
+                      >
+                        {[ tag.name ]}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="result-filters">
+            <!--
+            <a ng-class="{active: contentType === ''}" ng-click="setContentType()" class="result-filter">All results</a>
+            <a ng-class="{active: contentType === 'video'}" ng-click="setContentType('video')" class="result-filter">Videos</a>
+            <a ng-class="{active: contentType === 'files'}" ng-click="setContentType('files')" class="result-filter">Downloadables</a>
+            -->
+            <a
+              ng-class="{active: contentKind === ''}"
+              ng-click="setContentKind()"
+              class="result-filter"
+            >
+              All results
+            </a>
+            <a
+              ng-class="{active: contentKind === 'Book'}"
+              ng-click="setContentKind('Book')"
+              class="result-filter"
+            >
+              Books
+            </a>
+            <a
+              ng-class="{active: contentKind === 'Page'}"
+              ng-click="setContentKind('Page')"
+              class="result-filter"
+            >
+              Pages
+            </a>
+          </div>
+
+          <div class="search-results" ng-init="setUsers">
+            <search-result ng-repeat="r in results track by r.uid" result="r"></search-result>
+            <h4 ng-cloak ng-show="loading"><i class="fa fa-spin fa-spinner fa-lg"></i></h4>
+            <div ng-cloak ng-hide="loading || results.length > 0">
+              <h4>No results found</h4>
+              <p>
+                Please try another search.
+              </p>
+            </div>
+            <button class="paginate-button" ng-class="{active: shouldPaginate}" ng-click="loadMore()">
+              <div class="button-overlay">
+                <i class="fa fa-chevron-down fa-inverse fa-lg"></i>
+              </div>
+              Load more
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Aside -->
+
+        <div class="col-md-3 hidden-sm hidden-xs">
+          {% if user %}
+          <div class="aside">
+            <a class="btn btn-lg btn-primary w-100" ng-click="initEditBookModal()">
+              <i style="position:relative; bottom:3px; margin-right: 4px;" class="fa fa-pencil fa-lg"></i>
+               ADD A BOOK
+            </a>
+            <a class="btn btn-lg btn-primary w-100" href="/pages/upload" target="_self">
+              <i style="position:relative; bottom:3px; margin-right: 4px;" class="fa fa-pencil fa-lg"></i>
+               ADD A PAGE
+            </a>
+          </div>
+          {% endif %}
+        </div>
+
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+  </div>
+
+</div>
+
+{% endblock %}

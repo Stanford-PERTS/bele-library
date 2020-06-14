@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"></meta>
+    {% include '_styles.html' %}
+    <style type="text/css">
+      a.cta, button.cta {
+        background-color: #EF472F;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table class="email-outer">
+      <tr>
+        <td>
+          <table class="email-inner">
+            <tr>
+              <td>
+                <table class="email-header">
+                  <tr>
+                    <td>
+                      <a href="{{ domain }}">
+                        <img src="{{ domain }}/" height="48px">
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="email-body">
+                  <tr>
+                    <td>
+                      <p>
+                        Dear {{ short_name }},
+                      </p>
+                      <p>
+                        You&rsquo;ve been invited to be
+                        {# 'author' or 'editor' #}
+                        an {{ role }} on <em>{{ entity_title }}</em>. If you
+                        accept, please click the link below.
+                      </p>
+                      <p>
+                        {% set role_condition = 'authorship' if role == 'author' else 'editorship' %}
+                        <a
+                          href="{{ domain }}/{{ entity_type }}/{{ entity_id }}/accept_authorship?uid={{ to_uid }}&token={{ token }}"
+                        >I accept {{ role_condition }} of <em>{{ entity_title }}</em></a>
+                      </p>
+                      <p>
+                        This link will be valid for 30 days.
+                      </p>
+                      <p>
+                        Thank you for contributing to the BELE Library!
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table class="email-footer">
+            This message was intended for {{ full_name }}<br>
+            PERTS &copy; {{ year }}  |   All Rights Reserved<br>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

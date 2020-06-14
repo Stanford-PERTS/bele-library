@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+<!-- SEO tags -->
+
+{% set title = practice.name %}
+{% set desc = practice.summary %}
+{% set controller = "PracticeCtrl" %}
+
+{% block head %}
+  {{ super() }}
+
+  <!-- Set color based on topic color -->
+  <style type="text/css">
+    .practice-page .practice-page_info { background-color: {{ color }}; }
+    .practice-container_inner p > a { color: {{ color }}; }
+    .practice-container_inner p > b > a { color: {{ color }}; }
+    .practice-container_inner li > a { color: {{ color }}; }
+    #discussion-box a.comment-button { background-color: {{ color }}; }
+    .practice-page .practice-files a.attachment { color: {{ color }}; }
+    .practice-page .practice-files a.attachment:hover .attachment_image { background-color: {{ color }}; }
+    .practice-page .practice-files a.attachment .attachment_image { border-color: {{ color }}; }
+    .print-button a { color: {{ color }}; }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="full-container practice-page">
+
+  <!-- Info for mobile -->
+
+  <div class="practice-page_info">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+
+          <h1>{{ practice.name }}</h1>
+          <p class="summary-text">{{practice.summary}}</p>
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-3 practice_user-info">
+
+          <h4>Posted by</h4>
+          <a href="{{'/users/' + creator.canonical_username if creator.username else ''}}" class="user-info">
+            <div class="user-info_image" user-image="" user="{{creator_json}}"></div>
+            <div class="user-info_name">
+            {% if creator.first_name %}
+            {{ creator.first_name.split('@')[0]}} {{ creator.last_name[0] or '' }}
+            {% endif %}
+            </div>
+            <p>{{ practice.created | datetime }}</p>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panels -->
+
+  <div class="">
+    <div class="container">
+      <div class="row">
+
+        <!-- Main content -->
+
+        <div class="col-sm-9 practice-container">
+          <div class="practice-container_inner">
+
+          <!-- Determine type of practice -->
+
+          {% if practice.youtube_id %}
+
+          <!-- 16:9 aspect ratio -->
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="//www.youtube.com/embed/{{practice.youtube_id}}?wmode=transparent&amp;rel=0&amp;showinfo=0"></iframe>
+          </div>
+
+          <br><br>
+
+          {% endif %}
+
+          {% if practice.iframe_src %}
+
+          <!-- 16:9 aspect ratio -->
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="{{practice.iframe_src}}"></iframe>
+          </div>
+
+          <br><br>
+
+          {% endif %}
+
+          <div class="practice-body">
+            {{ practice.body | safe }}
+          </div>
+
+          <!-- Like button -->
+          <div class="vote-wrapper">
+            <a class="like-button" ng-hide="user" ng-cloak data-toggle="modal" data-target="#signupModal">
+              <i class="fa fa-heart"></i>&nbsp;Like this
+            </a>
+            <a class="like-button" ng-show="user && voteFound" ng-cloak ng-click="toggleLike()" ng-class="{liked: liked}">
+              <i class="fa fa-heart"></i>&nbsp;{[ liked ? 'Liked' : 'Like this' ]}
+            </a>
+          </div>
+
+          <!-- List links to files if present -->
+
+          {% if practice.json_properties.files %}
+
+          <div class="practice-files">
+            <h4>Attachments</h4>
+
+            {% for file in practice.json_properties.files %}
+
+            <a href="{{file.link}}" target="_blank" class="attachment" ng-click="trackDownload({{file.filename}})">
+              <div class="attachment_image">
+                {% if file.content_type | filetype == 'image file' %}
+                <i class="fa fa-2x fa-file-image-o"></i>
+                {% elif file.content_type | filetype == 'audio' %}
+                <i class="fa fa-2x fa-file-sound-o"></i>
+                {% elif file.content_type | filetype == 'word document' %}
+                <i class="fa fa-2x fa-file-word-o"></i>
+                {% elif file.content_type | filetype == 'pdf file' %}
+                <i class="fa fa-2x fa-file-pdf-o"></i>
+                {% elif file.content_type | filetype == 'presentation' %}
+                <i class="fa fa-2x fa-file-powerpoint-o"></i>
+                {% else %}
+                <i class="fa fa-2x fa-file"></i>
+                {% endif %}
+              </div>
+              <div class="attachment_text">
+                <h4>{{file.content_type | filetype}}</h4>
+                <span>{{file.filename}}</span>
+              </div>
+            </a>
+
+            <br>
+
+            {% endfor %}
+
+          </div>
+
+          {% endif %}
+
+          <!-- Button to prompt page printing -->
+
+          <div class="print-button">
+            <a onclick="window.print()">
+              <i class="fa fa-print"></i>&nbsp;Print this page
+            </a>
+          </div>
+
+          <!-- Discussion Angular Directive -->
+
+          <discussion parent="'{{ practice.uid }}'" type="practice"></discussion>
+
+          </div>
+        </div>
+
+        <!-- Side panel with practice info -->
+
+        <div class="col-sm-3 practice-info">
+          <div class="practice-info_inner">
+
+            <h4>Tags</h4>
+
+            {% if practice.tags%}
+
+            <div class="practice_tags-wrapper">
+              <div class="practice_tags">
+                {% for tag in practice.tags%}
+                <a class="mindset-tag" href="/search?tags={{tag | escape | ampescape}}">{{tag}}</a>
+                {% endfor %}
+              </div>
+            </div>
+
+            {% endif %}
+
+            <h4>Details</h4>
+            <div class="practice-details" ng-class="{active: showDetails}" ng-cloak>
+
+              <p><b>Grades:&nbsp;</b>
+                {% if practice.max_grade == practice.min_grade %}
+                  {[ gradeLevels[{{practice.min_grade}}] ]} only
+                {% elif practice.max_grade != 13 or practice.min_grade != 0 %}
+                  {[ gradeLevels[{{practice.min_grade}}] ]}
+                  through
+                  {[ gradeLevels[{{practice.max_grade}}] ]}
+                {% else %}
+                  Any
+                {% endif %}
+              </p>
+              <p><b>Subjects:&nbsp;</b>
+                {% if practice.subjects %}
+                  {% for subject in practice.subjects %}
+                    {{subject}}{% if not loop.last %},&nbsp;{% endif %}
+                  {% endfor %}
+                {% else %}
+                  Any
+                {% endif %}
+              </p>
+              <p><b>Time of year:&nbsp;&nbsp;</b>{{practice.time_of_year}}</p>
+              <p><b>Class period:&nbsp;&nbsp;</b>{{practice.class_period}}</p>
+
+            </div>
+
+            {% if related_practices %}
+            <div class="practice_related-practices">
+              <h4>Related Practices</h4>
+              {% for practice in related_practices %}
+              <a class="content_practice-wrapper" href="/practices/{{ practice.short_uid }}">
+                <div class="practice_title">
+                  {{ practice.name }}
+                </div>
+                <div class="practice_info">
+                  {{ practice.summary }}
+                </div>
+                <div class="practice_icon {{'icon--video' if practice.youtube_id else ''}} {{'icon--files' if practice.has_files else ''}}"></div>
+              </a>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% include 'components/footer.html' %}
+
+</div>
+
+<!-- Sticky share buttons -->
+
+<div class="sticky-share" ng-class="{active: shareOpened}">
+  <!-- Social links -->
+  <div class="sticky-share_links">
+    <a share-button="{{practice.uid}}" share-type="facebook">
+      <i class="fa fa-facebook fa-lg"></i>
+    </a>
+    <a share-button="{{practice.uid}}" share-type="twitter" share-text="{{share_text}}">
+      <i class="fa fa-twitter fa-lg"></i>
+    </a>
+    <a share-button="{{practice.uid}}" share-type="google">
+      <i class="fa fa-google-plus fa-lg"></i>
+    </a>
+    <div class="share-toggler" ng-click="shareOpened = !shareOpened">
+      <i ng-hide="shareOpened" class="fa fa-share fa-lg"></i>
+      <i ng-show="shareOpened" class="fa fa-close fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

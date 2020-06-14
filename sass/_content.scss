@@ -1,0 +1,300 @@
+// _content.scss
+
+// =====================================================
+// CONTENT STYLES
+// * Styles applied to main 'content' pages
+// * Extended by [theme.scss, topic.scss]
+// * Practice styles used on all related practices
+// =====================================================
+
+@import '_colors';
+@import '_fonts';
+@import '_responsive';
+@import 'compass';
+
+.content-page_masthead {
+  height: 375px;
+  background-color: #373439;
+  color: white;
+  text-align: center;
+  padding-top: 90px;
+  letter-spacing: 1px;
+  position: relative;
+
+  h1.masthead_title {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  a.cta-button {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: white;
+    color: $font-color;
+    font-weight: 600;
+    @include border-radius(5px);
+    padding: 8px 22px;
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0px;
+    @include opacity(0.9);
+
+    &:hover {
+      @include opacity(1.0);
+    }
+  }
+
+  .masthead_background {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%; width: 100%;
+    @include background-size(cover);
+    background-position: center top;
+    @include opacity(1.0);
+
+    &.loaded {
+      @include opacity(1.0);
+      @include transition(opacity 300ms ease-in-out);
+    }
+
+    &.loading {
+      @include opacity(0.0);
+    }
+  }
+}
+
+.content-page_stats {
+  background-color: white;
+  padding: 10px 0px;
+  text-align: center;
+
+  .stats_value {
+    font-size: 17px;
+    color: #666;
+    display: block;
+  }
+}
+
+.content-page_body {
+  padding-top: 45px;
+  padding-bottom: 60px;
+  background-color: #f2f2f2;
+
+  a.lesson-wrapper {
+    position: relative;
+    display: block;
+    background-color: white;
+    padding: 20px 150px;
+    margin: 15px 0px 15px 0px;
+    color: #333;
+    text-decoration: none;
+    min-height: 130px;
+
+    * {
+      @include transition(0.12s ease-in-out);
+    }
+
+    .image-holder {
+      position: absolute;
+      top: 20px; left: 30px;
+      height: 90px;
+      width: 90px;
+      @include border-radius(45px);
+      @include opacity(0.7);
+      overflow: hidden;
+      color: white;
+      text-align: center;
+
+      i {
+        margin-top: 25px;
+        color: white;
+      }
+    }
+
+    .lesson_image {
+      height: 100%;
+      width: 100%;
+      background-position: center center;
+      @include background-size(175% 140%);
+      position: relative;
+    }
+
+    .image-holder_overlay {
+      position: absolute;
+      top: 0px; left: 0px;
+      height: 100%; width: 100%;
+      background-color: rgba(0,0,0,0.6);
+      @include transition(0.12s ease-in-out);
+      background-image: url('/static/images/video-overlay.png');
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-top: 8px;
+    }
+
+    &:hover {
+
+      .image-holder {
+        @include opacity(1.0);
+      }
+
+      .image-holder_overlay {
+        background-color: rgba(0,0,0,0.0);
+      }
+    }
+  }
+}
+
+a.practices_search-button {
+  width: 260px;
+  color: white;
+  @include border-radius(8px);
+  margin: 20px auto;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: #333;
+  border: 2px solid #666;
+  padding: 10px 10px;
+  background-color: transparent;
+  letter-spacing: 0.5px;
+  display: block;
+   @include opacity(0.85);
+
+  &:hover{ @include opacity(1.0); }
+}
+
+a.content_practice-wrapper {
+  text-align: left;
+  display: block;
+  position: relative;
+  padding: 10px 10px 10px 65px;
+  color: #333;
+  font-size: 13px;
+  margin-top: 20px;
+  text-decoration: none;
+  height: 90px;
+  overflow-y: hidden;
+
+  .practice_title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  .practice_icon {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    height: 50px;
+    width: 50px;
+    background-color: transparent;
+    @include border-radius(25px);
+    border: 2px solid #333;
+
+    &:after {
+      position: absolute;
+      width: 100%;
+      left: 0px;
+      top: 8px;
+      text-align: center;
+      font-size: 22px;
+      font-family: 'FontAwesome';
+      content: "\f0f6";  // fa-file-text-o
+      display: block;
+    }
+
+    &.icon--files:after {
+      content: "\f0c5";  // fa-files-o
+    }
+
+    &.icon--video:after {
+      content: "\f16a";  // fa-youtube-play
+    }
+  }
+
+  &:hover {
+    .practice_icon {
+      background-color: #333;
+
+      &:after {
+        color: white;
+      }
+    }
+  }
+}
+
+@include desktop {
+  .content-page_body {
+
+    a.lesson-wrapper {
+      padding: 20px 30px 20px 150px;
+    }
+  }
+}
+
+@include mobile {
+
+  .content-page_masthead {
+    height: auto;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .content-page_body {
+
+    a.lesson-wrapper {
+      padding: 20px 15px 20px 105px;
+
+      .image-holder {
+        position: absolute;
+        top: 20px; left: 15px;
+        height: 75px;
+        width: 75px;
+        font-size: 11px;
+
+        i {
+          margin-top: 22px;
+        }
+      }
+    }
+  }
+
+  .content-page_stats {
+    background-color: white;
+    padding: 10px 0px;
+    text-align: center;
+
+    .stat {
+      border-bottom: 1px solid #ccc;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      margin: 0px 15px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .stats_value {
+      font-size: 17px;
+      color: #666;
+      display: inline-block;
+      margin-left: 10px;
+    }
+  }
+
+  a.content_practice-wrapper {
+    height: auto;
+  }
+}

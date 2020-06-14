@@ -1,0 +1,100 @@
+<div class="search-result-bele search-result__{[ kind.toLowerCase() ]}">
+  <div class="row">
+    <div class="col-sm-3 text-center">
+      <div class="search-result-icon" ng-style="{ 'background-image': 'url(' + iconSrc + ')' }" />
+    </div>
+    <div class="col-sm-9">
+      <div class="search-result-body">
+        <div class="search-result-header">
+          <h2 class="search-result-title">
+            <a href="{[ link ]}" target="_self" title="{[ result.title ]}">
+              {[ result.title ]}
+            </a>
+          </h2>
+          <div class="search-result-right">
+            <div class="search-result-meta">
+              <div class="search-result-meta-item" ng-show="canEdit">
+                <a href="{[ editLink ]}" target="_self">
+                  <i class="fa fa-edit" />
+                </a>
+              </div>
+              <div class="search-result-meta-item" ng-show="result.votes_for !== undefined && kind !== 'Chapter'">
+                  <i class="fa fa-heart" />
+                  {[ result.votes_for ]}
+              </div>
+              <div class="search-result-meta-item" ng-show="result.num_comments !== undefined && kind !== 'Book'">
+                  <i class="fa fa-comment" />
+                  {[ result.num_comments ]}
+              </div>
+            </div>
+            <!-- Don't display review status for likes because these are other
+            people's pages and books, not your own. Also don't display it when
+            viewing someone else's profile. -->
+            <!-- Note that `isYours` refers to whether you're looking at your
+            own profile page, it doesn't refer to individual pieces of content.
+            -->
+            <div
+              class="search-result-status"
+              ng-hide="resultType === 'likes' || !isYours"
+            >
+              <div
+                class="review-status pending"
+                ng-show="result.status === 'pending'"
+              >
+                Pending
+              </div>
+              <div
+                class="review-status approved"
+                ng-show="result.status === 'approved'"
+              >
+                Approved
+              </div>
+              <div
+                class="review-status rejected"
+                ng-show="result.status === 'rejected'"
+              >
+                Rejected
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="search-result-subheading" ng-show="kind === 'Chapter'">
+          Chapter {[ result.chapterNumber ]} in <a ng-href="/books/{[ result.bookUID ]}" target="_self">{[ result.bookTitle ]}</a>
+        </p>
+        <p class="search-result-summary">
+          {[ result.short_description ]}
+        </p>
+        <div class="search-result-tags" ng-show="result.tags">
+          <a
+            ng-href="/discover?tags={[tag]}"
+            ng-repeat="tag in result.tags"
+            class="tag"
+          >
+            <div class="tag">{[ tag ]}</div>
+          </a>
+        </div>
+      </div>
+      <div class="search-result-authors">
+        <a
+          ng-href="/users/{[author.canonical_username]}"
+          target="_self"
+          class="author-row user-info"
+          ng-show="!profileResult"
+          ng-repeat="author in result.author_users"
+        >
+          <div class="user-image" user-image="" user="author"></div>
+          <div class="posting-data">
+            <div class="byline">
+              {[ author.first_name ]} {[ author.last_name ]}
+            </div>
+            <!--
+            <div class="date">
+              {[ result.createdPrettyDate ]}
+            </div>
+            -->
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
